@@ -1,1 +1,2 @@
-{:launchpad/options {:emacs true :portal true}}
+{:launchpad/aliases [:dev :test]
+ :launchpad/options {:emacs true :portal true}}
