@@ -3,7 +3,8 @@
 (require
  '[lambdaisland.launchpad :as launchpad])
 
-(launchpad/main {})
+(launchpad/main
+ {:java-args ["-Dio.pedestal.log.formatter=puget.printer/cprint-str"]})
 
 ;; Local Variables:
 ;; mode:clojure

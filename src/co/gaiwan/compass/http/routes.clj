@@ -1,6 +1,8 @@
-(ns co.gaiwan.compass.http.routes)
+(ns co.gaiwan.compass.http.routes
+  (:require
+   [co.gaiwan.compass.routes.home :as home]))
 
 (defn routing-table []
   ["/"
    {:name :index
-    :get {:handler (fn [_] {:status 200 :body "ok"})}}])
+    :get {:handler home/GET-home}}])
