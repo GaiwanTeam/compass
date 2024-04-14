@@ -1,1 +1,2 @@
-{:compass/http {:port 8099}}
+{:compass/http {:port 8099}
+ :compass/db {:url "jdbc:pgsql://localhost:5432/compass?user=postgres"}}

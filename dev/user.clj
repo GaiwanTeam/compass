@@ -14,3 +14,6 @@
 
 (defn browse []
   ((jit clojure.java.browse/browse-url) "http://localhost:8099"))
+
+(defn conn []
+  (:compass/db @(jit integrant.repl.state/system)))

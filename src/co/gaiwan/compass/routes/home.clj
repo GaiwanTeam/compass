@@ -11,5 +11,3 @@
           [layout/layout
            [home/home]
            {:title "Conference Compass"}])})
-
-(GET-home)
