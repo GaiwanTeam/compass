@@ -12,4 +12,4 @@ resources/public/ui
 .store
 out
 .#*
-deps.local.edn
+*.local.*
