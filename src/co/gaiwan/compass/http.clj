@@ -25,7 +25,10 @@
   (ring/ring-handler
    (router)
    (default-handler {})
-   {:middleware [[ring-defaults/wrap-defaults ring-defaults/site-defaults]]}))
+   {:middleware [(fn [h]
+                   (fn [r]
+                     (assoc-in (h r) [:headers "Max-Age"] "0")))
+                 [ring-defaults/wrap-defaults ring-defaults/site-defaults]]}))
 
 (defmethod ig/init-key :compass/http [_ {:keys [port]}]
   (jetty/run-jetty #((handler) %) {:port port
