@@ -29,9 +29,12 @@
 
 (o/defstyled session-card :div
   :surface-2
-  :shadow-3
+  :shadow-4
   :padding-tb-2
   :padding-lr-3
+  {:border "1px solid var(--surface-3)"}
+  [:&.talk {:background-color "light-dark(var(--blue-2), var(--blue-9))"}]
+  [:&.workshop {:background-color "light-dark(var(--teal-2), var(--teal-8))"}]
   [:.title
    :margin-b-3
    {:font-size "var(--font-size-3)"
@@ -46,7 +49,7 @@
     :height "var(--size-fluid-6)",
     :border-radius "100%"}]
   ([{:keys [type title speaker organized day date time location]}]
-   [:<>
+   [:<> {:class (name type)}
     [:h2.title title]
     [:div.content
      [:div.avatar
