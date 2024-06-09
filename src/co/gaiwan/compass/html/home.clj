@@ -1,13 +1,37 @@
 (ns co.gaiwan.compass.html.home
+  {:ornament/prefix "home-"}
   (:require
-   [lambdaisland.ornament :as o]))
+   [lambdaisland.ornament :as o]
+   [co.gaiwan.compass.css.tokens :as t :refer :all]))
 
-(o/defstyled card :div
-  :shadow-3
-  :margin-2
-  :padding-3
-  :surface-1
-  )
+(o/defprop --arc-degrees "240deg")
+(o/defprop --arc-thickness "40px")
+(o/defprop --arc-color --lime-5)
+
+(o/defstyled arc :div
+  "Partial circle arc, clockwise. Expects arc (a value in CSS `deg` units) and
+  thickness to be passed as props or set as css vars by a parent element."
+  {:aspect-ratio  --ratio-square
+   :padding       --arc-thickness
+   :border-radius --radius-round
+   :background    --arc-color
+   :mask          (str "linear-gradient(#0000 0 0) content-box intersect, conic-gradient(#000 " --arc-degrees ", #0000 0)") })
+
+(o/defstyled capacity-gauge :div
+  "Image with an arc around it to indicate how full a session is."
+  flex square
+  [arc w-full]
+  {--arc-thickness "10%"}
+  [:.img w-full
+   {:padding --arc-thickness
+    :margin-left "-100%"}
+   [:>* w-full square rounded]]
+  ([{:keys [capacity image]}]
+   [:<> {:style {--arc-degrees (str (* 360.0 capacity) "deg")}}
+    [arc]
+    [:div.img
+     [:div
+      {:style {:background-image image}}]]]))
 
 (def test-values
   {:title ["Cursive Office Hours"
@@ -28,32 +52,26 @@
   (update-vals test-values rand-nth))
 
 (o/defstyled session-card :div
-  :surface-2
+  surface-2
   :shadow-4
-  :padding-tb-2
-  :padding-lr-3
-  {:border "1px solid var(--surface-3)"}
+  :p-tb-2
+  :p-lr-3
+  {:border (str "1px solid " --surface-3)}
   [:&.talk {:background-color "light-dark(var(--blue-2), var(--blue-9))"}]
   [:&.workshop {:background-color "light-dark(var(--teal-2), var(--teal-8))"}]
   [:.title
-   :margin-b-3
-   {:font-size "var(--font-size-3)"
+   :m-b-3
+   {:font-size --font-size-3
     :max-inline-size "none"}]
-  [:.content :flex]
-  [:.details :flex-col]
-  [:.avatar
-   :margin-r-3
-
-   {:flex-shrink 0
-    :width "var(--size-fluid-6)",
-    :height "var(--size-fluid-6)",
-    :border-radius "100%"}]
+  [:.content  flex]
+  [capacity-gauge :w-100px :m-r-3]
+  [:.details flex-col]
   ([{:keys [type title speaker organized day date time location]}]
    [:<> {:class (name type)}
     [:h2.title title]
     [:div.content
-     [:div.avatar
-      {:style {:background-image (str "var(--gradient-" (inc (rand-int 8)) ")")}}]
+     [capacity-gauge {:capacity (rand)
+                      :image (str "var(--gradient-" (inc (rand-int 7)) ")")}]
      [:div.details
       (when speaker
         [:p.speaker "Speaker " speaker])
@@ -63,9 +81,9 @@
       [:p.host "Organized by "organized]]]]))
 
 (o/defstyled home :main
-  :padding-3
-  :flex-col
+  :p-3
+  flex-col
   {:gap "var(--size-3)"}
   ([]
    [:<>
-    (repeatedly 10 #(do [session-card (rand-session)]))]))
+    (repeatedly 1 #(do [session-card (rand-session)]))]))
