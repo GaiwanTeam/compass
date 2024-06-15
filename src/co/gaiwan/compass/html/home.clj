@@ -1,8 +1,13 @@
 (ns co.gaiwan.compass.html.home
-  {:ornament/prefix "home-"}
+  #:ornament{:prefix "home-"}
   (:require
-   [lambdaisland.ornament :as o]
-   [co.gaiwan.compass.css.tokens :as t :refer :all]))
+   [co.gaiwan.compass.css.tokens :as t :refer :all]
+   [co.gaiwan.compass.http.oauth :as oauth]
+   [lambdaisland.ornament :as o]))
+
+(o/defstyled top-bar :nav
+  ([]
+   [:a {:href (oauth/flow-init-url)} "Sign-in with Discord"]))
 
 (o/defprop --arc-degrees "240deg")
 (o/defprop --arc-thickness "40px")
@@ -86,4 +91,5 @@
   {:gap "var(--size-3)"}
   ([]
    [:<>
+    [top-bar]
     (repeatedly 1 #(do [session-card (rand-session)]))]))

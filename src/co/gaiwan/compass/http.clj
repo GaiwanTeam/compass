@@ -1,13 +1,33 @@
 (ns co.gaiwan.compass.http
   (:require
+   [co.gaiwan.compass.http.middleware :as middleware]
    [co.gaiwan.compass.http.routes :as routes]
    [integrant.core :as ig]
    [reitit.ring :as ring]
    [ring.adapter.jetty :as jetty]
-   [ring.middleware.defaults :as ring-defaults]))
+   [ring.middleware.defaults :as ring-defaults]
+   [ring.middleware.session.cookie :as session-cookie]))
 
 (defn router []
   (ring/router (routes/routing-table)))
+
+(def ring-default-config
+  {:params    {:urlencoded true
+               :multipart  true
+               :nested     true
+               :keywordize true}
+   :cookies   true
+   :session   {:flash true
+               :cookie-attrs {:http-only true}
+               :store (session-cookie/cookie-store {:key "zsrpNuvjTqFcz6fg"})}
+   :security  {:anti-forgery   true
+               :frame-options  :sameorigin
+               :content-type-options :nosniff}
+   :static    {:resources "public"}
+   :responses {:not-modified-responses true
+               :absolute-redirects     false
+               :content-types          true
+               :default-charset        "utf-8"}})
 
 (defn default-handler
   "The default fallback handler
@@ -28,7 +48,8 @@
    {:middleware [(fn [h]
                    (fn [r]
                      (assoc-in (h r) [:headers "Max-Age"] "0")))
-                 [ring-defaults/wrap-defaults ring-defaults/site-defaults]]}))
+                 [ring-defaults/wrap-defaults ring-default-config]
+                 middleware/wrap-render]}))
 
 (defmethod ig/init-key :compass/http [_ {:keys [port]}]
   (jetty/run-jetty #((handler) %) {:port port

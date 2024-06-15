@@ -7,9 +7,11 @@
   (apply (jit co.gaiwan.compass/go) args))
 
 (defn reset []
+  ((jit clojure.tools.namespace.repl/set-refresh-dirs) "src")
   ((jit integrant.repl/reset)))
 
 (defn reset-all []
+  ((jit clojure.tools.namespace.repl/set-refresh-dirs) "src")
   ((jit integrant.repl/reset-all)))
 
 (defn browse []

@@ -5,9 +5,7 @@
    [lambdaisland.hiccup :as hiccup]))
 
 (defn GET-home [req]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (hiccup/render
-          [layout/layout
-           [home/home]
-           {:title "Conference Compass"}])})
+  {:status    200
+   :headers   {"Content-Type" "text/html"}
+   :html/head [:title "Conference Compass"]
+   :html/body [home/home]})

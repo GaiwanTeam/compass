@@ -5,6 +5,7 @@
    [clojure.string :as str]
    [integrant.core :as ig]
    [integrant.repl :as ig-repl]
+   [co.gaiwan.compass.config :as config]
    [io.pedestal.log :as log]))
 
 (require
@@ -13,6 +14,7 @@
 
 (defmethod aero/reader 'ig/ref [_ _tag value] (ig/ref value))
 (defmethod aero/reader 'ig/refset [_ _tag value] (ig/refset value))
+(defmethod aero/reader 'config [_ _tag k] (config/value k))
 
 (def system-edn (io/resource "co/gaiwan/compass/system.edn"))
 (def system-local-edn (io/file "system.local.edn"))
