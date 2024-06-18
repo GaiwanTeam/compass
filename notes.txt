@@ -1,2 +1,34 @@
 https://discord.com/developers/applications/1228962758796775444/bot
 https://discord.com/developers/docs
+
+- Login/Sign-up
+- List Session
+  - Filter / Sort
+    - Starred
+    - Participating
+    - By type
+    - Has spots available
+  - Session
+    - Star/bookmark
+    - Join
+    - More details
+- Edit sessions
+  - Add/edit activity/session
+    - Name
+    - Type
+    - Location
+    - Capacity
+    - Description
+    - Image
+    - Requires ticket
+  - Organizer tools
+    - Message participants
+    - Split into groups
+    - Manage waiting list
+- People
+- Profile
+  - Name
+  - Social media / contact
+  - Privacy controls
+  - Link ticket
+  - 

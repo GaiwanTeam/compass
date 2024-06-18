@@ -10,7 +10,9 @@
 
 (require
  'co.gaiwan.compass.db
- 'co.gaiwan.compass.http)
+ 'co.gaiwan.compass.http
+ 'co.gaiwan.compass.css
+ )
 
 (defmethod aero/reader 'ig/ref [_ _tag value] (ig/ref value))
 (defmethod aero/reader 'ig/refset [_ _tag value] (ig/refset value))

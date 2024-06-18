@@ -53,7 +53,8 @@
                  middleware/wrap-render
                  middleware/wrap-identity
                  #_handler
-                 ;; ^^^^^^^  Response goes up]}))
+                 ;; ^^^^^^^  Response goes up
+                 ]}))
 
 (defmethod ig/init-key :compass/http [_ {:keys [port]}]
   (jetty/run-jetty #((handler) %) {:port port

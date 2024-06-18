@@ -1,0 +1,15 @@
+{
+    "--gray-0-hsl": {"$value": "210 17% 98%", "$type": "color"},
+    "--gray-1-hsl": {"$value": "210 17% 95%", "$type": "color"},
+    "--gray-2-hsl": {"$value": "210 16% 93%", "$type": "color"},
+    "--gray-3-hsl": {"$value": "210 14% 89%", "$type": "color"},
+    "--gray-4-hsl": {"$value": "210 14% 83%", "$type": "color"},
+    "--gray-5-hsl": {"$value": "210 11% 71%", "$type": "color"},
+    "--gray-6-hsl": {"$value": "210 7% 56%", "$type": "color"},
+    "--gray-7-hsl": {"$value": "210 9% 31%", "$type": "color"},
+    "--gray-8-hsl": {"$value": "210 10% 23%", "$type": "color"},
+    "--gray-9-hsl": {"$value": "210 11% 15%", "$type": "color"},
+    "--gray-10-hsl": {"$value": "214 14% 10%", "$type": "color"},
+    "--gray-11-hsl": {"$value": "216 16% 6%", "$type": "color"},
+    "--gray-12-hsl": {"$value": "210 40% 2%", "$type": "color"},
+}
