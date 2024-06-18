@@ -5,8 +5,7 @@
    [clojure.java.io :as io]
    [charred.api :as charred]))
 
-(o/import-tokens! (charred/read-json (io/resource "open-props.tokens.json")))
-(o/import-tokens! (charred/read-json (io/resource "open-props.grays-hsl.json")))
+(o/import-tokens! (charred/read-json (io/resource "open-props.tokens.json")) {:include-values? false})
 
 (o/defprop --hoc-pink "#e25f7d")
 (o/defprop --surface-1)
@@ -24,3 +23,16 @@
 (o/defutil rounded   {:border-radius "100%"})
 (o/defutil w-full    {:width "100%"})
 (o/defutil h-full    {:height "100%"})
+
+;; openprops
+(o/defprop --shadow-1)
+(o/defprop --shadow-2)
+(o/defprop --shadow-3)
+(o/defprop --shadow-4)
+(o/defprop --shadow-5)
+(o/defprop --inner-shadow-0)
+(o/defprop --inner-shadow-1)
+(o/defprop --inner-shadow-2)
+(o/defprop --inner-shadow-3)
+(o/defprop --inner-shadow-4)
+(o/defprop --inner-shadow-5)

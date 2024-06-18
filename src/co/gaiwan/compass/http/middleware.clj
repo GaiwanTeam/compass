@@ -6,6 +6,8 @@
    [lambdaisland.hiccup :as hiccup]
    [reitit.ring :as ring]))
 
+(swap! hiccup/kebab-prefixes conj "cx-")
+
 (defn wrap-render
   "Handle rendering of hiccup for routes with backend rendering.
 

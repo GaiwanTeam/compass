@@ -8,12 +8,6 @@
    [garden.compiler :as gc]
    [lambdaisland.ornament :as o]))
 
-(o/set-tokens!
- {:components
-  (with-meta
-    tokens/components
-    {:replace true})})
-
 (defn spit-styles []
   (spit "resources/public/css/styles.css"
         (gc/compile-css
