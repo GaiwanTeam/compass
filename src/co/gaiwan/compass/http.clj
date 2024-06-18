@@ -45,11 +45,15 @@
   (ring/ring-handler
    (router)
    (default-handler {})
-   {:middleware [(fn [h]
+   {:middleware [;; vvvvvvv  Request goes down
+                 (fn [h]
                    (fn [r]
                      (assoc-in (h r) [:headers "Max-Age"] "0")))
                  [ring-defaults/wrap-defaults ring-default-config]
-                 middleware/wrap-render]}))
+                 middleware/wrap-render
+                 middleware/wrap-identity
+                 #_handler
+                 ;; ^^^^^^^  Response goes up]}))
 
 (defmethod ig/init-key :compass/http [_ {:keys [port]}]
   (jetty/run-jetty #((handler) %) {:port port

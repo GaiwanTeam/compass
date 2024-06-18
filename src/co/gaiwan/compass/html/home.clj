@@ -6,8 +6,10 @@
    [lambdaisland.ornament :as o]))
 
 (o/defstyled top-bar :nav
-  ([]
-   [:a {:href (oauth/flow-init-url)} "Sign-in with Discord"]))
+  ([user]
+   (if-let [name (:user/name user)]
+     name
+     [:a {:href (oauth/flow-init-url)} "Sign-in with Discord"])))
 
 (o/defprop --arc-degrees "240deg")
 (o/defprop --arc-thickness "40px")
@@ -45,7 +47,7 @@
            "Babashka Workshop"
            "The Curious Case of the Unexpected Unquote-Splice"
            "Bookswap"]
-   :speaker ["Eric Normand" "Jack Rusher" "James Reeves" "Francine Bennett" "Sophia Velten" "Michiel Borkent, Christian Johansen, Teodor Dorlunt" nil nil]
+   :speaker ["Eric Normand" "Jack Rusher" "James Reeves" "Sophia Velten" "Michiel Borkent, Christian Johansen, Teodor Dorlunt" nil nil]
    :type [:talk :workshop :office-hours :workshop :activity]
    :organized ["Heart of Clojure" "Community" "Jordan Miller" "London Clojurians" "Dave Liepmann"]
    :day ["Wednesday" "Thursday"]
@@ -89,7 +91,7 @@
   :p-3
   flex-col
   {:gap "var(--size-3)"}
-  ([]
+  ([user]
    [:<>
-    [top-bar]
+    [top-bar user]
     (repeatedly 1 #(do [session-card (rand-session)]))]))

@@ -8,4 +8,4 @@
   {:status    200
    :headers   {"Content-Type" "text/html"}
    :html/head [:title "Conference Compass"]
-   :html/body [home/home]})
+   :html/body [home/home (:identity req)]})

@@ -1,6 +1,7 @@
 (ns co.gaiwan.compass.http.middleware
   (:require
    [clojure.string :as str]
+   [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.layout :as layout]
    [lambdaisland.hiccup :as hiccup]
    [reitit.ring :as ring]))
@@ -48,3 +49,15 @@
                                           body)))
             (assoc-in [:headers "content-type"] "text/html; charset=utf-8"))
         res))))
+
+(defn wrap-identity [handler]
+  (fn [req]
+    (handler
+     (if-let [uuid (get-in req [:session :identity])]
+       (assoc req :identity
+              (db/q '[:find (pull ?u [*]) .
+                      :in $ ?uid
+                      :where [?u :user/uuid ?uid]]
+                    (db/db)
+                    uuid))
+       req))))

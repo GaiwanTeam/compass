@@ -1,21 +1,30 @@
 (ns co.gaiwan.compass.http.oauth
   (:require
+   [clojure.string :as str]
    [co.gaiwan.compass.config :as config]
-   [hato.client :as hato]
-   [lambdaisland.uri :as uri]
+   [co.gaiwan.compass.db :as db]
+   [co.gaiwan.compass.util :as util]
    [datomic.api :as d]
-   [co.gaiwan.compass.db :as db]))
+   [hato.client :as hato]
+   [lambdaisland.uri :as uri]))
 
 (def discord-oauth-endpoint "https://discord.com/oauth2/authorize")
 (def discord-api-endpoint "https://discord.com/api/v10")
 
-(defn flow-init-url []
-  (-> (uri/uri discord-oauth-endpoint)
-      (uri/assoc-query*
-       {:client_id     (config/value :discord/app-id)
-        :response_type "code"
-        :redirect_uri  (str (config/value :compass/origin) "/oauth2/discord/callback")
-        :scope         "identify email"})))
+(defn flow-init-url
+  ([]
+   (flow-init-url ["email" "identify"]))
+  ([scopes]
+   (-> (uri/uri discord-oauth-endpoint)
+       (uri/assoc-query*
+        {:client_id     (config/value :discord/client-id)
+         :response_type "code"
+         :redirect_uri  (str (config/value :compass/origin) "/oauth2/discord/callback")
+         :scope         (str/join " " scopes)}))))
+
+;; Add as bot to server
+#_
+(println (str (flow-init-url ["bot" "applications.commands"])))
 
 (defn exchange-code [code]
   (hato/post
@@ -38,24 +47,31 @@
 (defn GET-callback [{:keys [query-params]}]
   (let [code                  (get query-params "code")
         {:keys [status body]} (exchange-code code)]
-    (when (= 200 status)
+    (if (not= 200 status)
+      {:status  302
+       :headers {"Location" "/"}
+       :flash   [:p
+                 "Discord OAuth2 exchange failed."
+                 [:pre (util/pprint-str body)]]
+       :session {:identity nil}}
       (let [{:keys [access_token refresh_token expires_in]} body
-            {:keys [global_name email username]}            (fetch-user-info access_token)]
-        (d/transact
-         (db/conn)
-         [{:user/email            email
-           :user/name             global_name
-           :user/handle           username
-           :discord/access-token  access_token
-           :discord/refresh-token refresh_token
-           :discord/expires-at    (.plusSeconds (java.time.Instant/now) (- expires_in 60))}])))
-    {:status  302
-     :headers {"Location" "/"}
-     :flash   (if (= 200 status)
-                "You are signed in"
-                "Discord OAuth2 exchange failed. Try again?")
-     #_:session
-     }))
+            {:keys [id global_name email username]}         (fetch-user-info access_token)
+            user-uuid                                       (:user/uuid (d/entity (db/db) [:user/email email]) (random-uuid))
+            tx-data
+            [{:user/uuid             user-uuid
+              :user/email            email
+              :user/name             global_name
+              :user/handle           username
+              :discord/id            id
+              :discord/access-token  access_token
+              :discord/refresh-token refresh_token
+              :discord/expires-at    (.plusSeconds (java.time.Instant/now) (- expires_in 60))}]]
+        (def tx-data tx-data)
+        @(db/transact tx-data )
+        {:status  302
+         :headers {"Location" "/"}
+         :flash   [:p "You are signed in!"]
+         :session {:identity user-uuid}}))))
 
 (defn routes []
   ["/oauth2"
