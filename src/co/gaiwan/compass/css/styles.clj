@@ -1,5 +1,6 @@
-(ns co.gaiwan.compass.css.styles)
+(ns co.gaiwan.compass.css.styles
+  (:require [lambdaisland.ornament :as o]))
 
-(def styles
-  [
-   ])
+(o/defrules resets
+  [[#{:ul :ol} :list-none :m-0 :p-0]
+   [:body :overflow-x-hidden :w-screen]])

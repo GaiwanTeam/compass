@@ -4,9 +4,10 @@
    [clojure.string :as str]
    [co.gaiwan.compass.css.colors :as colors]
    [co.gaiwan.compass.css.tokens :as tokens]
-   [co.gaiwan.compass.css.styles :as styles]
    [garden.compiler :as gc]
    [lambdaisland.ornament :as o]))
+
+(require 'co.gaiwan.compass.css.styles)
 
 (defn spit-styles []
   (spit "resources/public/css/styles.css"

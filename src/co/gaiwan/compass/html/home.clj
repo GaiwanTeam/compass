@@ -2,6 +2,7 @@
   {:ornament/prefix "home-"}
   (:require
    [co.gaiwan.compass.html.graphics :as graphics]
+   [co.gaiwan.compass.html.sessions :as sessions]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.http.oauth :as oauth]
    [lambdaisland.ornament :as o]))
@@ -10,8 +11,7 @@
   t/flex
   t/surface-1
   {:align-items "center"
-   :padding t/--size-3
-   }
+   :padding t/--size-3}
   [:h1 {:font-size   t/--font-size-5
         :margin-right "auto"
         :margin-left t/--size-2}]
@@ -19,13 +19,11 @@
          :flex-shrink 0
          :width       t/--font-size-5
          :height      t/--font-size-5}]
-  [graphics/cross {:display "none"}]
   ([user]
    [:<>
     [graphics/compass-logo]
     [:h1 "Compass"]
     [:button {:cx-toggle "menu-open" :cx-target "body"}
-     [graphics/cross]
      [graphics/hamburger]]
     ]))
 
@@ -37,36 +35,58 @@
 (o/defstyled menu-panel :nav
   t/surface-2
   t/h-full
+  [:svg {:width       t/--font-size-5
+         :height      t/--font-size-5}]
+  [:.bar :flex :justify-between
+   {:padding t/--size-3}]
+  [:li {:font-size t/--font-size-3
+        :line-height t/--font-size-6
+        :border-bottom (str "1px solid " t/--surface-4)}]
   {:overflow "hidden"
-   :animation "var(--animation-slide-in-left) forwards"
-   :padding t/--size-3
-   :box-shadow t/--shadow-4
-   :position "absolute"
+   :transition "transform 300ms ease-in"
+   :box-shadow t/--shadow-5
+   :position "fixed"
+   :width t/--size-fluid-10
    :right 0
-   :top 0
-   :width 0}
+   :max-width "100vw"
+   :transform "translate(100%, 0)"
+   :z-index 1}
   ([]
-   "Menu"))
+   [:<>
+    [:div.bar
+     "Menu"
+     [:button {:cx-toggle "menu-open" :cx-target "body"}
+      [graphics/cross]]]
+    [:ul
+     [:li [:a {:href "/"} "Sessions & Activities"]]
+     [:li [:a {:href "/"} "Attendees"]]
+     [:li [:a {:href "/"} "Profile & Settings"]]
+     [:li [:a {:href "/"} "Create Activity"]]]]))
 
 (o/defrules toggle-menu-button)
 
 (o/defrules toggle-menu
   [:body.menu-open
-   [menu-panel {:width t/--size-fluid-9}]
-   [graphics/cross {:display "block"}]
-   [graphics/hamburger {:display "none"}]])
+   [menu-panel {:transform "translate(0, 0)"}]
+   ])
 
-(o/defined-garden)
 
 (o/defstyled home :div
-  [:main {:padding t/--size-3}]
-  [:>div {:position "relative"}]
+  [:main {:padding t/--size-3
+          }
+   ]
+  {:max-width "100vw"}
+  :overflow-hidden
+  [sessions/session-card :mb-3]
   ([user]
    [:<>
+    [menu-panel]
     [nav-bar user]
-    [:div
-     [:main
-      "content"]
-     [menu-panel]]
+    [:main
+     [sessions/session-card (sessions/rand-session)]
+     [sessions/session-card (sessions/rand-session)]
+     [sessions/session-card (sessions/rand-session)]
+     [sessions/session-card (sessions/rand-session)]
+     [sessions/session-card (sessions/rand-session)]]
     ]))
 

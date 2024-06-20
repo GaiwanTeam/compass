@@ -58,25 +58,39 @@
   :p-tb-2
   :p-lr-3
   {:border (str "1px solid " --surface-3)}
-  [:&.talk {:background-color "light-dark(var(--blue-2), var(--blue-9))"}]
-  [:&.workshop {:background-color "light-dark(var(--teal-2), var(--teal-8))"}]
+  [:.type {:background-color "light-dark(var(--red-2), var(--red-9))"}]
+  [:&.talk [:.type {:background-color "light-dark(var(--blue-2), var(--blue-9))"}]]
+  [:&.workshop [:.type {:background-color "light-dark(var(--teal-2), var(--teal-8))"}]]
   [:.title
    :m-b-3
    {:font-size --font-size-3
-    :max-inline-size "none"}]
-  [:.content  flex]
+    :max-inline-size "none"
+    }]
+  [:.datetime :flex :flex-col :items-center :justify-center
+   {:font-size t/--font-size-3} :font-bold]
+  [:.guage :p-2]
+  [:.type :font-bold {
+                      :padding t/--size-1
+                      :writing-mode "sideways-lr"
+                      :text-align "center"
+                      :font-variant "small-caps"}]
+  :flex :gap-3
   [capacity-gauge :w-100px :m-r-3]
-  [:.details flex-col]
+  [:.details flex-col :py-2]
   ([{:keys [type title speaker organized day date time location]}]
    [:<> {:class (name type)}
-    [:h2.title title]
-    [:div.content
+    [:div.type (name type)]
+    [:div.datetime
+     [:div (subs day 0 3)]
+     [:div date]
+     [:div time]]
+    [:div.guage
      [capacity-gauge {:capacity (rand)
-                      :image (str "var(--gradient-" (inc (rand-int 7)) ")")}]
-     [:div.details
-      (when speaker
-        [:p.speaker "Speaker " speaker])
+                      :image (str "var(--gradient-" (inc (rand-int 7)) ")")}]]
+    [:div.details
+     [:h2.title title]
+     (when speaker
+       [:p.speaker "Speaker " speaker])
 
-      [:div.time day " " date " " time]
-      [:div.loc location]
-      [:p.host "Organized by "organized]]]]))
+     [:div.loc location]
+     [:p.host "Organized by "organized]]]))
