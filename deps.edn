@@ -11,8 +11,10 @@
   ring/ring-defaults      {:mvn/version "0.5.0"}
 
   com.lambdaisland/hiccup   {:mvn/version "0.9.48"}
-  com.lambdaisland/ornament {:git/sha "8c60b4f03c81a3d7755d39360eca29a52db98c0a"
-                             :git/url "https://github.com/lambdaisland/ornament.git"}#_{:local/root "/home/arne/github/lambdaisland/ornament"}#_{:mvn/version "1.12.107"}
+  com.lambdaisland/ornament
+  #_{:git/sha "8c60b4f03c81a3d7755d39360eca29a52db98c0a"
+     :git/url "https://github.com/lambdaisland/ornament.git"}
+  {:local/root "/home/arne/github/lambdaisland/ornament"}#_{:mvn/version "1.12.107"}
 
   io.pedestal/pedestal.log       {:mvn/version "0.7.0-rc-1"}
   ch.qos.logback/logback-classic {:mvn/version "1.5.6"}

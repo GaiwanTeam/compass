@@ -20,13 +20,13 @@
 
 (o/defstyled capacity-gauge :div
   "Image with an arc around it to indicate how full a session is."
-  flex square
-  [arc w-full]
+  :flex :aspect-square
+  [arc :w-full]
   {--arc-thickness "10%"}
-  [:.img w-full
+  [:.img :w-full
    {:padding --arc-thickness
     :margin-left "-100%"}
-   [:>* w-full square rounded]]
+   [:>* :w-full :aspect-square :rounded-full]]
   ([{:keys [capacity image]}]
    [:<> {:style {--arc-degrees (str (* 360.0 capacity) "deg")}}
     [arc]
@@ -53,30 +53,25 @@
   (update-vals test-values rand-nth))
 
 (o/defstyled session-card :div
-  surface-2
+  :flex :gap-3
+  :surface-2
   :shadow-4
-  :p-tb-2
-  :p-lr-3
-  {:border (str "1px solid " --surface-3)}
+  :px-3
+  :py-2
+  :boder :border-solid :border-surface-3
   [:.type {:background-color "light-dark(var(--red-2), var(--red-9))"}]
   [:&.talk [:.type {:background-color "light-dark(var(--blue-2), var(--blue-9))"}]]
   [:&.workshop [:.type {:background-color "light-dark(var(--teal-2), var(--teal-8))"}]]
-  [:.title
-   :m-b-3
-   {:font-size --font-size-3
-    :max-inline-size "none"
-    }]
-  [:.datetime :flex :flex-col :items-center :justify-center
-   {:font-size t/--font-size-3} :font-bold]
+  [:.title :mb-3 :font-size-3]
+  [:.datetime :flex-col :items-center :justify-center :font-size-3 :font-bold]
   [:.guage :p-2]
-  [:.type :font-bold {
-                      :padding t/--size-1
-                      :writing-mode "sideways-lr"
-                      :text-align "center"
-                      :font-variant "small-caps"}]
-  :flex :gap-3
-  [capacity-gauge :w-100px :m-r-3]
-  [:.details flex-col :py-2]
+  [:.type :font-bold
+   :p-1
+   :text-center
+   :small-caps
+   {:writing-mode "sideways-lr"}]
+  [capacity-gauge :w-100px :mr-3]
+  [:.details :flex-col :py-2]
   ([{:keys [type title speaker organized day date time location]}]
    [:<> {:class (name type)}
     [:div.type (name type)]
