@@ -140,4 +140,3 @@
              (if (re-find #"^[0-9a-fA-F]{6}$" color-code)
                (orig color-map color)
                color-code))))))))
-

@@ -11,4 +11,3 @@
     {:name :index
      :get {:handler home/GET-home}}]
    (oauth/routes)])
-

@@ -9,4 +9,5 @@
   </root>
   <logger name="co.gaiwan" level="debug" />
   <logger name="org.eclipse" level="warn" />
+  <logger name="datomic.process-monitor" level="warn" />
 </configuration>
