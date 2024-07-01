@@ -32,7 +32,3 @@
     [:path {:d "M 4.0348568,1.5348556 15.965143,13.465142"}]
     [:path {:d "M 15.965143,1.5348556 4.0348568,13.465142"}]
     ]))
-
-
-(println
- (lambdaisland.hiccup/render[cross {:width "20" :class "xxx"}]))

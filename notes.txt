@@ -1,6 +1,12 @@
 https://discord.com/developers/applications/1228962758796775444/bot
 https://discord.com/developers/docs
 
+- Discord bot
+  - Add to HoC server
+  - Give them a role for the activities app
+  - Ask for their Ti.to booking code
+  - Give them a role for ticket holder
+  - reminder for upcoming activities
 - Login/Sign-up
 - List Session
   - Filter / Sort
@@ -8,27 +14,53 @@ https://discord.com/developers/docs
     - Participating
     - By type
     - Has spots available
+    - Location
   - Session
+    - More details (description)
     - Star/bookmark
-    - Join
-    - More details
+    - Join (participate)
+    - Cancel
+    - Sign up for waiting list
+    - See participants (if public)
 - Edit sessions
   - Add/edit activity/session
     - Name
     - Type
     - Location
+      - Het Depot - main stage
+      - Het Depot - Bar
+      - Hal 5 - zone A
+      - Hal 5 - zone B
+      - Hal 5 - HoC Café
+      - Hal 5 - Foodcourt
+      - Hal 5 - park
+      - Hal 5 - outside seating
+      - Hal 5 - long table
     - Capacity
     - Description
     - Image
-    - Requires ticket
+    - Requires ticket?
+    - Visible/published?
   - Organizer tools
-    - Message participants
+    - Message participants (discord)
+      - Or create private channel
     - Split into groups
+      - e.g. Mystery dinner - Split into groups of 5-8 people
+      - e.g. #PairWithMe - Split into groups of 2
     - Manage waiting list
 - People
+  
 - Profile
+  - Publicly visible name (can be alias)
   - Name
+  - Email
   - Social media / contact
   - Privacy controls
-  - Link ticket
-  - 
+    - Fine grained
+    - Unlisted / Listed / Connected
+  - Link ticket (or via discord bot?)
+  - Send connection request
+    - QR code?
+    - Discord - do you want to connect with this person?
+
+
