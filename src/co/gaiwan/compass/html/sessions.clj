@@ -89,3 +89,14 @@
 
      [:div.loc location]
      [:p.host "Organized by "organized]]]))
+
+;; Create / edit
+
+(o/defstyled session-form :div
+  ([params]
+   [:<>
+    [:h2 "Edit Activity"]
+    [:form {:method "POST" :action "/sessions"}
+     [:label {:for "name"} "Activity Name"]
+     [:input {:id "name" :name "name"}]
+     [:input {:type "submit"}]]]))

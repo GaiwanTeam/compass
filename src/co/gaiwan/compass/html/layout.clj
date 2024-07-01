@@ -1,6 +1,19 @@
-(ns co.gaiwan.compass.html.layout)
+(ns co.gaiwan.compass.html.layout
+  (:require
+   [ring.middleware.anti-forgery :as anti-forgery]
+   [charred.api :as charred]
+   [co.gaiwan.compass.html.navigation :as nav]
+   [lambdaisland.ornament :as o]))
 
-(defn base-layout [{:keys [head body flash] :as opts}]
+(o/defrules layout
+  [:body
+   :m-2
+   {:max-width "100vw"}
+   [:>main :p-3]
+
+   ])
+
+(defn base-layout [{:keys [head body flash user request] :as opts}]
   [:html
    [:head
     [:meta {:charset "UTF-8"}]
@@ -13,7 +26,19 @@
     [:script {:src "/js/cx.js"}]
     [:script {:src "/js/live.js#css"}]
     head]
-   [:body
-    (when flash
-      [:p.flash flash])
-    body]])
+   [:body {;; Have HTMX handle normal links
+           :hx-boost true
+           ;; Only replace what's in <main>, the navbar/menu don't get replaced
+           :hx-select "main"
+           :hx-target "main"
+           ;; CSRF
+           :hx-headers (charred/write-json-str {"x-csrf-token" anti-forgery/*anti-forgery-token*})
+           }
+    [nav/menu-panel user]
+    [nav/nav-bar user]
+    [:main
+     (when flash
+       [:p.flash flash])
+     body
+     #_
+     [:pre (with-out-str (clojure.pprint/pprint request))]]]])

@@ -6,7 +6,8 @@
    [co.gaiwan.compass.util :as util]
    [datomic.api :as d]
    [hato.client :as hato]
-   [lambdaisland.uri :as uri]))
+   [lambdaisland.uri :as uri]
+   [ring.util.response :as response]))
 
 (def discord-oauth-endpoint "https://discord.com/oauth2/authorize")
 (def discord-api-endpoint "https://discord.com/api/v10")
@@ -74,7 +75,14 @@
          :session {:identity user-uuid}}))))
 
 (defn routes []
-  ["/oauth2"
-   ["/discord"
-    ["/callback"
-     {:get {:handler GET-callback}}]]])
+  [""
+   ["/oauth2"
+    ["/discord"
+     ["/callback"
+      {:get {:handler GET-callback}}]]]
+   ["/logout"
+    {:get {:handler (fn [req]
+                      (assoc
+                       (response/redirect "/")
+                       :flash "You were signed out"
+                       :session {}))}}]])

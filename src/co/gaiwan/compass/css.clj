@@ -27,14 +27,12 @@
   (when (.isFile (io/file (str (:path e))))
     (when (.endsWith (str (:path e)) ".clj")
       (require
-       (doto
-           (symbol
-            (-> (str (:path e))
-                (str/replace #".*/src/" "")
-                (str/replace #"/" ".")
-                (str/replace #"_" "-")
-                (str/replace #"\.clj$" "")))
-         prn)
+       (symbol
+        (-> (str (:path e))
+            (str/replace #".*/src/" "")
+            (str/replace #"/" ".")
+            (str/replace #"_" "-")
+            (str/replace #"\.clj$" "")))
        :reload)))
   (spit-styles))
 

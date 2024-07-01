@@ -47,7 +47,9 @@
                    :body (hiccup/render (if layout-fn
                                           (layout-fn {:head head
                                                       :body body
-                                                      :flash (:flash req)})
+                                                      :flash (:flash req)
+                                                      :user (:identity req)
+                                                      :request req})
                                           body)))
             (assoc-in [:headers "content-type"] "text/html; charset=utf-8"))
         res))))

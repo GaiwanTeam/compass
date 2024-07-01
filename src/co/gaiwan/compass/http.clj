@@ -50,8 +50,8 @@
                    (fn [r]
                      (assoc-in (h r) [:headers "Max-Age"] "0")))
                  [ring-defaults/wrap-defaults ring-default-config]
-                 middleware/wrap-render
                  middleware/wrap-identity
+                 middleware/wrap-render
                  #_handler
                  ;; ^^^^^^^  Response goes up
                  ]}))
