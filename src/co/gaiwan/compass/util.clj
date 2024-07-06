@@ -2,32 +2,37 @@
   (:import [java.time Instant ZonedDateTime ZoneId]
            [java.time.format DateTimeFormatter])
   (:require
+   [clojure.core.protocols :as p]
+   [clojure.datafy :as d]
    [clojure.pprint :as pprint]))
 
-(defn format-instant
+(defn datafy-instant
   "Output: 
-  
-  ```
-  {:time #object[java.time.LocalTime],
-   :day-of-week #object[java.time.DayOfWeek],
-   :month LONG,
-   :day-of-month LONG}
-  ```"
+   ```
+   {:time #object[java.time.LocalTime],
+    :day-of-week LONG,
+    :month LONG,
+    :day-of-month LONG}
+   ```"
   [instant]
   (let [zone-id (ZoneId/systemDefault)
         zdt (ZonedDateTime/ofInstant instant zone-id)
-        day-of-week (.getDayOfWeek zdt)
+        day-of-week (.getValue (.getDayOfWeek zdt))
         month (.getMonthValue zdt)
         day-of-month (.getDayOfMonth zdt)
         time (.toLocalTime zdt)]
-     {:time time
-      :day-of-week day-of-week
-      :month month
-      :day-of-month day-of-month}))
+    {:time time
+     :day-of-week day-of-week
+     :month month
+     :day-of-month day-of-month}))
+
+(extend-protocol p/Datafiable
+  Instant
+  (datafy [d]
+    (datafy-instant d)))
 
 (comment
-  (format-instant (Instant/now))
-  )
+  (d/datafy (Instant/now)))
 
 (defn pprint-str [o]
   (with-out-str (pprint/pprint o)))

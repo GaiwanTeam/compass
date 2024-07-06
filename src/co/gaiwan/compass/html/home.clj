@@ -8,6 +8,7 @@
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.util :as util]
+   [clojure.datafy :as df]
    [lambdaisland.ornament :as o]))
 
 (def session-query
@@ -17,6 +18,10 @@
     [?l :location/name ?location-name]
     [?e :session/type ?t]
     [?t :db/ident ?type-keyword]])
+
+(defn week-day-str [day]
+  (let [week-days ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"]]
+    (nth week-days (dec day))))
 
 (defn session-model
   "session data from database to frontend
@@ -28,14 +33,15 @@
         {:session/keys [time speaker name capacity organized
                         duration]} session-graph
         {:keys [day-of-week month day-of-month
-                time]} (util/format-instant time)
+                time]} (df/datafy time)
+        day-of-week-str (week-day-str day-of-week)
         time-str (format "%02d.%02d" (.getHour time) (.getMinute time))
         date-str (format "%02d.%02d" month day-of-month)]
     {:title name
      :speaker speaker
      :type type-keyword
      :organized organized
-     :day (.name day-of-week)
+     :day day-of-week-str
      :date date-str
      :time time-str
      :location location-name}))
