@@ -1,4 +1,13 @@
 (ns co.gaiwan.compass.db
+  "System-level component.
+  
+  The config of db is in the file 
+  'resources/co/gaiwan/compass/system.edn' 
+  
+  - initialize the database schema
+  - import the database init data
+  - provide the basic db API: `q`, `transact`, `conn`, `db`
+  "
   (:require
    [clojure.walk :as walk]
    [datomic.api :as d]
