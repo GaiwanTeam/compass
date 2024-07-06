@@ -1,4 +1,16 @@
 (ns co.gaiwan.compass.http
+  "System-level component: web server
+  
+  The config of http is in the file
+  'resources/co/gaiwan/compass/system.edn' 
+  
+  Wiring the following components together
+    - jetty  
+      - ring handler
+        - compass routes
+        - compass default handler
+        - compass middleware
+  "
   (:require
    [co.gaiwan.compass.http.middleware :as middleware]
    [co.gaiwan.compass.http.routes :as routes]
