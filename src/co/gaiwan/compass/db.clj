@@ -1,13 +1,4 @@
 (ns co.gaiwan.compass.db
-  "System-level component.
-  
-  The config of db is in the file 
-  'resources/co/gaiwan/compass/system.edn' 
-  
-  - initialize the database schema
-  - import the database init data
-  - provide the basic db API: `q`, `transact`, `conn`, `db`
-  "
   (:require
    [clojure.walk :as walk]
    [datomic.api :as d]
@@ -34,13 +25,135 @@
    [:discord/expires-at :instant "Expiration timestamp for the OAuth2 token"]
    [:discord/refresh-token :string "Discord OAuth2 refresh-token"]
 
-   [:session/name :string "Title of the talk/workshop/activity"]
+   [:session/name :string "Title of the talk/workshop/activity" :identity]
+   [:session/speaker :string "Name of the speaker"]
+   [:session/type :ref "Type of the session"]
+   [:session/organized :string "Who organize this session"]
    [:session/time :instant "Time the session starts"]
    [:session/duration :string "Duration of the session in ISO interval notation"]
    [:session/location :ref "Where does the session take place"]
    [:session/capacity :long "Number of people that are able to join this session"]
 
-   [:location/name :string "Name of the location"]])
+   [:location/name :string "Name of the location" :identity]])
+
+(def location-data
+  [{:location/name "Het Depot"}
+   {:location/name "Hal 5"}
+   {:location/name "Hal 5 - Workshop Area"}
+   {:location/name "HoCafé"}])
+
+(def session-data
+  [{:session/name "Living With Legacy Code"
+    :session/speaker "James Reeves"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Open Hearts for Diversity"
+    :session/speaker "Katja Böhnke"
+    :session/type :session/workshop
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Hal 5"] 
+    :session/capacity 50}
+   {:session/name "TimeLines: Live Musical"
+    :session/speaker "Dimitris Kyriakoudis"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Hal 5 - Workshop Area"] 
+    :session/capacity 50}
+   {:session/name "Making UI great again with Humble UI"
+    :session/speaker "Nikita Prokopov"
+    :session/type :session/workshop
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "HoCafé"] 
+    :session/capacity 50}
+   {:session/name "Opening Keynote"
+    :session/speaker "Lu Wilson"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Sailing with Scicloj: A Bayesian Adventure"
+    :session/speaker "Sami Kallinen"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Build full-stack ClojureScript apps with and without Sitefox"
+    :session/speaker "Chris McCormick"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Cursive office hours"
+    :session/speaker "Colin Fleming"
+    :session/type :session/office-hours
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "An introduction to application.garden"
+    :session/speaker "Jack Rusher & Paolo (Sohalt)"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Responsible Data and AI"
+    :session/speaker "Anna Colom"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "The Shoulders of Giants or Uncovering the Fundational Ideas of Lisp"
+    :session/speaker "Daniel Szmulewicz"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Babashka in practice"
+    :session/speaker "Michiel Borkent, Teodor Heggelund, and Christian Johansen"
+    :session/type :session/workshop
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Beyond the Hype: Obstacles on the Path to Clojure Adoption"
+    :session/speaker "Mitesh Shah"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}
+   {:session/name "Richer SQL"
+    :session/speaker "Jeremy Taylor"
+    :session/type :session/talk
+    :session/organized "Heart of Clojure"
+    :session/time #inst "2024-09-18"   
+    :session/duration "PT45M"
+    :session/location [:location/name "Het Depot"] 
+    :session/capacity 50}])
 
 (defn inflate-enums [e]
   (map #(do {:db/ident %}) e))
@@ -100,6 +213,7 @@
 (comment
   (transact (concat (inflate-enums enums)
                     (inflate-schema schema)))
+   
   (q
    '[:find (pull ?e [*])
      :where [?e :db/ident :user/uuid]]
@@ -109,8 +223,16 @@
      :where [?e :user/uuid]]
    (db))
 
+  ;; query all the sessions
+  (q
+   '[:find [(pull ?e [*]) ...]
+     :where [?e :session/name]]
+   (db))
 
   (d/transact (conn) (inflate-schema schema))
+  ;; import session-data
+  (transact location-data)
+  (transact session-data)
   )
 
 (clojure.reflect/reflect java.time.Instant)
