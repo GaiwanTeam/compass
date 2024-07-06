@@ -1,4 +1,5 @@
 (ns co.gaiwan.compass.html.home
+  "The UI of the compass system"
   {:ornament/prefix "home-"}
   (:require
    [co.gaiwan.compass.html.graphics :as graphics]

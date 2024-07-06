@@ -1,4 +1,9 @@
 (ns co.gaiwan.compass
+  "The entrance point of the compass
+  
+  - read the config
+  - manage the state and reloadable workflow
+  "
   (:require
    [aero.core :as aero]
    [clojure.java.io :as io]
