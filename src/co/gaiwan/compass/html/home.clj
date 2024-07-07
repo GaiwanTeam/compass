@@ -35,7 +35,7 @@
         {:keys [day-of-week month day-of-month
                 time]} (df/datafy time)
         day-of-week-str (week-day-str day-of-week)
-        time-str (format "%02d.%02d" (.getHour time) (.getMinute time))
+        time-str (format "%02d:%02d" (.getHour time) (.getMinute time))
         date-str (format "%02d.%02d" month day-of-month)]
     {:title name
      :speaker speaker
