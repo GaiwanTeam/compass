@@ -33,10 +33,10 @@
         {:session/keys [time speaker name capacity organized
                         duration]} session-graph
         {:keys [day-of-week month day-of-month
-                time]} (df/datafy time)
+                hour minute]} (df/datafy time)
         day-of-week-str (week-day-str day-of-week)
-        time-str (format "%02d:%02d" (.getHour time) (.getMinute time))
-        date-str (format "%02d.%02d" month day-of-month)]
+        date-str (format "%02d.%02d" day-of-month month)
+        time-str (format "%02d:%02d" hour minute)]
     {:title name
      :speaker speaker
      :type type-keyword

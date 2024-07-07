@@ -9,7 +9,8 @@
 (defn datafy-instant
   "Output: 
    ```
-   {:time #object[java.time.LocalTime],
+   {:hour LONG,
+    :minute LONG,
     :day-of-week LONG,
     :month LONG,
     :day-of-month LONG}
@@ -21,7 +22,8 @@
         month (.getMonthValue zdt)
         day-of-month (.getDayOfMonth zdt)
         time (.toLocalTime zdt)]
-    {:time time
+    {:hour (.getHour time)
+     :minute (.getMinute time)
      :day-of-week day-of-week
      :month month
      :day-of-month day-of-month}))
