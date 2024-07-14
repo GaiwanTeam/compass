@@ -1,4 +1,5 @@
 (ns co.gaiwan.compass.html.sessions
+  "Views and components (hiccup/ornament) related to sessions"
   {:ornament/prefix "sessions-"}
   (:require
    [co.gaiwan.compass.css.tokens :as t :refer :all]
@@ -26,7 +27,8 @@
   [:.img :w-full
    {:padding --arc-thickness
     :margin-left "-100%"}
-   [:>* :w-full :aspect-square :rounded-full]]
+   [:>* :w-full :aspect-square :rounded-full
+    {:background-size "contain"}]]
   ([{:keys [capacity image]}]
    [:<> {:style {--arc-degrees (str (* 360.0 capacity) "deg")}}
     [arc]
@@ -34,34 +36,11 @@
      [:div
       {:style {:background-image image}}]]]))
 
-(def test-values
-  {:title ["Cursive Office Hours"
-           "On Abstraction"
-           "Let's go to the climbing gym"
-           "Babashka Workshop"
-           "The Curious Case of the Unexpected Unquote-Splice"
-           "Bookswap"]
-   :speaker ["Eric Normand" "Jack Rusher" "James Reeves" "Sophia Velten" "Michiel Borkent, Christian Johansen, Teodor Dorlunt" nil nil]
-   :type [:talk :workshop :office-hours :workshop :activity]
-   :organized ["Heart of Clojure" "Community" "Jordan Miller" "London Clojurians" "Dave Liepmann"]
-   :day ["Wednesday" "Thursday"]
-   :date ["17.09" "18.09"]
-   :time (map #(str % ":" (rand-nth ["00" "15" "30"])) (range 9 20))
-   :location ["Het Depot" "Hal 5" "HoCafé" "Hal 5 - Workshop Area" ]})
-
-(defn rand-session []
-  (update-vals test-values rand-nth))
-
 (o/defstyled session-card :div
   :flex :gap-3
   :surface-2
   :shadow-4
-  :px-3
-  :py-2
   :boder :border-solid :border-surface-3
-  [:.type {:background-color "light-dark(var(--red-2), var(--red-9))"}]
-  [:&.talk [:.type {:background-color "light-dark(var(--blue-2), var(--blue-9))"}]]
-  [:&.workshop [:.type {:background-color "light-dark(var(--teal-2), var(--teal-8))"}]]
   [:.title :mb-3 :font-size-3]
   [:.datetime :flex-col :items-center :justify-center :font-size-3 :font-bold]
   [:.guage :p-2]
@@ -69,25 +48,28 @@
    :p-1
    :text-center
    :small-caps
-   {:writing-mode "sideways-lr"}]
+   {:writing-mode "vertical-lr"
+    :transform "rotate(180deg)"}]
   [capacity-gauge :w-100px :mr-3]
   [:.details :flex-col :py-2]
-  ([{:keys [type title speaker organized day date time location]}]
-   [:<> {:class (name type)}
-    [:div.type (name type)]
-    [:div.datetime
-     [:div (subs day 0 3)]
-     [:div date]
-     [:div time]]
+  ([{:session/keys [type title subtitle organized time location image]}]
+   [:<>
+    [:div.type (:sesion.type/name type)]
+    [:div.datetime (str time)]
+    #_[:div.datetime
+       [:div (subs day 0 3)]
+       [:div date]
+       [:div time]]
     [:div.guage
      [capacity-gauge {:capacity (rand)
-                      :image (str "var(--gradient-" (inc (rand-int 7)) ")")}]]
+                      :image (if image
+                               (str "url(" image ")")
+                               (str "var(--gradient-" (inc (rand-int 7)) ")"))}]]
     [:div.details
      [:h2.title title]
-     (when speaker
-       [:p.speaker "Speaker " speaker])
+     [:p.subtitle subtitle]
 
-     [:div.loc location]
+     [:div.loc (:location/name location)]
      [:p.host "Organized by "organized]]]))
 
 ;; Create / edit

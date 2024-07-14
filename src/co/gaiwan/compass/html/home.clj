@@ -1,5 +1,5 @@
 (ns co.gaiwan.compass.html.home
-  "The UI of the compass system"
+  "Front page views and components"
   {:ornament/prefix "home-"}
   (:require
    [co.gaiwan.compass.html.graphics :as graphics]
@@ -11,22 +11,14 @@
    [clojure.datafy :as df]
    [lambdaisland.ornament :as o]))
 
-(def session-query
-  '[:find (pull ?e [*]) ?type-keyword ?location-name
-    :where [?e :session/name]
-    [?e :session/location ?l]
-    [?l :location/name ?location-name]
-    [?e :session/type ?t]
-    [?t :db/ident ?type-keyword]])
-
 (defn week-day-str [day]
   (let [week-days ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"]]
     (nth week-days (dec day))))
 
 (defn session-model
   "session data from database to frontend
-  
-   input `x` is a vecotr of 
+
+   input `x` is a vecotr of
          `[session-graph type-keyword location-name]`"
   [v]
   (let [[session-graph type-keyword location-name] v
@@ -48,18 +40,12 @@
 
 (o/defstyled home :div
   [sessions/session-card :mb-3]
-  ([user]
+  ([{:keys [user sessions]}]
    [:<>
     [:main
-     ;; replace 
-     ;; `[sessions/session-card (sessions/rand-session)]`
-     ;; with the following let block
-     (let [session-data (db/q session-query (db/db))]
-       (map
-        (fn [x]
-          [sessions/session-card
-           (session-model x)])
-        session-data))]]))
+     (for [session sessions]
+       [sessions/session-card session]
+       )]]))
 
 (comment
   [sessions/session-card (sessions/rand-session)]

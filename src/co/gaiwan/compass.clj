@@ -1,6 +1,6 @@
 (ns co.gaiwan.compass
   "The entrance point of the compass
-  
+
   - read the config
   - manage the state and reloadable workflow
   "
@@ -18,6 +18,8 @@
  'co.gaiwan.compass.http
  'co.gaiwan.compass.css
  )
+
+(set! *print-namespace-maps* false)
 
 (defmethod aero/reader 'ig/ref [_ _tag value] (ig/ref value))
 (defmethod aero/reader 'ig/refset [_ _tag value] (ig/refset value))

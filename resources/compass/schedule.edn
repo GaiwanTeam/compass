@@ -1,0 +1,207 @@
+({:session/title
+  "The Shoulders of Giants or Uncovering the Foundational Ideas of Lisp",
+  :session/subtitle "Daniel Szmulewicz",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/daniel-szmulewicz.jpg",
+  :session/time #time/inst "2024-09-18T18:20:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "In the world of computer science, we often acknowledge that we are standing on the shoulders of giants. However, the identities and contributions of these giants are sometimes less known than we might expect. While many Lisp practitioners recognize John McCarthy as the inventor of Lisp, the story of the foundational ideas that enabled its discovery remains largely untold.\r\nThis talk aims to explore two essential questions: Why do we know so little about the foundational ideas that enable our practice, and what are those ideas and their connections?\n\n## Speakers\n\n### Daniel Szmulewicz\n\nFunctional programmer. Closet philosopher. Emacs meshugge."}
+ {:session/title "Sailing with Scicloj: A Bayesian Adventure",
+  :session/subtitle "Sami Kallinen",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/sami-kallinen.png",
+  :session/time #time/inst "2024-09-18T17:40:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "The presentation, created in collaboration with Daniel Slutsky and the Scicloj community, discusses the Scicloj project and the data science tools for Clojure. Sami Kallinen shares his personal journey of learning to sail during the Covid-19 pandemic. The main focus of the presentation is on Polar diagrams, which are crucial for assessing a boat's performance, important for racing tactics and choosing the optimal sailing routes. The speaker has collected and analyzes various data points to create these diagrams for a 46-year-old Finnish half-tonner cruising sailboat with a classic design. The primary focus is on showcasing how Clojure's data science tools are used to analyze data and construct models, especially through Bayesian analysis.\n\n## Speakers\n\n### Sami Kallinen\n\nSami is a full-stack Clojure developer, data scientist, and the founder of 8-bit-sheep.com, with experience in leading digital products and media strategy since the early 1990s. Sami has been working at KP System in Växjö, Sweden, for the past three years."}
+ {:session/title "Living With Legacy Code",
+  :session/subtitle "James Reeves",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/james-reeves.jpeg",
+  :session/time #time/inst "2024-09-18T12:30:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "A look into maintaining backward compatibility in Clojure codebases.\n\n## Speakers\n\n### James Reeves\n\nA Clojure developer since 2008, and the maintainer of several prominent libraries such as Ring, Hiccup and Integrant. James currently works as a freelance contractor just outside of London."}
+ {:session/title
+  "Build full-stack ClojureScript apps with and without Sitefox",
+  :session/subtitle "Chris McCormick",
+  :session/type :session.type/workshop,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/chris-mccormick.jpg",
+  :session/time #time/inst "2024-09-18T14:00:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/hal5,
+  :session/description
+  "Interested in building \"full stack\" ClojureScript software running on the Node ecosystem instead of Java? I'll take you step by step through different options for going all-in on ClojureScript. We'll start with simple backend-only websites and work our way up to apps with both frontend and backend components. We'll learn about shadow-cljs (front and backend), Nbb, Squint, Scittle and my web framework, Sitefox. We'll look at the tradeoffs of different approaches and learn to get web projects up and running quickly and with minimum fuss.\n\n## Speakers\n\n### Chris McCormick\n\nChris is an independent computer programmer building open source software, freelancing, and bootstrapping online micro-businesses with ClojureScript. He's always looking for efficient and joyful ways to create software, so when a friend introduced him to Clojure at a game jam and he was hooked. He also enjoys tinkering with game dev and making procedural music, and uses ClojureScript for this too."}
+ {:session/title "An Exceptionally Janky Tale",
+  :session/subtitle "Jeaye Wilkerson",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/jeaye-wilkerson.png",
+  :session/time #time/inst "2024-09-18T15:30:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "Gather 'round, friends, it's story time! Hear the adventurous tale of plunging into unknown depths and meeting new friends along the way.\r\n\r\nMeanwhile, in the interludes, we'll be plunging ourselves deep into the jank compiler and implementing our story's chapters: throw, try, catch, and finally. We won't shy away from the C++ involved, so be ready for a highly technical discussion.\r\n\r\nBy the end of the talk, you'll not only have your heart warmed, you'll also have a clear idea of how a non-trivial compiler feature is implemented, from parsing through to code generation.\n\n## Speakers\n\n### Jeaye Wilkerson\n\nJeaye has a background in C++ systems programming, focusing on games and game engines. After several years of making games, he co-founded and built an e-sports tournament startup written in full-stack Clojure. These days, he’s writing Clojure at Electronic Arts (EA) to build tooling used for making some of the world’s top games.\r\n\r\nJeaye is the creator of the jank programming language, a Clojure dialect on LLVM with a native runtime and C++ interop."}
+ {:session/title "The Wonders of Abstraction",
+  :session/subtitle "Eric Normand",
+  :session/type :session.type/keynote,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/eric-normand.jpg",
+  :session/time #time/inst "2024-09-19T18:05:00Z",
+  :session/duration "PT45M",
+  :session/location :location.type/depot,
+  :session/description
+  "Fish are to water as programmers are to abstraction. We swim in it all day, barely aware of it. We say \"abstraction\" all the time, but have we thought about what it means? \r\n\r\nI've spent 20 years asking how computers--that move electrons around in a complex circuit--do work useful to humans. Abstraction is the key. In this philosophical talk, we explore this wonderous process called abstraction. We'll wade through the everyday uses of the term, paddle out to formal definitions, and dive into why some abstractions give us incredible leverage. Along the way, we'll see how abstraction is at the heart of getting computers to do useful work. I hope you leave with a deeper appreciation of the wonders of programming.\n\n## Speakers\n\n### Eric Normand\n\nEric Normand has been programming functionally since 2001. He teaches, speaks, and writes. He consults with companies to help them build better software one function at a time. He lives with his family in Madison, Wisconsin. You can find his writing and other projects at [ericnormand.me](https://ericnormand.me/)."}
+ {:session/title "Babashka in practice",
+  :session/subtitle
+  "Michiel Borkent, Teodor Heggelund, Christian Johansen",
+  :session/type :session.type/workshop,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/michiel-borkent-teodor-heggelund-christian-johansen.png",
+  :session/time #time/inst "2024-09-18T14:30:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/hal5,
+  :session/description
+  "What is Babashka? Why should you care?\r\n\r\nIn 90 minutes you’ll get an introduction to Babashka, and hands-on experience with it through a shared programming experience with the rest of the group and two veteran Clojure programmers. You’ll learn what Babashka is, how it fits in with JVM Clojure, and how to work with it in a practical sense.\r\n\r\nThe workshop aims to be a joyful learning experience where we’ll get to know each other better and learn more about REPL-driven programming, testing Clojure, and, of course scripting with Babashka.\n\n## Speakers\n\n### Michiel Borkent\n\nMichiel Borkent (@borkdude) is the author of babashka, clj-kondo, SCI, cherry\r\nand several other Clojure projects. He has been using Clojure since 2010 as a\r\ntinkerer, lecturer and professional software developer. Since 2021 he dedicates\r\nmost his time to open source Clojure software. Hobbies include eating vegetables\r\nand walking.\n### Teodor Heggelund\n\nTeodor likes to program computers, especially with along other people. In previous lives, he has taught Elm to kids, Matlab and mechanics to students, and Python to civil engineers. His experience is that Clojure's interactivity makes it uniquely well suited to explore problems together.\n### Christian Johansen\n\nI am a Clojure developer at the Norwegian Food Safety Authority. I have 20 years of experience building software, and have done Clojure full-time for the past 10 years. I write about software development occasionally at https://cjohansen.no and regularly at https://parenteser.mattilsynet.io (in Norwegian). I am the maintainer of some open source projects, notably Portfolio (https://github.com/cjohansen/portfolio), which was sponsored by Clojurists Together in 2023. I also demonstrate pair programming and using Clojure and ClojureScript to fight zombies in the screencast https://parensofthedead.com/"}
+ {:session/title
+  "Staring into the PLFZABYSS - From the IBM AS/400 to Clojure & Datomic",
+  :session/subtitle "Philippa Markovics, Martin Kavalar",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/philippa-markovics-martin-kavalar.png",
+  :session/time #time/inst "2024-09-19T15:30:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "Starting in 2021, we naively took on the task of bringing mission-critical legacy systems in the automotive logistics sector into the modern era. \r\n\r\nThis experience report covers our eventually successful live migration from the IBM AS/400 to Clojure and Datomic. We look at both the technical and human organizational challenges we faced and share our failures and learnings along the way.\r\n\r\nThousands of globally unique 8-character column names, green-screen terminal UIs, skunk work projects and personal drama —  this talk has it all!\n\n## Speakers\n\n### Philippa Markovics\n\nPhilippa works as UI Designer and Frontend Lead at Nextjournal, mostly working on Clerk at the moment. Her main interests are in how we can make programming more tangible and data science more accessible. When she’s not working, you can find her planting food plots somewhere in the Austrian countryside.\n### Martin Kavalar\n\nMartin Kavalar is a co-founder at Nextjournal, a hybrid between startup and research lab trying to improve programming. Nextjournal makes a polyglot computational notebook with a focus on reproducibility and a variety of open source tools, including Clerk, a programmer's assistant for Clojure."}
+ {:session/title "Build a Desktop Application with Humble UI",
+  :session/subtitle "Nikita Prokopov",
+  :session/type :session.type/workshop,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/nikita-prokopov.jpg",
+  :session/time #time/inst "2024-09-18T16:00:00Z",
+  :session/duration "PT90M",
+  :session/location :location.type/hal5,
+  :session/description
+  "Humble UI is an ongoing project to build desktop-class UIs in Clojure without help of the browser.\r\n\r\nIn this workshop, we’ll try to build a new graphical desktop application that works across all three OSes from scratch.\n\n## Speakers\n\n### Nikita Prokopov\n\nNikita is a Clojure developer with an eye for design and UX. He is the author of DataScript, Humble UI, Rum, Clojure Sublimed, Tongue, Clj-reload, Uberjars, Clj-simple-router, and Fira Code."}
+ {:session/title
+  "TimeLines: Crafting a Live Coding Musical Instrument with & out of Clojure",
+  :session/subtitle "Dimitris Kyriakoudis",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/dimitris-kyriakoudis.png",
+  :session/time #time/inst "2024-09-19T16:10:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "TimeLines is an ongoing PhD research project in the design and implementation of Live Coding musical instruments. Live Coding is a creative practice that, at its core, involves real-time Human-Computer Interaction (HCI) with a live and dynamic computational system - as much an instrument as an open-ended instrument-building workbench. TimeLines follows a purely functional approach to music, treating both the synthesis of sounds and of musical structure to be functions of just a single numerical argument: time itself. All time-varying behavior is encoded in those pure functions, enabling the potential for massive parallelization and static analyses. Clojure's Lisp-heritage's metaprogramming powers are greatly relied upon to make an instrument that is capable of creating and extending itself.\n\n## Speakers\n\n### Dimitris Kyriakoudis\n\nDimitris is a music tech PhD Student at Univeristy of Sussex, as well as a Live Coding Luthier & Performer\r\n\r\nHe's the creator of the TimeLines live coding system, originally written in Haskell, but since ported to Clojure."}
+ {:session/title "Cursive office hours",
+  :session/subtitle "Colin Fleming",
+  :session/type :session.type/office-hours,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/colin-fleming.jpeg",
+  :session/time #time/inst "2024-09-19T15:00:00Z",
+  :session/duration "PT90M",
+  :session/location :location.type/hal5,
+  :session/description
+  "Come with all your questions about Cursive! I have developed Cursive from the very start, and I'd love to hear your questions, see how you're using Cursive and (hopefully!) help you with any problems you're experiencing. Whether you're an experienced Cursive user, an experienced Emacs user curious about why anyone might want to use anything else, or anywhere in between those two points, I'd love to hear from you and help with any issues you're experiencing.\n\n## Speakers\n\n### Colin Fleming\n\nColin is the developer of Cursive. He has programmed things for a long time now, in a bunch of different programming languages. When he's not hacking on Cursive, he's mostly climbing in the hills nearby."}
+ {:session/title "Open hearts for diversity",
+  :session/subtitle "Katja Böhnke",
+  :session/type :session.type/session,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/katja-bohnke.jpg",
+  :session/time #time/inst "2024-09-18T15:30:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/hal5,
+  :session/description
+  "As women in tech I am used to being the only women in the room. I am used to feeling different. At time this raises the question: Do I belong here?\r\n\r\nWorking on a team with people of different age, gender, sexual orientation, religion, physical and mental abilities, ethnic and social background helps me to realize that we are all different and we all belong. Unfortunately, many teams are less diverse and not all people get to make this experience. Therefore, it is important to create opportunities to learn about each other and to become aware of similarities and differences.\r\n\r\nIn this interactive session we share experiences and talk about challenges. The goal is to raise awareness for the topic, to hear each others stories and to support each other. The session is open for all! I invite you to open your hearts for diversity and connect with each other!\n\n## Speakers\n\n### Katja Böhnke\n\nKatja Böhnke is a software engineer and psychology student. She values connection and learning. She loves to work on diverse teams and to create spaces where people can be themselves and connect with each other."}
+ {:session/title "Richer SQL",
+  :session/subtitle "Jeremy Taylor",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/jeremy-taylor.jpg",
+  :session/time #time/inst "2024-09-19T09:50:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "SELECT NAME FROM EMP WHERE DEPT = 'TOY'\r\n\r\n...SQL has been celebrating its 50th birthday this year, and this original query still runs flawlessly across countless implementations - an impressive milestone in the world of software that nobody could have predicted back in 1974. SQL is the most potent example of declarative programming and backwards compatibility.\r\n\r\nHowever SQL's continued dominance and legacy has not been without significant downsides. Mountains of complexity has been built, and continues to be built, upon its sprawling, anachronistic designs.\r\n\r\nIn search of some antidote to SQL's myriad issues the Clojure community has always been a vibrant melting pot of visions and attempts to tame SQL or surpass it entirely.\r\n\r\nThe XTDB team has spent the past 3 years working on _evolving_ SQL to make it more compatible with Clojure's philosophy and in this talk we will take a tour through how this is achieved and where it might lead.\n\n## Speakers\n\n### Jeremy Taylor\n\nJeremy is the Head of Product at JUXT, with primary responsibility for XTDB. Jeremy has been digging into databases and \"tools for thought\" for much of his career. He was initially drawn to Clojure for the Datalog, but stayed for the parens."}
+ {:session/title "Klor: Choreographic Programming in Clojure",
+  :session/subtitle "Lovro Lugović, Sung-Shik Jongmans",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/lovro-lugovic-sung-shik-jongmans.png",
+  :session/time #time/inst "2024-09-18T17:00:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "Over the past five years, the European Commission has invested over 250M EUR in its **Next Generation Internet** initiative. As part of this ambitious program, we are developing a new free and open-source core technology for distributed systems -- in Clojure, of course.\r\n\r\nThe idea behind our project, called Klor (https://github.com/lovrosdu/klor), is to use a new domain-specific language (DSL) -- embedded in Clojure -- to write distributed systems as **choreographies**. A choreography is very similar to any \"normal\" Clojure program, except that it has a special message-passing primitive for processes to communicate: instead of the usual two `send` and `receive` primitives, there is just one `communicate` primitive that embodies a whole end-to-end transmission. The great thing about this is that bugs like communication mismatches and deadlocks -- very hard to diagnose and fix! -- become syntactically impossible to write in the first place. The choreography essentially acts as a single source of truth and is used to automatically generate the implementations of the processes in the system. `communicate` still compiles to a `send` and a corresponding `receive` behind the scenes, but it all happens completely transparently to the programmer.\r\n\r\nKlor is implemented on top of the `clojure.tools.analyzer` compiler framework and hooks into Clojure's macro system to perform all of its analysis and code generation at macroexpansion-time, imposing virtually no run-time cost on the user. It uses a lightweight \"type\" system to track the locations of values and knowledge shared between the processes, and supports standard higher-order features that help with composition and modularity. Still, Klor does not impose any hard restrictions and embraces the interactive and dynamically typed spirit of Clojure: there is seamless interoperability with external Clojure code and standard REPL-based development is highly encouraged. All in all, Clojure's excellent support for concurrency, host interop and mature tooling makes it a great foundation to use for Klor.\r\n\r\nThe aim of this talk is to demonstrate Klor's usage and highlight some of the interesting implementation challenges we faced.\n\n## Speakers\n\n### Lovro Lugović\n\nLovro Lugović is a C++ software engineer turned Lisp hacker and a recent PhD graduate from the University of Southern Denmark, specializing in programming languages and concurrency theory. He likes functional programming, designing domain-specific languages and solving problems using a combination thereof.\n### Sung-Shik Jongmans\n\nSung-Shik Jongmans is language engineer at Swat.engineering. Before, he was associate professor at Open University of the Netherlands and researcher at the Dutch National Research Institute for Mathematics and Computer Science. His interests include programming languages, concurrency theory, and software engineering. And Clojure, of course."}
+ {:session/title "An introduction to application.garden",
+  :session/subtitle "Jack Rusher, Paolo Holinski",
+  :session/type :session.type/workshop,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/jack-rusher-paolo-holinski.png",
+  :session/time #time/inst "2024-09-18T15:00:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/hal5,
+  :session/description
+  "Learn how to use application.garden to quickly deploy a working application with hassle-free authentication, cron jobs, email handling, and a live REPL.\n\n## Speakers\n\n### Jack Rusher\n\nJack Rusher's long career as a computer scientist includes time at Bell Labs/AT&T Research and a number of successful startups. Much of his current work focuses on the deep relationship between art and technology.\n### Paolo Holinski\n\nPaolo has been programming with Clojure for the past 10 years. He is interested in making programming more accessible and has helped build application.garden at Nextjournal."}
+ {:session/title
+  "Beyond the Hype: Obstacles on the Path to Clojure Adoption",
+  :session/subtitle "Mitesh Shah",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/mitesh-shah.png",
+  :session/time #time/inst "2024-09-18T16:10:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "To the mainstream public (devs and business folks), clojure is either seen as an arcane lisp, or as a hyped language. This perception of Clojure is further solidified by the fact that it's hard to get started with Clojure.\r\n\r\nClojure definitely has a very passionate community and undeniable strengths, then what is holding it back? \r\n\r\nBy openly discussing these issues and collborating on solutions, we can propel Clojure beyond it's current position as a powerful defacto business choice. There are many low hanging fruits and quick wins we can do to get the ball rolling.\n\n## Speakers\n\n### Mitesh Shah\n\nMitesh / @oxalorg has created Clojure screencasts, contributed to LambdaIsland open source repos and also recently volunteered at a ClojureBridge workshop!\r\n\r\nMitesh works as a Senior full-stack Clojure[script] Engineer at Gaiwan!"}
+ {:session/title
+  "Building Conversational Speech Annotation Tool in Clojure",
+  :session/subtitle "Paweł Stroiński",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/pawel-stroinski.jpeg",
+  :session/time #time/inst "2024-09-19T10:30:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "This talk will be a story of inheriting a bespoke text editor with annotation features written in ClojureScript and turning it into a number of things. It will include horror stories of debugging in-house Specter macros running in browser as well as calming stories of how nice it is to work in a code with a good test coverage even if it is difficult to approach, or how enjoyable it is to create interactive audio annotation tooling in ClojureScript.\n\n## Speakers\n\n### Paweł Stroiński\n\nPaweł first started writing code 25 years ago in Turbo Pascal. He's programmed professionally using Delphi, XSLT, VB.NET, C#, JavaScript, TypeScript, and Clojure. Has experience on the entrepreneurial side and passion for music. A proud father of a six years old."}
+ {:session/title "Squint: a taste of Clojure for JavaScript devs",
+  :session/subtitle "Felix Alm",
+  :session/type :session.type/talk,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/felix-alm.jpeg",
+  :session/time #time/inst "2024-09-19T11:30:00Z",
+  :session/duration "PT30M",
+  :session/location :location.type/depot,
+  :session/description
+  "Diving head first into shadow-cljs and the surrounding ecosystem can be daunting. What if we could incrementally introduce Clojure into our existing JS applications from the safety of our favourite frontend frameworks like React or Svelte to tame its more complex logic - hopefully with the help of a trusted REPL\n\n## Speakers\n\n### Felix Alm\n\nFelix left a biochemistry major after an \"Intro to Programming\"-course during his second year completely stole the show. Some zigzagging later he's now been working in the industry using functional languages since 2017. Clojure became his favourite side project tool early on and 2.5 years ago, when he joined JUXT, it has been his full-time language as well."}
+ {:session/title "Opening Keynote (TBD)",
+  :session/subtitle "Lu Wilson",
+  :session/type :session.type/keynote,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/lu-wilson.png",
+  :session/time #time/inst "2024-09-18T09:35:00Z",
+  :session/duration "PT45M",
+  :session/location :location.type/depot,
+  :session/description
+  "We are excited to have Lu join us to deliver the opening keynote. Stay tuned for more details.\n\n## Speakers\n\n### Lu Wilson\n\nLu creates slightly-surreal videos about creative-coding under the Todepond moniker. They are one of the hosts of the Future of Coding podcast, a coder at tldraw, and a researcher in residence at Ink and Switch."}
+ {:session/title "Responsible Data and AI",
+  :session/subtitle "Anna Colom",
+  :session/type :session.type/keynote,
+  :session/image
+  "https://2024.heartofclojure.eu/img/speakers/anna-colom.png",
+  :session/time #time/inst "2024-09-18T11:05:00Z",
+  :session/duration "PT45M",
+  :session/location :location.type/depot,
+  :session/description
+  "-TBD-\n\n## Speakers\n\n### Anna Colom\n\nAnna is a senior lead, researcher and evaluator working at the intersections of digital technologies, democratic processes, justice and climate. She's currently active at The Data Tank, an organization championing a holistic approach to re-using data for the common good.\r\n\r\nBefore joining The Data Tank, she was the Public Participation and Research Lead at the Ada Lovelace Institute. Her role focused on ensuring public perspectives and experiences are embedded in Ada’s research in rigorous, inclusive and meaningful ways.\r\n\r\nPrior to joining Ada, Anna managed the research on democratic innovations at Democratic Society, including the evaluation of deliberative mini-publics across the European Union and the UK. She was Director of Innovations and Learning at Africa’s Voices Foundation and worked as a Senior Research Manager at BBC Media Action, working with teams across South Asia, and East and West Africa. Anna holds a PhD in Political Science from The Open University, where she has applied an intersectional lens to understanding how instant messaging mediates citizenship capabilities. She was formerly a journalist, documentary filmmaker and participatory video facilitator."})
