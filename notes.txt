@@ -1,12 +1,4 @@
-https://discord.com/developers/applications/1228962758796775444/bot
-https://discord.com/developers/docs
 
-- Discord bot
-  - Add to HoC server
-  - Give them a role for the activities app
-  - Ask for their Ti.to booking code
-  - Give them a role for ticket holder
-  - reminder for upcoming activities
 - Login/Sign-up
 - List Session
   - Filter / Sort
@@ -63,4 +55,12 @@ https://discord.com/developers/docs
     - QR code?
     - Discord - do you want to connect with this person?
 
+- Discord bot
+  - Add to HoC server
+  - Give them a role for the activities app
+  - Ask for their Ti.to booking code
+  - Give them a role for ticket holder
+  - reminder for upcoming activities
 
+https://discord.com/developers/applications/1228962758796775444/bot
+https://discord.com/developers/docs
