@@ -8,9 +8,7 @@
    [lambdaisland.uri :as uri]))
 
 (defn routing-table []
-  [["/"
-    {:name :index
-     :get {:handler home/GET-home}}]
+  [(home/routes)
    (sessions/routes)
    (oauth/routes)])
 
