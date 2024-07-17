@@ -37,7 +37,9 @@ To get started you need to set up a discord bot, and then create a
 ```clj
 ;; config.local.edn
 {:discord/client-secret "..."
- :discord/bot-token "..."}
+ :discord/bot-token     "..."
+ :discord/client-id     "..."
+ :discord/public-key    "..."}
 ```
 
 ## Roadmap

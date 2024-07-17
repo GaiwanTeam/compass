@@ -1,7 +1,7 @@
 
 - Login/Sign-up
 - List Session
-  - Filter / Sort
+ - Filter / Sort
     - Starred
     - Participating
     - By type

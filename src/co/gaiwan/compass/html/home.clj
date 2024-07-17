@@ -6,7 +6,6 @@
    [co.gaiwan.compass.html.sessions :as sessions]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.http.oauth :as oauth]
-   [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.util :as util]
    [clojure.datafy :as df]
    [lambdaisland.ornament :as o]))
@@ -64,7 +63,7 @@
 (comment
   [sessions/session-card (sessions/rand-session)]
 
-;; Not in use now  
+;; Not in use now
   (defn week-day-str [day]
     (let [week-days ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"]]
       (nth week-days (dec day))))
