@@ -1,11 +1,11 @@
 (ns co.gaiwan.compass.http
   "System-level component: web server
-  
+
   The config of http is in the file
-  'resources/co/gaiwan/compass/system.edn' 
-  
+  'resources/co/gaiwan/compass/system.edn'
+
   Wiring the following components together
-    - jetty  
+    - jetty
       - ring handler
         - compass routes
         - compass default handler
@@ -18,7 +18,8 @@
    [reitit.ring :as ring]
    [ring.adapter.jetty :as jetty]
    [ring.middleware.defaults :as ring-defaults]
-   [ring.middleware.session.cookie :as session-cookie]))
+   [ring.middleware.session.cookie :as session-cookie]
+   [io.pedestal.log :as log]))
 
 (defn router []
   (ring/router (routes/routing-table)))
@@ -69,6 +70,7 @@
                  ]}))
 
 (defmethod ig/init-key :compass/http [_ {:keys [port]}]
+  (log/info :http/starting {:port port})
   (jetty/run-jetty #((handler) %) {:port port
                                    :join? false}))
 
