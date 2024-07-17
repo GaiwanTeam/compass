@@ -18,57 +18,20 @@
    :html/body [h/home {:user (:identity req)
                        :sessions (all-sessions)}]})
 
-(defn GET-no-filters [req]
+(defn GET-filters-showed [req]
   {:html/head [:title "filter snippets"]
-   :html/body
-   [:session#filters
-    [:button
-     {:hx-get "/open-filters"
-      :hx-trigger "click"
-      :hx-swap "outerHTML"
-      :hx-target "#filters"
-      :hx-select "#filters"}
-     "Open Session Filters"]]})
+   :html/body [h/filters-showed]})
 
-(defn GET-filters [req]
+(defn GET-filters-hidden [req]
   {:html/head [:title "filter snippets"]
-   :html/body
-   [:section#filters
-    [:button
-     {:hx-get "/close-filters"
-      :hx-trigger "click"
-      :hx-swap "outerHTML"
-      :hx-target "#filters"
-      :hx-select "#filters"}
-     "Close Session Filters"]
-    [:div
-     [:label "Starred"]
-     [:input {:type "checkbox"}]]
-    [:div
-     [:label "Participating"]
-     [:input {:type "checkbox"}]]
-    [:div
-     [:label "Spots available"]
-     [:input {:type "checkbox"}]]
-    [:div
-     [:label "Type"]
-     [:select
-      [:option {:value "talk"} "talk"]
-      [:option {:value "workshop"} "workshop"]
-      [:option {:value "office-hours"} "office-hours"]
-      [:option {:value "sessions"} "session"]]]
-    [:div
-     [:label "Location"]
-     [:select
-      [:option {:value "depot"} "depot"]
-      [:option {:value "hal5"} "hal5"]]]]})
+   :html/body [h/filters-hidden]})
 
 (defn routes []
   [""
    ["/"
     {:name :index
      :get {:handler GET-home}}]
-   ["/open-filters"
-    {:get {:handler GET-filters}}]
-   ["/close-filters"
-    {:get {:handler GET-no-filters}}]])
+   ["/show-filters"
+    {:get {:handler GET-filters-showed}}]
+   ["/hide-filters"
+    {:get {:handler GET-filters-hidden}}]])

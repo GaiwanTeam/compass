@@ -11,18 +11,52 @@
    [clojure.datafy :as df]
    [lambdaisland.ornament :as o]))
 
+(defn filters-hidden []
+  [:section#filters
+   [:button
+    {:hx-get "/show-filters"
+     :hx-trigger "click"
+     :hx-swap "outerHTML"
+     :hx-target "#filters"
+     :hx-select "#filters"}
+    "Open Session Filters"]])
+
+(defn filters-showed []
+  [:section#filters
+   [:button
+    {:hx-get "/hide-filters"
+     :hx-trigger "click"
+     :hx-swap "outerHTML"
+     :hx-target "#filters"
+     :hx-select "#filters"}
+    "Close Session Filters"]
+   [:div
+    [:label "Starred"]
+    [:input {:type "checkbox"}]]
+   [:div
+    [:label "Participating"]
+    [:input {:type "checkbox"}]]
+   [:div
+    [:label "Spots available"]
+    [:input {:type "checkbox"}]]
+   [:div
+    [:label "Type"]
+    [:select
+     [:option {:value "talk"} "talk"]
+     [:option {:value "workshop"} "workshop"]
+     [:option {:value "office-hours"} "office-hours"]
+     [:option {:value "sessions"} "session"]]]
+   [:div
+    [:label "Location"]
+    [:select
+     [:option {:value "depot"} "depot"]
+     [:option {:value "hal5"} "hal5"]]]])
+
 (o/defstyled home :div
   [sessions/session-card :mb-3]
   ([{:keys [user sessions]}]
    [:<>
-    [:section#filters
-     [:button
-      {:hx-get "/open-filters"
-       :hx-trigger "click"
-       :hx-swap "outerHTML"
-       :hx-target "#filters"
-       :hx-select "#filters"}
-      "Open Session Filters"]]
+    [filters-hidden]
     [:main
      (for [session sessions]
        [sessions/session-card session])]]))
