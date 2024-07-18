@@ -33,6 +33,9 @@ apt-get update && apt-get install -yq \
   jq \
   cron
 
+# Install Clojure
+curl -sL https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh | bash
+
 # Install Datomic
 curl -sL "https://datomic-pro-downloads.s3.amazonaws.com/${DATOMIC_VERSION}/datomic-pro-${DATOMIC_VERSION}.zip" > datomic.zip
 unzip datomic.zip -d /opt/
@@ -170,10 +173,31 @@ EOF
 EOF
 
 # Set up app, run as low privilege user
+cat <<-EOF > /etc/systemd/system/compass.service
+[Unit]
+Description=Compass Clojure App
+Wants=network.target
+After=network-online.target
+After=txor.service
+
+[Service]
+Restart=always
+RestartSec=1
+WorkingDirectory=/home/compass/app/current
+ExecStart=/usr/local/bin/clojure -M -m co.gaiwan.compass --config /home/compass/config.edn
+User=compass
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 useradd -m -s /bin/bash compass
 sudo -u compass git clone --bare https://github.com/GaiwanTeam/compass /home/compass/repo
 sudo -u compass mkdir /home/compass/app
+
+
+
 SHA="$(sudo -u compass git -C /home/compass/repo rev-parse HEAD)"
-sudo -u compass echo git -C /home/compass/repo checkout HEAD --work-tree=/home/compass/app/"$SHA"
+sudo -u compass git -C /home/compass/repo checkout HEAD --work-tree=/home/compass/app/"$SHA"
 sudo -u compass ln -sf /home/compass/app/"$SHA" /home/compass/app/current
 sudo -u compass ln -sf /home/compass/app/current/pre-receive.bb /home/compass/repo/hooks/pre-receive

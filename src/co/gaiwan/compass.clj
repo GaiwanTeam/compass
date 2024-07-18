@@ -8,11 +8,13 @@
   (:require
    [aero.core :as aero]
    [clojure.java.io :as io]
+   [clojure.pprint :as pprint]
    [clojure.string :as str]
+   [co.gaiwan.compass.config :as config]
    [integrant.core :as ig]
    [integrant.repl :as ig-repl]
-   [co.gaiwan.compass.config :as config]
-   [io.pedestal.log :as log]))
+   [io.pedestal.log :as log]
+   [lambdaisland.cli :as cli]))
 
 (require
  'co.gaiwan.compass.db
@@ -76,5 +78,44 @@
      (nil? key)
      (ig-repl/go))))
 
-(defn -main [& _]
-  (go {:profile :prod}))
+(def flags
+  ["--env <prod|dev|test>" {:doc     "Configuration profile"
+                            :default :prod
+                            :parse   keyword}
+   "--config <path>" {:doc   "Additional EDN file with configuration"
+                      :coll? true}
+   "--start <ig-key>" {:doc   "Which integrant component(s) to start"
+                       :parse read-string}])
+
+(defn set-config! [{:keys [config env]}]
+  (when config
+    (run! config/add-config-file! config))
+  (config/set-env! env))
+
+(defn run
+  "Launch the Compass application"
+  [opts]
+  (set-config! opts)
+  (go (cond-> {:profile (:env opts)}
+        (:start opts)
+        (assoc :key (:start opts)))))
+
+(defn print-config
+  "Print fully merged config and exit"
+  [opts]
+  (set-config! opts)
+  (pprint/pprint
+   (into {}
+         (map (juxt identity config/value))
+         (keys config/config))))
+
+(def commands
+  ["run" #'run
+   "print-config" #'print-config])
+
+(defn -main [& command-line-args]
+  (cli/dispatch*
+   {:name       "clojure -M -m co.gaiwan.compass"
+    :flags      flags
+    :commands   commands}
+   command-line-args))

@@ -5,26 +5,34 @@
    [clojure.string :as str]))
 
 (def config {})
-(def env (if-let [env (System/getenv "COMPASS_ENV")]
-           (keyword env)
-           :dev))
+(def env :dev)
 
 (def config-edn (io/resource "co/gaiwan/compass/config.edn"))
-(def config-local-edn (io/file "config.local.edn"))
+(def extra-config-files ["config.local.edn"])
 
 (defn env-edn [env]
   (io/resource (str "co/gaiwan/compass/" (name env) ".edn")))
 
 (defn load-config
-  [env]
-  (merge
+  []
+  (apply
+   merge
    (aero/read-config config-edn {})
    (aero/read-config (env-edn env))
-   (when (.exists config-local-edn)
-     (aero/read-config config-local-edn {}))))
+   (for [f extra-config-files]
+     (when (.exists (io/file f))
+       (aero/read-config f {})))))
 
 (defn load-config! [& _]
-  (intern *ns* 'config (load-config env)))
+  (alter-var-root #'config (constantly (load-config))))
+
+(defn set-env! [e]
+  (alter-var-root #'env (constantly e))
+  (load-config!))
+
+(defn add-config-file! [f]
+  (alter-var-root #'extra-config-files conj f)
+  (load-config!))
 
 (defn key->env-var
   "Take the key used to identify a setting or secret, and turn it into a string
@@ -59,8 +67,6 @@
 (defonce install-watcher
   (when-let [watch! (try (requiring-resolve 'lambdaisland.launchpad.watcher/watch!) (catch Exception _))]
     (watch!
-     {(str config-edn)       #'load-config!
-      (env-edn env)          #'load-config!
-      (str config-local-edn) #'load-config!})))
-
-
+     {(str config-edn)   #'load-config!
+      (env-edn env)      #'load-config!
+      "config.local.edn" #'load-config!})))
