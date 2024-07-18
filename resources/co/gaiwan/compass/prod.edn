@@ -1,1 +1,2 @@
-{:compass/origin "https://compass.heartofclojure.eu"}
+{:port 8080
+ :compass/origin "https://compass.heartofclojure.eu"}

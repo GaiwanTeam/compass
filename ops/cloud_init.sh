@@ -152,6 +152,7 @@ mkdir /data/letsencrypt
 ln -s /data/letsencrypt /etc/
 echo 'Y' | certbot --nginx -d compass.heartofclojure.eu -m arne@gaiwan.co
 
+# More helpful login message
 cat <<-EOF > /etc/motd
 Welcome to the Compass server
 
@@ -170,9 +171,11 @@ Locations
 
 EOF
 
-EOF
-
 # Set up app, run as low privilege user
+if [[ ! -f /home/compass/config.edn ]]; then
+  echo "{}" > /home/compass/config.edn
+fi
+
 cat <<-EOF > /etc/systemd/system/compass.service
 [Unit]
 Description=Compass Clojure App
@@ -184,20 +187,23 @@ After=txor.service
 Restart=always
 RestartSec=1
 WorkingDirectory=/home/compass/app/current
-ExecStart=/usr/local/bin/clojure -M -m co.gaiwan.compass --config /home/compass/config.edn
+ExecStart=/usr/local/bin/clojure -M -m co.gaiwan.compass --env prod --config /home/compass/config.edn
 User=compass
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
+systemctl enable compass
+
 useradd -m -s /bin/bash compass
 sudo -u compass git clone --bare https://github.com/GaiwanTeam/compass /home/compass/repo
 sudo -u compass mkdir /home/compass/app
-
+sudo -u compass git -C /home/compass/repo cat-file blob HEAD:ops/pre-receive.bb > /tmp/pre-receive.bb
 
 
 SHA="$(sudo -u compass git -C /home/compass/repo rev-parse HEAD)"
-sudo -u compass git -C /home/compass/repo checkout HEAD --work-tree=/home/compass/app/"$SHA"
-sudo -u compass ln -sf /home/compass/app/"$SHA" /home/compass/app/current
+pushd /home/compass/repo
+sudo -u compass bb /tmp/pre-receive.bb <<< "000 $SHA refs/heads/main"
+popd
 sudo -u compass ln -sf /home/compass/app/current/pre-receive.bb /home/compass/repo/hooks/pre-receive
