@@ -175,5 +175,5 @@ sudo -u compass git clone --bare https://github.com/GaiwanTeam/compass /home/com
 sudo -u compass mkdir /home/compass/app
 SHA="$(sudo -u compass git -C /home/compass/repo rev-parse HEAD)"
 sudo -u compass echo git -C /home/compass/repo checkout HEAD --work-tree=/home/compass/app/"$SHA"
-sudo -u compass ln -s /home/compass/app/"$SHA" /home/compass/app/current
-sudo -u compass ln -s /home/compass/app/current/pre-receive.bb /home/compass/repo/hooks/pre-receive
+sudo -u compass ln -sf /home/compass/app/"$SHA" /home/compass/app/current
+sudo -u compass ln -sf /home/compass/app/current/pre-receive.bb /home/compass/repo/hooks/pre-receive

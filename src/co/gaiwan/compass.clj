@@ -4,6 +4,7 @@
   - read the config
   - manage the state and reloadable workflow
   "
+  (:gen-class)
   (:require
    [aero.core :as aero]
    [clojure.java.io :as io]
@@ -74,3 +75,6 @@
      (ig-repl/go [key])
      (nil? key)
      (ig-repl/go))))
+
+(defn -main [& _]
+  (go {:profile :prod}))
