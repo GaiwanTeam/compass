@@ -187,7 +187,7 @@ After=txor.service
 Restart=always
 RestartSec=1
 WorkingDirectory=/home/compass/app/current
-ExecStart=/usr/local/bin/clojure -M -m co.gaiwan.compass --env prod --config /home/compass/config.edn
+ExecStart=/usr/local/bin/clojure -M -m co.gaiwan.compass run --env prod --config /home/compass/config.edn
 User=compass
 
 [Install]
@@ -206,4 +206,4 @@ SHA="$(sudo -u compass git -C /home/compass/repo rev-parse HEAD)"
 pushd /home/compass/repo
 sudo -u compass bb /tmp/pre-receive.bb <<< "000 $SHA refs/heads/main"
 popd
-sudo -u compass ln -sf /home/compass/app/current/pre-receive.bb /home/compass/repo/hooks/pre-receive
+sudo -u compass ln -sf /home/compass/app/current/ops/pre-receive.bb /home/compass/repo/hooks/pre-receive
