@@ -41,24 +41,41 @@
    [:div
     [:label "Type"]
     [:select
+     {:name "type"
+      :hx-include "select[name='location']"
+      :hx-get "/conf-sessions"
+      :hx-select "#sessions"
+      :hx-target "#sessions"}
+     [:option {:value "all"} "all"]
      [:option {:value "talk"} "talk"]
      [:option {:value "workshop"} "workshop"]
+     [:option {:value "keynote"} "keynote"]
      [:option {:value "office-hours"} "office-hours"]
-     [:option {:value "sessions"} "session"]]]
+     [:option {:value "session"} "session"]]]
    [:div
     [:label "Location"]
     [:select
-     [:option {:value "depot"} "depot"]
-     [:option {:value "hal5"} "hal5"]]]])
+     {:name "location"
+      :hx-include "select[name='type']"
+      :hx-get "/conf-sessions"
+      :hx-select "#sessions"
+      :hx-target "#sessions"}
+     [:option {:value "all"} "all"]
+     [:option {:value "depot"} "Het Depot"]
+     [:option {:value "hal5"} "Hal 5"]]]])
+
+(defn session-snippet
+  [sessions]
+  [:main#sessions
+   (for [session sessions]
+     [sessions/session-card session])])
 
 (o/defstyled home :div
   [sessions/session-card :mb-3]
   ([{:keys [user sessions]}]
    [:<>
     [filters-hidden]
-    [:main
-     (for [session sessions]
-       [sessions/session-card session])]]))
+    [session-snippet sessions]]))
 
 (comment
   [sessions/session-card (sessions/rand-session)]
