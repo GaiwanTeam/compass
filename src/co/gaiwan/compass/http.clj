@@ -15,11 +15,11 @@
    [co.gaiwan.compass.http.middleware :as middleware]
    [co.gaiwan.compass.http.routes :as routes]
    [integrant.core :as ig]
+   [io.pedestal.log :as log]
    [reitit.ring :as ring]
    [ring.adapter.jetty :as jetty]
    [ring.middleware.defaults :as ring-defaults]
-   [ring.middleware.session.cookie :as session-cookie]
-   [io.pedestal.log :as log]))
+   [ring.middleware.session.cookie :as session-cookie]))
 
 (defn router []
   (ring/router (routes/routing-table)))

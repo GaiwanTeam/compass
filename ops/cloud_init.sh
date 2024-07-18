@@ -13,9 +13,11 @@ grep -q "$DATA_DISK_DEV" /etc/fstab || echo "$DATA_DISK_DEV /data ext4 defaults 
 systemctl daemon-reload
 mountpoint -q /data || mount /data
 
+# Install babashka
 curl -sL "https://github.com/babashka/babashka/releases/download/v$BABASHKA_VERSION/babashka-$BABASHKA_VERSION-linux-amd64.tar.gz" \
   | tar -xz -C /usr/local/bin
 
+# Install packages
 apt-get update && apt-get install -yq \
   docker.io \
   openjdk-17-jre \
@@ -31,9 +33,11 @@ apt-get update && apt-get install -yq \
   jq \
   cron
 
+# Install Datomic
 curl -sL "https://datomic-pro-downloads.s3.amazonaws.com/${DATOMIC_VERSION}/datomic-pro-${DATOMIC_VERSION}.zip" > datomic.zip
 unzip datomic.zip -d /opt/
 
+# Set up Datomic txor as a systemd unit
 cat <<-EOF > /etc/systemd/system/txor.service
 [Unit]
 Description=Datomic Txor
@@ -53,6 +57,7 @@ EOF
 systemctl enable txor
 systemctl start txor
 
+# Configure nginx to proxy to our app
 cat <<-'EOF' > /etc/nginx/sites-available/default
 server {
     listen       80;
@@ -79,6 +84,7 @@ EOF
 mkdir -p /data/public_html/_static
 systemctl restart nginx
 
+# Install SSH keys of people in the heartofclojure group
 cat <<-'EOF' > /usr/local/bin/install_ssh_keys
 #!/usr/bin/env bash
 
@@ -138,6 +144,36 @@ chmod 600 ~/.ssh/authorized_keys
 
 (crontab -l 2>/dev/null; echo "* */10 * * * /usr/local/bin/install_ssh_keys") | crontab -
 
+# Letsencrypt (SSL cert)
 mkdir /data/letsencrypt
 ln -s /data/letsencrypt /etc/
 echo 'Y' | certbot --nginx -d compass.heartofclojure.eu -m arne@gaiwan.co
+
+cat <<-EOF > /etc/motd
+Welcome to the Compass server
+
+   https://compass.heartofclojure.eu
+
+Services
+
+   systemctl status txor
+   systemctl status compass
+
+Locations
+
+   Bare git repo: /home/compass/repo
+   Checkouts:     /home/compass/app
+   Config:        /home/compass/config.env
+
+EOF
+
+EOF
+
+# Set up app, run as low privilege user
+useradd -m -s /bin/bash compass
+sudo -u compass git clone --bare https://github.com/GaiwanTeam/compass /home/compass/repo
+sudo -u compass mkdir /home/compass/app
+SHA="$(sudo -u compass git -C /home/compass/repo rev-parse HEAD)"
+sudo -u compass echo git -C /home/compass/repo checkout HEAD --work-tree=/home/compass/app/"$SHA"
+sudo -u compass ln -s /home/compass/app/"$SHA" /home/compass/app/current
+sudo -u compass ln -s /home/compass/app/current/pre-receive.bb /home/compass/repo/hooks/pre-receive
