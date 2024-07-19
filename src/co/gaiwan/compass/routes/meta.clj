@@ -2,5 +2,5 @@
 
 (defn routes []
   ["/health"
-   {:name :index
+   {:name :health
     :get {:handler (fn [_] {:body "OK"})}}])

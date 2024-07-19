@@ -20,8 +20,6 @@ curl -sL "https://github.com/babashka/babashka/releases/download/v$BABASHKA_VERS
 # Install packages
 apt-get update && apt-get install -yq \
   openjdk-17-jre \
-  postgresql \
-  postgresql-contrib \
   docker.io \
   netcat-openbsd \
   rlwrap \
@@ -63,30 +61,6 @@ EOF
 systemctl enable txor
 systemctl start txor
 
-# Prepare postgresql db/table
-
-cat <<-EOF | sudo -u postgres psql
-CREATE ROLE datomic LOGIN PASSWORD 'datomic';
-
-CREATE DATABASE datomic
- WITH owner = datomic
-      TEMPLATE template0
-      ENCODING = 'UTF8'
-      LC_COLLATE = 'en_US.UTF-8'
-      LC_CTYPE = 'en_US.UTF-8'
-      CONNECTION LIMIT = -1;
-
-\c datomic
-
-CREATE TABLE datomic_kvs
-(
- id text NOT NULL,
- rev integer,
- map text,
- val bytea,
- CONSTRAINT pk_id PRIMARY KEY (id )
-);
-EOF
 
 # Configure nginx to proxy to our app
 cat <<-'EOF' > /etc/nginx/sites-available/default
@@ -212,6 +186,10 @@ https://compass.heartofclojure.eu
    Bare git repo: /home/compass/repo
    Checkouts:     /home/compass/app
    Config:        /home/compass/config.edn
+
+-= Database =-
+
+   Exoscale Hosted: hoc-compass-db-exoscale-35f30fc9-004b-4593-a18d-533dfbe262d7.e.aivencloud.com:21699
 
 EOF
 
