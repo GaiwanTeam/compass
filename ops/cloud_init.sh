@@ -1,8 +1,8 @@
 #!/bin/sh
 
 DATA_DISK_DEV="/dev/vdb"
-BABASHKA_VERSION="1.3.190"
-DATOMIC_VERSION="1.0.7075"
+BABASHKA_VERSION="1.3.191"
+DATOMIC_VERSION="1.0.7180"
 
 # Format persistent disk if it hasn't been already
 blkid --match-token TYPE=ext4 "$DATA_DISK_DEV" || mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard "$DATA_DISK_DEV"
@@ -19,8 +19,10 @@ curl -sL "https://github.com/babashka/babashka/releases/download/v$BABASHKA_VERS
 
 # Install packages
 apt-get update && apt-get install -yq \
-  docker.io \
   openjdk-17-jre \
+  postgresql \
+  postgresql-contrib \
+  docker.io \
   netcat-openbsd \
   rlwrap \
   unzip \
@@ -39,6 +41,7 @@ curl -sL https://github.com/clojure/brew-install/releases/latest/download/linux-
 # Install Datomic
 curl -sL "https://datomic-pro-downloads.s3.amazonaws.com/${DATOMIC_VERSION}/datomic-pro-${DATOMIC_VERSION}.zip" > datomic.zip
 unzip datomic.zip -d /opt/
+ln -sf /opt/datomic-pro-${DATOMIC_VERSION} /opt/datomic
 
 # Set up Datomic txor as a systemd unit
 cat <<-EOF > /etc/systemd/system/txor.service
@@ -51,7 +54,7 @@ After=systemd-resolved.service
 [Service]
 Restart=always
 RestartSec=1
-ExecStart=/opt/datomic-pro-1.0.7075/bin/transactor -Xmx -Xmx2g -Xms -Xms2g /data/datomic-postgres.properties
+ExecStart=/opt/datomic/bin/transactor -Xmx -Xmx2g -Xms -Xms2g /data/datomic-postgres.properties
 
 [Install]
 WantedBy=multi-user.target
@@ -59,6 +62,31 @@ EOF
 
 systemctl enable txor
 systemctl start txor
+
+# Prepare postgresql db/table
+
+cat <<-EOF | sudo -u postgres psql
+CREATE ROLE datomic LOGIN PASSWORD 'datomic';
+
+CREATE DATABASE datomic
+ WITH owner = datomic
+      TEMPLATE template0
+      ENCODING = 'UTF8'
+      LC_COLLATE = 'en_US.UTF-8'
+      LC_CTYPE = 'en_US.UTF-8'
+      CONNECTION LIMIT = -1;
+
+\c datomic
+
+CREATE TABLE datomic_kvs
+(
+ id text NOT NULL,
+ rev integer,
+ map text,
+ val bytea,
+ CONSTRAINT pk_id PRIMARY KEY (id )
+);
+EOF
 
 # Configure nginx to proxy to our app
 cat <<-'EOF' > /etc/nginx/sites-available/default
@@ -154,20 +182,36 @@ echo 'Y' | certbot --nginx -d compass.heartofclojure.eu -m arne@gaiwan.co
 
 # More helpful login message
 cat <<-EOF > /etc/motd
-Welcome to the Compass server
 
-   https://compass.heartofclojure.eu
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⠀⠀⠀⠀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣄⠀⠀⠀⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣤⡀⠀⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⡀⣀⣤⣶⡟⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⣻⣾⣿⣿⣿⡿⠟⠛⠛⠛⠛⠻⢿⣿⣿⣿⡿⣻⡟⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣴⣿⣿⣿⠟⠁⠀⠀⠀⠀⢀⣠⣴⣿⣿⡿⠋⣼⣿⣦⠀⠀⠀⠀⠀
+⠀⢠⣄⣀⣼⣿⣿⡿⠁⠀⠀⠀⣀⣤⣾⣿⣿⣿⡿⠋⢀⣼⢿⣿⣿⣧⣀⣠⡄⠀
+⠀⠀⠀⠙⣿⣿⣿⠁⠀⠀⠀⣼⠛⢿⣿⣿⡿⠋⠀⢀⡾⠃⠈⣿⣿⣿⠋⠀⠀⠀
+⠀⠀⠀⠀⣿⣿⣿⠀⠀⢀⣾⠃⠀⠀⢙⡋⠀⠀⢠⡿⠁⠀⠀⣿⣿⣿⠀⠀⠀⠀
+⠀⠀⠀⣠⣿⣿⣿⡀⢀⡾⠁⠀⢀⣴⣿⣿⣦⣠⡟⠁⠀⠀⢀⣿⣿⣿⣄⠀⠀⠀
+⠀⠘⠋⠉⢻⣿⣿⣷⡿⠁⢀⣴⣿⣿⣿⡿⠟⠋⠀⠀⠀⢀⣾⣿⣿⡟⠉⠙⠃⠀
+⠀⠀⠀⠀⠀⢻⣿⡟⢀⣴⣿⣿⠿⠋⠁⠀⠀⠀⠀⢀⣴⣿⣿⣿⡟⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣼⢟⣴⣿⣿⣿⣷⣦⣤⣤⣤⣤⣴⣶⣿⣿⣿⡿⣯⡀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣼⠿⠛⠉⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉⠀⠈⠛⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠋⠀⠉⠉⠀⠙⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
-Services
+   C · O · M · P · A · S · S
+https://compass.heartofclojure.eu
+
+-= Services =-
 
    systemctl status txor
    systemctl status compass
 
-Locations
+-= Locations =-
 
    Bare git repo: /home/compass/repo
    Checkouts:     /home/compass/app
-   Config:        /home/compass/config.env
+   Config:        /home/compass/config.edn
 
 EOF
 
@@ -187,7 +231,7 @@ After=txor.service
 Restart=always
 RestartSec=1
 WorkingDirectory=/home/compass/app/current
-ExecStart=/usr/local/bin/clojure -M -m co.gaiwan.compass run --env prod --config /home/compass/config.edn
+ExecStart=/usr/local/bin/clojure -A:prod -M -m co.gaiwan.compass run --env prod --config /home/compass/config.edn
 User=compass
 
 [Install]
@@ -200,7 +244,6 @@ useradd -m -s /bin/bash compass
 sudo -u compass git clone --bare https://github.com/GaiwanTeam/compass /home/compass/repo
 sudo -u compass mkdir /home/compass/app
 sudo -u compass git -C /home/compass/repo cat-file blob HEAD:ops/pre-receive.bb > /tmp/pre-receive.bb
-
 
 SHA="$(sudo -u compass git -C /home/compass/repo rev-parse HEAD)"
 pushd /home/compass/repo
