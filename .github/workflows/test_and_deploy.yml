@@ -35,4 +35,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       - name: Push
-        run: git push compass@compass.heartofclojure.eu/repo main:main
+        run: git push ssh://compass@compass.heartofclojure.eu:/home/compass/repo main:main
