@@ -28,10 +28,7 @@ jobs:
           cli: latest
       - name: Run tests
         run: CLOJURE_ALIAS=clojure-${{ matrix.clojure }} bin/kaocha
-  deploy:
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
