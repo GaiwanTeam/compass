@@ -86,7 +86,6 @@
                   true
                   (println status (int (- timeout time-passed)) (timestamp))))
               (catch Exception e
-                (println "ERR" (int (- timeout time-passed)) (timestamp))
                 false))
           true
           (if (< timeout time-passed)
@@ -133,6 +132,7 @@
                   (fatal "Updating symlink failed"))
                 (do
                   (header "Restarting app")
+                  (sh "journalctl" "-f" "-u" service-name)
                   (if-not (systemctl "restart")
                     (do
                       (println (color 33 "Service restart failed, reverting"))
