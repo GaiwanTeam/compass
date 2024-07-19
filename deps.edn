@@ -13,7 +13,7 @@
   com.lambdaisland/cli {:mvn/version "0.16.68"}
 
   com.lambdaisland/hiccup   {:mvn/version "0.9.48"}
-  com.lambdaisland/ornament {:git/sha "12f843e8b00081d5e743fc734e96750491788a89"
+  com.lambdaisland/ornament {:git/sha "0af129132bfbfeba940705031f83b60250e71dcf"
                              :git/url "https://github.com/lambdaisland/ornament.git"}
   #_                        {:local/root "/home/arne/github/lambdaisland/ornament"}
 
