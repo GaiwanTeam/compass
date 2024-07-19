@@ -132,7 +132,8 @@
                   (fatal "Updating symlink failed"))
                 (do
                   (header "Restarting app")
-                  (sh "journalctl" "-f" "-u" service-name)
+                  (future
+                    (sh "journalctl" "-q" "-f" "-u" service-name))
                   (if-not (systemctl "restart")
                     (do
                       (println (color 33 "Service restart failed, reverting"))
