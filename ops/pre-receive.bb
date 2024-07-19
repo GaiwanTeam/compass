@@ -8,7 +8,7 @@
          '[cheshire.core :as json]
          '[babashka.curl :as curl])
 
-(def timeout 30)
+(def timeout 120)
 (def service-name "compass")
 (def health-check-url "http://localhost:8080/health")
 (def app-dir "/home/compass/app")
