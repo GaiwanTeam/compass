@@ -125,9 +125,15 @@ body {
 }
 
 .sessions-capacity_gauge {
-  display: flex;
   aspect-ratio: 1 / 1;
+  position: relative;
   --sessions-arc-thickness: 10%;
+}
+
+.sessions-capacity_gauge >* {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .sessions-capacity_gauge .sessions-arc {
@@ -137,7 +143,6 @@ body {
 .sessions-capacity_gauge .img {
   width: 100%;
   padding: var(--sessions-arc-thickness);
-  margin-left: -100%;
 }
 
 .sessions-capacity_gauge .img >* {
@@ -156,7 +161,6 @@ body {
 }
 
 .sessions-session_card .title {
-  margin-bottom: var(--size-3);
   font-size: var(--size-3);
 }
 
@@ -171,6 +175,7 @@ body {
 
 .sessions-session_card .guage {
   padding: var(--size-2);
+  align-self: center;
 }
 
 .sessions-session_card .type {
@@ -180,11 +185,11 @@ body {
   font-variant: small-caps;
   writing-mode: vertical-lr;
   transform: rotate(180deg);
+  background-color: var(--sessions-session-type-color);
 }
 
 .sessions-session_card .sessions-capacity_gauge {
   width: 100px;
-  margin-right: var(--size-3);
 }
 
 .sessions-session_card .details {

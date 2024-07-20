@@ -2,8 +2,9 @@
   "Views and components (hiccup/ornament) related to sessions"
   {:ornament/prefix "sessions-"}
   (:require
+   [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
-   [co.gaiwan.compass.http.oauth :as oauth]
+   [java-time.api :as time]
    [lambdaisland.ornament :as o]))
 
 (o/defprop --arc-degrees "240deg")
@@ -21,56 +22,65 @@
 
 (o/defstyled capacity-gauge :div
   "Image with an arc around it to indicate how full a session is."
-  :flex :aspect-square
+  :aspect-square
+  {:position "relative"}
+  [:>* {:position "absolute" :top 0 :left 0}]
   [arc :w-full]
   {--arc-thickness "10%"}
   [:.img :w-full
    {:padding --arc-thickness
-    :margin-left "-100%"}
+    #_#_:margin-left "-100%"}
    [:>* :w-full :aspect-square :rounded-full
     {:background-size "contain"}]]
   ([{:keys [capacity image]}]
    [:<> {:style {--arc-degrees (str (* 360.0 capacity) "deg")}}
+    [arc {:style {--arc-degrees "360deg"
+                  --arc-color "white"}}]
     [arc]
+
     [:div.img
      [:div
       {:style {:background-image image}}]]]))
+
+(o/defprop --session-type-color)
 
 (o/defstyled session-card :div
   :flex :gap-3
   :surface-2
   :shadow-4
   :boder :border-solid :border-surface-3
-  [:.title :mb-3 :font-size-3]
+  [:.title :font-size-3]
   [:.datetime :flex-col :items-center :justify-center :font-size-3 :font-bold]
-  [:.guage :p-2]
+  [:.guage :p-2 :self-center]
   [:.type :font-bold
    :p-1
    :text-center
    :small-caps
    {:writing-mode "vertical-lr"
-    :transform "rotate(180deg)"}]
-  [capacity-gauge :w-100px :mr-3]
+    :transform "rotate(180deg)"
+    :background-color --session-type-color}]
+  [capacity-gauge :w-100px]
   [:.details :flex-col :py-2]
-  ([{:session/keys [type title subtitle organized time location image]}]
+  ([{:session/keys [type title subtitle organized time location image] :as s}]
    [:<>
-    [:div.type (:sesion.type/name type)]
-    [:div.datetime (str time)]
-    #_[:div.datetime
-       [:div (subs day 0 3)]
-       [:div date]
-       [:div time]]
+    {:style {--session-type-color (:session.type/color type)}}
+    [:div.type (:session.type/name type)]
     [:div.guage
      [capacity-gauge {:capacity (rand)
                       :image (if image
                                (str "url(" image ")")
                                (str "var(--gradient-" (inc (rand-int 7)) ")"))}]]
+    [:div.datetime
+     [:div
+      (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "]
+     [:div (time/format "dd.MM" time)]
+     [:div (str (time/truncate-to (time/local-time time) :minutes))]]
     [:div.details
      [:h2.title title]
-     [:p.subtitle subtitle]
+     [:h3.subtitle subtitle]
 
      [:div.loc (:location/name location)]
-     [:p.host "Organized by " organized]]]))
+     #_[:p.host "Organized by " organized]]]))
 
 ;; Create / edit
 
@@ -118,3 +128,4 @@
       [:input {:id "published" :name "published?" :type "checkbox"}]]
 
      [:input {:type "submit" :value "Create"}]]]))
+

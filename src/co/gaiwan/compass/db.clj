@@ -10,6 +10,8 @@
 
 (declare transact)
 
+(def event-time-zone (java.time.ZoneId/of "Europe/Brussels"))
+
 (defmethod ig/init-key :compass/db [_ {:keys [url]}]
   (d/create-database url)
   (let [conn (d/connect url)]
@@ -43,13 +45,18 @@
     (instance? java.time.Instant value)
     (java.util.Date/from value)
 
+    (instance? java.time.ZonedDateTime value)
+    (java.util.Date/from (.toInstant ^java.time.ZonedDateTime value))
+
     :else
     value))
 
 (defn munge-from-db [value]
   (cond
     (instance? java.util.Date value)
-    (.toInstant ^java.util.Date value)
+    (java.time.ZonedDateTime/ofInstant
+     (.toInstant ^java.util.Date value)
+     event-time-zone)
 
     (instance? datomic.query.EntityMap value)
     (->munged-entity value)

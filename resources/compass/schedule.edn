@@ -4,7 +4,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/daniel-szmulewicz.jpg",
-  :session/time #time/inst "2024-09-18T18:20:00Z",
+  :session/time #time/zdt "2024-09-18T18:20+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -14,7 +14,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/sami-kallinen.png",
-  :session/time #time/inst "2024-09-18T17:40:00Z",
+  :session/time #time/zdt "2024-09-18T17:40+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -24,7 +24,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/james-reeves.jpeg",
-  :session/time #time/inst "2024-09-18T12:30:00Z",
+  :session/time #time/zdt "2024-09-18T12:30+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -35,7 +35,7 @@
   :session/type :session.type/workshop,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/chris-mccormick.jpg",
-  :session/time #time/inst "2024-09-18T14:00:00Z",
+  :session/time #time/zdt "2024-09-18T14:00+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/hal5,
   :session/description
@@ -45,7 +45,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/jeaye-wilkerson.png",
-  :session/time #time/inst "2024-09-18T15:30:00Z",
+  :session/time #time/zdt "2024-09-18T15:30+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -55,7 +55,7 @@
   :session/type :session.type/keynote,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/eric-normand.jpg",
-  :session/time #time/inst "2024-09-19T18:05:00Z",
+  :session/time #time/zdt "2024-09-19T18:05+02:00[Europe/Brussels]",
   :session/duration "PT45M",
   :session/location :location.type/depot,
   :session/description
@@ -66,7 +66,7 @@
   :session/type :session.type/workshop,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/michiel-borkent-teodor-heggelund-christian-johansen.png",
-  :session/time #time/inst "2024-09-18T14:30:00Z",
+  :session/time #time/zdt "2024-09-18T14:30+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/hal5,
   :session/description
@@ -77,7 +77,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/philippa-markovics-martin-kavalar.png",
-  :session/time #time/inst "2024-09-19T15:30:00Z",
+  :session/time #time/zdt "2024-09-19T15:30+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -87,7 +87,7 @@
   :session/type :session.type/workshop,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/nikita-prokopov.jpg",
-  :session/time #time/inst "2024-09-18T16:00:00Z",
+  :session/time #time/zdt "2024-09-18T16:00+02:00[Europe/Brussels]",
   :session/duration "PT90M",
   :session/location :location.type/hal5,
   :session/description
@@ -98,7 +98,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/dimitris-kyriakoudis.png",
-  :session/time #time/inst "2024-09-19T16:10:00Z",
+  :session/time #time/zdt "2024-09-19T16:10+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -108,7 +108,7 @@
   :session/type :session.type/office-hours,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/colin-fleming.jpeg",
-  :session/time #time/inst "2024-09-19T15:00:00Z",
+  :session/time #time/zdt "2024-09-19T15:00+02:00[Europe/Brussels]",
   :session/duration "PT90M",
   :session/location :location.type/hal5,
   :session/description
@@ -118,17 +118,18 @@
   :session/type :session.type/session,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/katja-bohnke.jpg",
-  :session/time #time/inst "2024-09-18T15:30:00Z",
+  :session/time #time/zdt "2024-09-18T15:30+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/hal5,
   :session/description
   "As women in tech I am used to being the only women in the room. I am used to feeling different. At time this raises the question: Do I belong here?\r\n\r\nWorking on a team with people of different age, gender, sexual orientation, religion, physical and mental abilities, ethnic and social background helps me to realize that we are all different and we all belong. Unfortunately, many teams are less diverse and not all people get to make this experience. Therefore, it is important to create opportunities to learn about each other and to become aware of similarities and differences.\r\n\r\nIn this interactive session we share experiences and talk about challenges. The goal is to raise awareness for the topic, to hear each others stories and to support each other. The session is open for all! I invite you to open your hearts for diversity and connect with each other!\n\n## Speakers\n\n### Katja Böhnke\n\nKatja Böhnke is a software engineer and psychology student. She values connection and learning. She loves to work on diverse teams and to create spaces where people can be themselves and connect with each other."}
- {:session/title "Richer SQL",
+ {:session/title
+  "Richer SQL  — Steering SQL's Future Towards Clojure's Philosophy",
   :session/subtitle "Jeremy Taylor",
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/jeremy-taylor.jpg",
-  :session/time #time/inst "2024-09-19T09:50:00Z",
+  :session/time #time/zdt "2024-09-19T09:50+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -138,17 +139,17 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/lovro-lugovic-sung-shik-jongmans.png",
-  :session/time #time/inst "2024-09-18T17:00:00Z",
+  :session/time #time/zdt "2024-09-18T17:00+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
-  "Over the past five years, the European Commission has invested over 250M EUR in its **Next Generation Internet** initiative. As part of this ambitious program, we are developing a new free and open-source core technology for distributed systems -- in Clojure, of course.\r\n\r\nThe idea behind our project, called Klor (https://github.com/lovrosdu/klor), is to use a new domain-specific language (DSL) -- embedded in Clojure -- to write distributed systems as **choreographies**. A choreography is very similar to any \"normal\" Clojure program, except that it has a special message-passing primitive for processes to communicate: instead of the usual two `send` and `receive` primitives, there is just one `communicate` primitive that embodies a whole end-to-end transmission. The great thing about this is that bugs like communication mismatches and deadlocks -- very hard to diagnose and fix! -- become syntactically impossible to write in the first place. The choreography essentially acts as a single source of truth and is used to automatically generate the implementations of the processes in the system. `communicate` still compiles to a `send` and a corresponding `receive` behind the scenes, but it all happens completely transparently to the programmer.\r\n\r\nKlor is implemented on top of the `clojure.tools.analyzer` compiler framework and hooks into Clojure's macro system to perform all of its analysis and code generation at macroexpansion-time, imposing virtually no run-time cost on the user. It uses a lightweight \"type\" system to track the locations of values and knowledge shared between the processes, and supports standard higher-order features that help with composition and modularity. Still, Klor does not impose any hard restrictions and embraces the interactive and dynamically typed spirit of Clojure: there is seamless interoperability with external Clojure code and standard REPL-based development is highly encouraged. All in all, Clojure's excellent support for concurrency, host interop and mature tooling makes it a great foundation to use for Klor.\r\n\r\nThe aim of this talk is to demonstrate Klor's usage and highlight some of the interesting implementation challenges we faced.\n\n## Speakers\n\n### Lovro Lugović\n\nLovro Lugović is a C++ software engineer turned Lisp hacker and a recent PhD graduate from the University of Southern Denmark, specializing in programming languages and concurrency theory. He likes functional programming, designing domain-specific languages and solving problems using a combination thereof.\n### Sung-Shik Jongmans\n\nSung-Shik Jongmans is language engineer at Swat.engineering. Before, he was associate professor at Open University of the Netherlands and researcher at the Dutch National Research Institute for Mathematics and Computer Science. His interests include programming languages, concurrency theory, and software engineering. And Clojure, of course."}
+  "Over the past five years, the European Commission has invested over 250M EUR in its **Next Generation Internet** initiative. As part of this ambitious program, we are developing a new free and open-source core technology for distributed systems -- in Clojure, of course.\n\n## Speakers\n\n### Lovro Lugović\n\nLovro Lugović is a C++ software engineer turned Lisp hacker and a recent PhD graduate from the University of Southern Denmark, specializing in programming languages and concurrency theory. He likes functional programming, designing domain-specific languages and solving problems using a combination thereof.\n### Sung-Shik Jongmans\n\nSung-Shik Jongmans is language engineer at Swat.engineering. Before, he was associate professor at Open University of the Netherlands and researcher at the Dutch National Research Institute for Mathematics and Computer Science. His interests include programming languages, concurrency theory, and software engineering. And Clojure, of course."}
  {:session/title "An introduction to application.garden",
   :session/subtitle "Jack Rusher, Paolo Holinski",
   :session/type :session.type/workshop,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/jack-rusher-paolo-holinski.png",
-  :session/time #time/inst "2024-09-18T15:00:00Z",
+  :session/time #time/zdt "2024-09-18T15:00+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/hal5,
   :session/description
@@ -159,7 +160,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/mitesh-shah.png",
-  :session/time #time/inst "2024-09-18T16:10:00Z",
+  :session/time #time/zdt "2024-09-18T16:10+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -170,7 +171,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/pawel-stroinski.jpeg",
-  :session/time #time/inst "2024-09-19T10:30:00Z",
+  :session/time #time/zdt "2024-09-19T10:30+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -180,7 +181,7 @@
   :session/type :session.type/talk,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/felix-alm.jpeg",
-  :session/time #time/inst "2024-09-19T11:30:00Z",
+  :session/time #time/zdt "2024-09-19T11:30+02:00[Europe/Brussels]",
   :session/duration "PT30M",
   :session/location :location.type/depot,
   :session/description
@@ -190,7 +191,7 @@
   :session/type :session.type/keynote,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/lu-wilson.png",
-  :session/time #time/inst "2024-09-18T09:35:00Z",
+  :session/time #time/zdt "2024-09-18T09:35+02:00[Europe/Brussels]",
   :session/duration "PT45M",
   :session/location :location.type/depot,
   :session/description
@@ -200,7 +201,7 @@
   :session/type :session.type/keynote,
   :session/image
   "https://2024.heartofclojure.eu/img/speakers/anna-colom.png",
-  :session/time #time/inst "2024-09-18T11:05:00Z",
+  :session/time #time/zdt "2024-09-18T11:05+02:00[Europe/Brussels]",
   :session/duration "PT45M",
   :session/location :location.type/depot,
   :session/description

@@ -20,7 +20,8 @@
   io.pedestal/pedestal.log       {:mvn/version "0.7.0"}
   ch.qos.logback/logback-classic {:mvn/version "1.5.6"}
 
-  com.datomic/peer      {:mvn/version "1.0.7180"}
+  com.datomic/peer      {:mvn/version "1.0.7180"
+                         :exclusions [joda-time/joda-time]}
   com.cnuernber/charred {:mvn/version "1.034"}
 
   hato/hato                             {:mvn/version "1.0.0"}
