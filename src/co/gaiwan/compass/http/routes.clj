@@ -12,7 +12,8 @@
   [(meta/routes)
    (home/routes)
    (sessions/routes)
-   (oauth/routes)])
+   (oauth/routes)
+   ["/fail" {:get {:handler (fn [_] (throw (ex-info "fail" {:fail 1})))}}]])
 
 ;; - Sessions
 ;;   - Talk

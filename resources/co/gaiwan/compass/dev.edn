@@ -1,2 +1,3 @@
-{:compass/origin "http://localhost:8099"
- :datomic/url    "datomic:mem://compass"}
+{:compass/origin               "http://localhost:8099"
+ :datomic/url                  "datomic:mem://compass"
+ :http/show-exception-details? true}

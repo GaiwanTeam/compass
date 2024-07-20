@@ -12,17 +12,17 @@
         - compass middleware
   "
   (:require
+   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.http.middleware :as middleware]
    [co.gaiwan.compass.http.routes :as routes]
+   [co.gaiwan.compass.util :as util]
    [integrant.core :as ig]
    [io.pedestal.log :as log]
    [reitit.ring :as ring]
+   [reitit.ring.middleware.exception :as exception]
    [ring.adapter.jetty :as jetty]
    [ring.middleware.defaults :as ring-defaults]
    [ring.middleware.session.cookie :as session-cookie]))
-
-(defn router []
-  (ring/router (routes/routing-table)))
 
 (def ring-default-config
   {:params    {:urlencoded true
@@ -53,6 +53,47 @@
   (ring/routes
    (ring/redirect-trailing-slash-handler {:method :strip})
    (ring/create-default-handler opts)))
+
+(defn exception-handler [error request]
+  (let [error-id (random-uuid)]
+    (log/error :http/error {:message "HTTP handler threw"
+                            :error-id error-id
+                            :request request}
+               :exception error)
+    {:status 500
+     :html/body
+     [:<>
+      [:h1 (.getName (class error))]
+      [:h2 (.getMessage error)]
+      [:p "error-id=" error-id]
+      (when (config/value :http/show-exception-details?)
+        [:<>
+         [:table {:style {:width "100%"}}
+          [:tr
+           [:td "ex-data"]
+           [:td {:align "left"}
+            [:pre {:style {:white-space "pre-wrap"}}
+             (util/pprint-str (ex-data error))]]]
+          [:tr
+           [:td "Stack"]
+           [:td {:align "left"}
+            [:pre {:style {:white-space "pre-wrap"}}
+             (for [l (.getStackTrace error)]
+               (str l "\n"))]]]
+          [:tr
+           [:td "Request"]
+           [:td {:align "left"}
+            [:pre {:style {:white-space "pre-wrap"}}
+             (util/pprint-str request)]]]]])]}))
+
+(def ex-mw
+  (exception/create-exception-middleware
+   {::exception/default exception-handler}))
+
+(defn router []
+  (ring/router
+   (routes/routing-table)
+   {:data {:middleware [ex-mw]}}))
 
 (defn handler []
   (ring/ring-handler
