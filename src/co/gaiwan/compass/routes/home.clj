@@ -8,22 +8,22 @@
 
 (defn all-sessions
   [{:keys [location type]}]
-  (->>
-   (db/q
-    '[:find
-      [(pull ?e [* {:session/type [*]
-                    :session/location [*]}]) ...]
-      :where
-      [?e :session/title]]
-    (db/db))
-   (filter #(if (= type "all")
-              true
-              (= (keyword "session.type" type)
-                 (get-in % [:session/type :db/ident]))))
-   (filter #(if (= location "all")
-              true
-              (= (keyword "location.type" location)
-                 (get-in % [:session/location :db/ident]))))))
+  (->> (db/q
+        '[:find
+          [(pull ?e [* {:session/type [*]
+                        :session/location [*]}]) ...]
+          :where
+          [?e :session/title]]
+        (db/db))
+       (sort-by :session/time)
+       (filter #(if (= type "all")
+                  true
+                  (= (keyword "session.type" type)
+                     (get-in % [:session/type :db/ident]))))
+       (filter #(if (= location "all")
+                  true
+                  (= (keyword "location.type" location)
+                     (get-in % [:session/location :db/ident]))))))
 
 (defn GET-home [req]
   {:html/head [:title "Conference Compass"]
