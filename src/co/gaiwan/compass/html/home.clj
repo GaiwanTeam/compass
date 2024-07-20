@@ -10,20 +10,24 @@
    [clojure.datafy :as df]
    [lambdaisland.ornament :as o]))
 
-(defn filters-hidden []
-  [:section#filters
-   [:button
-    {:hx-get "/show-filters"
+(o/defstyled ui-filter-button :button
+  ([hx-action-link caption]
+   [:<>
+    {:hx-get hx-action-link
      :hx-target "#filters"
      :hx-select "#filters"}
+    caption]))
+
+(defn filters-hidden []
+  [:section#filters
+   [ui-filter-button
+    "/show-filters"
     "Open Session Filters"]])
 
 (defn filters-showed []
   [:section#filters
-   [:button
-    {:hx-get "/hide-filters"
-     :hx-target "#filters"
-     :hx-select "#filters"}
+   [ui-filter-button
+    "/hide-filters"
     "Close Session Filters"]
    [:div
     [:label "Starred"]
