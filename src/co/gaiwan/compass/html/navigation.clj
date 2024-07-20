@@ -43,8 +43,7 @@
   [:li :font-size-3
    :line-height-5 ;; FIXME
    :border :border-solid :border-surface-4
-   {:font-size     t/--font-size-3
-    }]
+   {:font-size     t/--font-size-3}]
   ([user]
    [:<>
     [:div.bar
@@ -69,5 +68,4 @@
 
 (o/defrules toggle-menu
   [:body.menu-open
-   [menu-panel {:transform "translate(0, 0)"}]
-   ])
+   [menu-panel {:transform "translate(0, 0)"}]])

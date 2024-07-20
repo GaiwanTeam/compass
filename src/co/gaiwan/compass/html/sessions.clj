@@ -17,7 +17,7 @@
    :padding       --arc-thickness
    :border-radius --radius-round
    :background    --arc-color
-   :mask          (str "linear-gradient(#0000 0 0) content-box intersect, conic-gradient(#000 " --arc-degrees ", #0000 0)") })
+   :mask          (str "linear-gradient(#0000 0 0) content-box intersect, conic-gradient(#000 " --arc-degrees ", #0000 0)")})
 
 (o/defstyled capacity-gauge :div
   "Image with an arc around it to indicate how full a session is."
@@ -70,15 +70,55 @@
      [:p.subtitle subtitle]
 
      [:div.loc (:location/name location)]
-     [:p.host "Organized by "organized]]]))
+     [:p.host "Organized by " organized]]]))
 
 ;; Create / edit
 
 (o/defstyled session-form :div
   ([params]
    [:<>
-    [:h2 "Edit Activity"]
+    [:h2 "Create Activity"]
     [:form {:method "POST" :action "/sessions"}
-     [:label {:for "name"} "Activity Name"]
-     [:input {:id "name" :name "name"}]
-     [:input {:type "submit"}]]]))
+     [:div
+      [:label {:for "name"} "Session Name"]
+      [:input {:id "name" :name "name" :type "text"}]]
+
+     [:div
+      [:label {:for "type"} "Type"]
+      [:select {:id "type" :name "type"}
+       [:option {:value "talk"} "talk"]
+       [:option {:value "workshop"} "workshop"]
+       [:option {:value "keynote"} "keynote"]
+       [:option {:value "office-hours"} "office-hours"]
+       [:option {:value "session"} "session"]]]
+
+     [:div
+      [:label {:for "location"} "Location"]
+      [:select {:id "location" :name "location"}
+       [:option {:value "depot"} "Het Depot - main stage"]
+       [:option {:value "depot"} "Het Depot - Bar"]
+       [:option {:value "hal5"} "Hal 5 - zone A"]
+       [:option {:value "hal5"} "Hal 5 - zone B"]
+       [:option {:value "hal5"} "Hal 5 - HoC Café"]
+       [:option {:value "hal5"} "Hal 5 - Foodcourt"]
+       [:option {:value "hal5"} "Hal 5 - park"]
+       [:option {:value "hal5"} "Hal 5 - outside seating"]
+       [:option {:value "hal5"} "Hal 5 - long table"]]]
+
+     [:div
+      [:label {:for "capacity"} "Capacity"]
+      [:input {:id "capacity" :name "capacity" :type "number"}]]
+
+     [:div
+      [:label {:for "description"} "Description"]
+      [:textarea {:id "description" :name "description"}]]
+
+     [:div
+      [:label {:for "requires_ticket"} "Requires Ticket?"]
+      [:input {:id "requires_ticket" :name "requires_ticket" :type "checkbox"}]]
+
+     [:div
+      [:label {:for "published"} "Published?"]
+      [:input {:id "published" :name "published" :type "checkbox"}]]
+
+     [:input {:type "submit" :value "Create"}]]]))

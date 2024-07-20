@@ -28,5 +28,4 @@
      :post {:handler save-session}}]
    ["/new"
     {:name :activity/new
-     :get {:handler new-session}}]]
-  )
+     :get {:handler new-session}}]])
