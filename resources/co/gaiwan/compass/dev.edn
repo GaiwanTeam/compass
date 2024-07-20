@@ -1,3 +1,5 @@
 {:compass/origin               "http://localhost:8099"
  :datomic/url                  "datomic:mem://compass"
- :http/show-exception-details? true}
+ :http/show-exception-details? true
+ :discord/client-id "983315200398733362"
+ :discord/public-key "fca03a0789343028329c53ea68af6f6ed32858283329615dd89ce0dd3908c8d3"}
