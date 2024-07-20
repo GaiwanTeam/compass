@@ -95,15 +95,15 @@
      [:div
       [:label {:for "location"} "Location"]
       [:select {:id "location" :name "location"}
-       [:option {:value "depot"} "Het Depot - main stage"]
-       [:option {:value "depot"} "Het Depot - Bar"]
-       [:option {:value "hal5"} "Hal 5 - zone A"]
-       [:option {:value "hal5"} "Hal 5 - zone B"]
-       [:option {:value "hal5"} "Hal 5 - HoC Café"]
-       [:option {:value "hal5"} "Hal 5 - Foodcourt"]
-       [:option {:value "hal5"} "Hal 5 - park"]
-       [:option {:value "hal5"} "Hal 5 - outside seating"]
-       [:option {:value "hal5"} "Hal 5 - long table"]]]
+       [:option {:value "depot-main-stage"} "Het Depot - main stage"]
+       [:option {:value "depot-baar"} "Het Depot - Bar"]
+       [:option {:value "hal5-zone-a"} "Hal 5 - zone A"]
+       [:option {:value "hal5-zone-b"} "Hal 5 - zone B"]
+       [:option {:value "hal5-hoc-cafe"} "Hal 5 - HoC Café"]
+       [:option {:value "hal5-foodcourt"} "Hal 5 - Foodcourt"]
+       [:option {:value "hal5-park"} "Hal 5 - park"]
+       [:option {:value "hal5-outside-seating"} "Hal 5 - outside seating"]
+       [:option {:value "hal5-long-table"} "Hal 5 - long table"]]]
 
      [:div
       [:label {:for "capacity"} "Capacity"]
@@ -115,10 +115,10 @@
 
      [:div
       [:label {:for "requires_ticket"} "Requires Ticket?"]
-      [:input {:id "requires_ticket" :name "requires_ticket" :type "checkbox"}]]
+      [:input {:id "requires_ticket" :name "requires-ticket?" :type "checkbox"}]]
 
      [:div
-      [:label {:for "published"} "Published?"]
-      [:input {:id "published" :name "published" :type "checkbox"}]]
+      [:label {:for "published"} "Published/Visible?"]
+      [:input {:id "published" :name "published?" :type "checkbox"}]]
 
      [:input {:type "submit" :value "Create"}]]]))

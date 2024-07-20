@@ -8,7 +8,8 @@
   "
   (:require
    [co.gaiwan.compass.html.sessions :as h]
-   [ring.util.response :as response]))
+   [ring.util.response :as response]
+   [co.gaiwan.compass.db :as db]))
 
 (defn new-session [req]
   (if-not (:identity req)
@@ -17,7 +18,15 @@
     {:html/head [:title "Create new session"]
      :html/body [h/session-form {}]}))
 
-(defn save-session [{:keys [params]}]
+(defn save-session
+  "Save session to Datomic
+  
+  The typical params is:
+  {:name \"dsafa\", :type \"talk\", 
+   :location \"depot-main-stage\", :capacity \"34\", 
+   :description \"dsafa\", :requires-ticket? \"on\"
+   :published? \"on\"}"
+  [{:keys [params]}]
   ;; TODO save to datomic
   {:html/body [:p "OK " (pr-str params)]})
 
