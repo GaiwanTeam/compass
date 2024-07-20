@@ -50,7 +50,7 @@
      "Menu"
      [:button {:cx-toggle "menu-open" :cx-target "body"}
       [graphics/cross]]]
-    [:pre (pr-str user)]
+    #_[:pre (pr-str user)]
     [:ul
 
      [:li
