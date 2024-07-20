@@ -62,8 +62,8 @@
   (str/trim (:out (shell/sh "hostname"))))
 
 (defn notify-discord [msg]
-  (when discord-endpoint
-    (curl/post discord-endpoint
+  (when discord-webhook
+    (curl/post discord-webhook
                {:headers {"Content-Type" "application/json"}
                 :body (json/generate-string {:username "compass.heartofclojure.eu"
                                              :content msg})})))
