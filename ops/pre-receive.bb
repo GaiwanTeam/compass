@@ -11,6 +11,7 @@
 
 (def timeout 90)
 (def service-name "compass")
+(def gh-repo "https://github.com/GaiwanTeam/compass")
 (def health-check-url "http://localhost:8080/health")
 (def app-dir "/home/compass/app")
 (def prep-cmd "true")
@@ -163,11 +164,11 @@
                                      (str/join "\n"))
                                 "> ```"))
                           (fatal "Health check failed"))
-                        (do
+                        (let [git-interval (str previous-git-sha ".." git-sha)]
                           (notify-discord
-                           (str "> __**Deployed " sha "**__\n"
+                           (str "> __**Deployed [" git-interval "](" gh-repo "/compare/" git-interval ")**__\n"
                                 "> ```\n"
-                                (->> (str/split (:out (sh/sh "git" "shortlog" (str previous-git-sha ".." git-sha))) #"\R")
+                                (->> (str/split (:out (sh/sh "git" "shortlog" git-interval)) #"\R")
                                      (map #(str "> " %))
                                      (str/join "\n"))
                                 "> ```"
