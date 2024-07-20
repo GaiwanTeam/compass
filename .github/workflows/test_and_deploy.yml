@@ -6,8 +6,8 @@ on:
     branches: [main]
 
 jobs:
-  test:
-    name: Clojure ${{ matrix.clojure }} (Java ${{ matrix.jdk }})
+  test_and_deploy:
+    name: Test and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,5 +32,5 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-      - name: Push
+      - name: Push to Deploy
         run: git push -f ssh://compass@compass.heartofclojure.eu:/home/compass/repo main:main
