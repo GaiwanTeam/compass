@@ -164,7 +164,7 @@
                                      (str/join "\n"))
                                 "> ```"))
                           (fatal "Health check failed"))
-                        (let [git-interval (str previous-git-sha ".." git-sha)]
+                        (let [git-interval (str (short-sha previous-git-sha) ".." (short-sha git-sha))]
                           (notify-discord
                            (str "> __**Deployed [" git-interval "](" gh-repo "/compare/" git-interval ")**__\n"
                                 "> ```\n"
