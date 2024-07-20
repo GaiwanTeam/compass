@@ -11,7 +11,6 @@
 (declare transact)
 
 (defmethod ig/init-key :compass/db [_ {:keys [url]}]
-  (/ 0 0)
   (d/create-database url)
   (let [conn (d/connect url)]
     @(transact conn (schema/schema-tx))
