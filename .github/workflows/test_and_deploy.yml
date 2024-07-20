@@ -7,27 +7,25 @@ on:
 
 jobs:
   test:
-    strategy:
-      matrix:
-        jdk: [17]
-        clojure: [11]
     name: Clojure ${{ matrix.clojure }} (Java ${{ matrix.jdk }})
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Java ${{ matrix.jdk }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Java
         uses: actions/setup-java@v2.5.0
         with:
           distribution: zulu
-          java-version: ${{ matrix.jdk }}
+          java-version: 17
           cache: maven
       - name: Setup Clojure
         uses: DeLaGuardo/setup-clojure@master
         with:
           cli: latest
       - name: Run tests
-        run: CLOJURE_ALIAS=clojure-${{ matrix.clojure }} bin/kaocha
+        run: bin/kaocha
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
