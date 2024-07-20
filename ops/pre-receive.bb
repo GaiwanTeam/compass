@@ -9,7 +9,7 @@
  '[cheshire.core :as json]
  '[babashka.curl :as curl])
 
-(def timeout 120)
+(def timeout 90)
 (def service-name "compass")
 (def health-check-url "http://localhost:8080/health")
 (def app-dir "/home/compass/app")
@@ -155,14 +155,14 @@
                           (println (color 33 "Health check failed, reverting"))
                           (sh "ln" "-sf" old-link current-dir)
                           (systemctl "restart")
-                          (fatal "Health check failed")
                           (notify-discord
                            (str "> __**Deployment health check failed, reverted.**__\n"
                                 "> ```\n"
                                 (->> (str/split log-lines #"\R")
                                      (map #(str "> " %))
                                      (str/join "\n"))
-                                "> ```")))
+                                "> ```"))
+                          (fatal "Health check failed"))
                         (do
                           (notify-discord
                            (str "> __**Deployed " sha "**__\n"
