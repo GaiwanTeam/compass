@@ -86,17 +86,13 @@
      [:div
       [:label {:for "type"} "Type"]
       [:select {:id "type" :name "type"}
-       [:option {:value "talk"} "talk"]
-       [:option {:value "workshop"} "workshop"]
-       [:option {:value "keynote"} "keynote"]
-       [:option {:value "office-hours"} "office-hours"]
-       [:option {:value "session"} "session"]]]
+       [:option {:value "activity"} "activity"]]]
 
      [:div
       [:label {:for "location"} "Location"]
       [:select {:id "location" :name "location"}
        [:option {:value "depot-main-stage"} "Het Depot - main stage"]
-       [:option {:value "depot-baar"} "Het Depot - Bar"]
+       [:option {:value "depot-bar"} "Het Depot - Bar"]
        [:option {:value "hal5-zone-a"} "Hal 5 - zone A"]
        [:option {:value "hal5-zone-b"} "Hal 5 - zone B"]
        [:option {:value "hal5-hoc-cafe"} "Hal 5 - HoC Café"]
@@ -114,8 +110,8 @@
       [:textarea {:id "description" :name "description"}]]
 
      [:div
-      [:label {:for "requires_ticket"} "Requires Ticket?"]
-      [:input {:id "requires_ticket" :name "requires-ticket?" :type "checkbox"}]]
+      [:label {:for "ticket"} "Requires Ticket?"]
+      [:input {:id "ticket" :name "ticket-required?" :type "checkbox"}]]
 
      [:div
       [:label {:for "published"} "Published/Visible?"]

@@ -24,6 +24,9 @@
    [:session/location :ref "Where does the session take place"]
    [:session/image :string "Image URL, either absolute, or relative to compass root"]
    [:session/capacity :long "Number of people that are able to join this session"]
+   [:session/signup :long "Number of people that are currently signing up this session"]
+   [:session/ticket-required? :boolean "If this session requires a ticket"]
+   [:session/published? :boolean "If this session is published/visible?"]
 
    [:session.type/name :string "Type of session, e.g. talk, activity"]
    [:session.type/color :string "CSS color or var reference used for rendering"]
