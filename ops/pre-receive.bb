@@ -169,8 +169,8 @@
                            (str "> __**Deployed [" git-interval "](" gh-repo "/compare/" git-interval ")**__\n"
                                 "> ```\n"
                                 (->> (str/split (:out (sh/sh "git" "shortlog" git-interval)) #"\R")
-                                     (map #(str "> " %))
-                                     (str/join "\n"))
+                                     (map #(str "> " % "\n"))
+                                     (str/join ""))
                                 "> ```"
                                 ))
                           (header "SUCCESSFULLY DEPLOYED" sha)
