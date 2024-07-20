@@ -144,8 +144,8 @@
                       (fatal "Service restart failed"))
                     (do
                       (header "Doing health check at" health-check-url)
-                      (future
-                        (sh "journalctl" "-q" "-f" "-u" service-name))
+                      #_(future
+                          (sh "journalctl" "-q" "-f" "-u" service-name))
                       (if-not (health-check!)
                         (let [log-lines (:out (sh/sh "journalctl" "-u" "compass" "-n" "10"))]
                           (println (color 33 "Health check failed, reverting"))
@@ -153,12 +153,21 @@
                           (systemctl "restart")
                           (fatal "Health check failed")
                           (notify-discord
-                           (str "Deployment health check failed, reverted.\n"
-                                log-lines)))
+                           (str "> __**Deployment health check failed, reverted.**__\n"
+                                "> ```\n"
+                                (->> (str/split log-lines #"\R")
+                                     (map #(str "> " %))
+                                     (str/join "\n"))
+                                "> ```")))
                         (do
                           (notify-discord
-                           (str "Deployed " sha "\n"
-                                (:out (sh/sh "git" "shortlog" (str previous-git-sha ".." git-sha)))))
+                           (str "> __**Deployed " sha "**__\n"
+                                "> ```\n"
+                                (->> (str/split (:out (sh/sh "git" "shortlog" (str previous-git-sha ".." git-sha))) #"\R")
+                                     (map #(str "> " %))
+                                     (str/join "\n"))
+                                "> ```"
+                                ))
                           (header "SUCCESSFULLY DEPLOYED" sha)
                           (System/exit 0))))))))))))))
 
