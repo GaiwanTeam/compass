@@ -24,10 +24,7 @@
   (def git-branch branch))
 
 (defn process-builder [args]
-  (doto (ProcessBuilder. args)
-    (.redirectInput java.lang.ProcessBuilder$Redirect/INHERIT)
-    (.redirectError java.lang.ProcessBuilder$Redirect/INHERIT)
-    (.redirectOutput java.lang.ProcessBuilder$Redirect/INHERIT)))
+  (.inheritIO (ProcessBuilder. args)))
 
 (defn color
   ([c1 c2 s]
@@ -41,6 +38,12 @@
 (defn short-sha [sha]
   (subs sha 0 8))
 
+(defonce procs (atom #{}))
+
+(defn exit! [code]
+  (run! #(.destroyForcibly %) @procs)
+  (System/exit code))
+
 (defn sh [& args]
   (let [[opts args] (if (map? (last args))
                       [(last args) (butlast args)]
@@ -52,11 +55,12 @@
                  (str/join " " (map #(if (str/includes? % " ") (pr-str %) %) args))
                  (if dir (str " (in " dir ")") "")))
      (timestamp))
-    (= 0 (-> (process-builder (into ["env" "-u" "GIT_QUARANTINE_PATH"] args))
-             (cond-> dir
-               (.directory (io/file dir)))
-             .start
-             .waitFor))))
+    (let [proc (-> (process-builder (into ["env" "-u" "GIT_QUARANTINE_PATH"] args))
+                   (cond-> dir
+                     (.directory (io/file dir)))
+                   .start)]
+      (swap! procs conj proc)
+      (= 0 (.waitFor proc)))))
 
 (defn hostname []
   (str/trim (:out (shell/sh "hostname"))))
@@ -71,7 +75,7 @@
 (defn fatal [& msg]
   (println (color 97 101 (str "FATAL:     " (str/join " " msg) "       ")) (timestamp))
   #_(notify-discord (str "FATAL: " (str/join " " msg)))
-  (System/exit -1))
+  (exit! -1))
 
 (defn header [& title]
   (println)
@@ -144,8 +148,8 @@
                       (fatal "Service restart failed"))
                     (do
                       (header "Doing health check at" health-check-url)
-                      #_(future
-                          (sh "journalctl" "-q" "-f" "-u" service-name))
+                      (future
+                        (sh "journalctl" "-q" "-f" "-u" service-name))
                       (if-not (health-check!)
                         (let [log-lines (:out (sh/sh "journalctl" "-u" "compass" "-n" "10"))]
                           (println (color 33 "Health check failed, reverting"))
@@ -169,11 +173,11 @@
                                 "> ```"
                                 ))
                           (header "SUCCESSFULLY DEPLOYED" sha)
-                          (System/exit 0))))))))))))))
+                          (exit! 0))))))))))))))
 
 (main)
 
-(System/exit 1)
+(exit! 1)
 
 ;; Local Variables:
 ;; mode:clojure
