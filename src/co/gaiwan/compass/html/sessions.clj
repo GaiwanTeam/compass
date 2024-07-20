@@ -80,7 +80,7 @@
     [:h2 "Create Activity"]
     [:form {:method "POST" :action "/sessions"}
      [:div
-      [:label {:for "name"} "Session Name"]
+      [:label {:for "name"} "Activity Name"]
       [:input {:id "name" :name "name" :type "text"}]]
 
      [:div

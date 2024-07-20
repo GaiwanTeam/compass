@@ -14,8 +14,6 @@
   [:section#filters
    [:button
     {:hx-get "/show-filters"
-     :hx-trigger "click"
-     :hx-swap "outerHTML"
      :hx-target "#filters"
      :hx-select "#filters"}
     "Open Session Filters"]])
@@ -24,8 +22,6 @@
   [:section#filters
    [:button
     {:hx-get "/hide-filters"
-     :hx-trigger "click"
-     :hx-swap "outerHTML"
      :hx-target "#filters"
      :hx-select "#filters"}
     "Close Session Filters"]
