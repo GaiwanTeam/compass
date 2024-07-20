@@ -1,2 +1,4 @@
 {:port 8080
- :compass/origin "https://compass.heartofclojure.eu"}
+ :compass/origin "https://compass.heartofclojure.eu"
+ :discord/client-id  "1228962758796775444"
+ :discord/public-key "f58a0fd30eaecaa690e8065717f61988d6fbdb5ee11658469d86ad016380656e"}
