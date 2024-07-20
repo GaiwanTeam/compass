@@ -1,19 +1,22 @@
 #!/bin/env bb
 
-(require '[clojure.string :as str]
-         '[clojure.java.io :as io]
-         '[clojure.core :as c]
-         '[clojure.pprint]
-         '[clojure.java.shell :as sh]
-         '[cheshire.core :as json]
-         '[babashka.curl :as curl])
+(require
+ '[clojure.string :as str]
+ '[clojure.java.io :as io]
+ '[clojure.core :as c]
+ '[clojure.pprint]
+ '[clojure.java.shell :as sh]
+ '[cheshire.core :as json]
+ '[babashka.curl :as curl])
 
 (def timeout 120)
 (def service-name "compass")
 (def health-check-url "http://localhost:8080/health")
 (def app-dir "/home/compass/app")
 (def prep-cmd "true")
-;; (def discord-endpoint "https://discord.com/api/webhooks/...")
+(def discord-webhook
+  (when (.exists (io/file "/home/compass/config.edn"))
+    (:discord/deployment-webhook (read-string (slurp "/home/compass/config.edn")))))
 
 (let [[from to branch] (str/split (slurp *in*) #" ")]
   (def previous-git-sha from)
@@ -59,14 +62,15 @@
   (str/trim (:out (shell/sh "hostname"))))
 
 (defn notify-discord [msg]
-  #_(curl/post discord-endpoint
+  (when discord-endpoint
+    (curl/post discord-endpoint
                {:headers {"Content-Type" "application/json"}
-                :body (json/generate-string {:username (hostname)
-                                             :content msg})}))
+                :body (json/generate-string {:username "compass.heartofclojure.eu"
+                                             :content msg})})))
 
 (defn fatal [& msg]
   (println (color 97 101 (str "FATAL:     " (str/join " " msg) "       ")) (timestamp))
-  (notify-discord (str "FATAL: " (str/join " " msg)))
+  #_(notify-discord (str "FATAL: " (str/join " " msg)))
   (System/exit -1))
 
 (defn header [& title]
@@ -74,7 +78,7 @@
   (println (str (color 93 "-=≡≣    ") (color 33 (str/join " " title)) (color 93 "    ≣≡=-"))
            (timestamp))
   (println)
-  (notify-discord (str/join " " title)))
+  #_(notify-discord (str/join " " title)))
 
 (defn health-check! []
   (let [start (System/currentTimeMillis)]
@@ -143,13 +147,18 @@
                       (future
                         (sh "journalctl" "-q" "-f" "-u" service-name))
                       (if-not (health-check!)
-                        (do
+                        (let [log-lines (:out (sh/sh "journalctl" "-u" "compass" "-n" "10"))]
                           (println (color 33 "Health check failed, reverting"))
                           (sh "ln" "-sf" old-link current-dir)
                           (systemctl "restart")
-                          (fatal "Health check failed"))
+                          (fatal "Health check failed")
+                          (notify-discord
+                           (str "Deployment health check failed, reverted.\n"
+                                log-lines)))
                         (do
-                          (sh "sh" "-c" (str "sudo /bin/systemctl status " service-name " | cut -c1-180"))
+                          (notify-discord
+                           (str "Deployed " sha "\n"
+                                (:out (sh/sh "git" "shortlog" (str previous-git-sha ".." git-sha)))))
                           (header "SUCCESSFULLY DEPLOYED" sha)
                           (System/exit 0))))))))))))))
 
