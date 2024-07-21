@@ -1,6 +1,7 @@
 :where(html) {
   --hoc-pink: #e25f7d;
-  --sessions-arc-thickness: 40px;
+  --size-0: 0;
+  --sessions-arc-thickness: 30px;
   --sessions-arc-color: var(--lime-5);
   --sessions-arc-degrees: 240deg;
 }
@@ -28,12 +29,8 @@ body.menu-open .co_gaiwan_compass_html_navigation__menu_panel {
 }
 
 body {
-  margin: var(--size-2);
+  padding: var(--size-2);
   max-width: 100vw;
-}
-
-body >main {
-  padding: var(--size-3);
 }
 
 ul, ol {
@@ -54,19 +51,18 @@ body {
 .graphics-hamburger {
   stroke-width: 13%;
   stroke-linecap: round;
-  stroke: var(--gray-9);
+  stroke: var(--text-1);
 }
 
 .graphics-cross {
   stroke-width: 13%;
   stroke-linecap: round;
-  stroke: var(--gray-9);
+  stroke: var(--text-1);
 }
 
 .co_gaiwan_compass_html_navigation__nav_bar {
   display: flex;
   align-items: center;
-  padding: var(--size-3);
   background-color: var(--surface-1);
 }
 
@@ -127,7 +123,7 @@ body {
 .sessions-capacity_gauge {
   aspect-ratio: 1 / 1;
   position: relative;
-  --sessions-arc-thickness: 10%;
+  --sessions-arc-thickness: 7%;
 }
 
 .sessions-capacity_gauge >* {
@@ -149,33 +145,52 @@ body {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 9999px;
-  background-size: contain;
+  background-size: cover;
+  background-position: 50% 50%;
 }
 
 .sessions-session_card {
   display: flex;
-  gap: var(--size-3);
-  box-shadow: var(--shadow-4);
+  gap: var(--size-1);
+  background-color: var(--surface-2);
+  box-shadow: var(--shadow-2);
   border-style: solid;
   border-color: var(--surface-3);
+  text-align: center;
 }
 
 .sessions-session_card .title {
-  font-size: var(--size-3);
+  font-size: var(--size-4);
+  font-weight: 600;
+  margin-bottom: var(--size-2);
 }
 
-.sessions-session_card .datetime {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.sessions-session_card .subtitle {
   font-size: var(--size-3);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .sessions-session_card .guage {
   padding: var(--size-2);
-  align-self: center;
+}
+
+.sessions-session_card .datetime {
+  font-weight: 600;
+  position: absolute;
+  top: var(--size-0);
+  right: var(--size-0);
+  text-align: right;
+  margin: var(--size-2);
+}
+
+.sessions-session_card .details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  padding-top: var(--size-3);
+  padding-bottom: var(--size-3);
+  position: relative;
 }
 
 .sessions-session_card .type {
@@ -192,13 +207,63 @@ body {
   width: 100px;
 }
 
-.sessions-session_card .details {
-  display: flex;
-  flex-direction: column;
-  padding-top: var(--size-2);
-  padding-bottom: var(--size-2);
+.sessions-session_card .sessions-session_actions {
+  text-align: right;
 }
 
-.home-home .sessions-session_card {
+.sessions-session_card .expansion {
+  display: none;
+}
+
+.sessions-session_card.expanded .expansion {
+  display: block;
+}
+
+.sessions-session_actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: var(--size-2);
+}
+
+.home-filters {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: var(--size-3);
   margin-bottom: var(--size-3);
+}
+
+.home-filters button {
+  font-weight: 400;
+  flex-grow: 1;
+}
+
+.sessions-session_list {
+  display: grid;
+  gap: var(--size-3);
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media (min-width: 40rem) {
+
+  .sessions-session_list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (min-width: 60rem) {
+
+  .sessions-session_list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+@media (min-width: 80rem) {
+
+  .sessions-session_list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
 }

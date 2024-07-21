@@ -15,7 +15,7 @@
         children))
 
 (o/defstyled nav-bar :nav
-  :flex :items-center :p-3
+  :flex :items-center
   :bg-surface-1
   [:h1 :font-size-5 :mr-auto :ml-2]
   [:svg :grow-0 :shrink-0

@@ -7,9 +7,9 @@
 
 (o/defrules layout
   [:body
-   :m-2
+   :p-2
    {:max-width "100vw"}
-   [:>main :p-3]
+
 
    ])
 
@@ -20,7 +20,7 @@
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
     [:link {:rel "stylesheet" :href "https://unpkg.com/open-props"}]
     [:link {:rel "stylesheet" :href "https://unpkg.com/open-props/normalize.min.css"}]
-    [:link {:rel "stylesheet" :href "https://unpkg.com/open-props/buttons.min.css"}]
+    [:link {:rel "stylesheet" :href "/css/buttons.css"}]
     [:link {:rel "stylesheet" :href "/css/styles.css"}]
     [:script {:src "/js/htmx-1.9.12.js"}]
     [:script {:src "/js/cx.js"}]

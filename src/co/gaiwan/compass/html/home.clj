@@ -10,72 +10,59 @@
    [clojure.datafy :as df]
    [lambdaisland.ornament :as o]))
 
-(o/defstyled ui-filter-button :button
-  ([hx-action-link caption]
+(o/defstyled filters :section#filters
+  :flex :flex-wrap
+  :my-3
+  [:button :font-normal :flex-grow]
+  ([]
    [:<>
-    {:hx-get hx-action-link
-     :hx-target "#filters"
-     :hx-select "#filters"}
-    caption]))
+    [:button "Today"]
+    [:button "All"]
+    [:button "My Activities"]
+    [:button "Created By Me"]
+    [:button "Create An Activity"]
+    ]))
 
-(defn filters-hidden []
-  [:section#filters
-   [ui-filter-button
-    "/show-filters"
-    "Open Session Filters"]])
-
-(defn filters-showed []
-  [:section#filters
-   [ui-filter-button
-    "/hide-filters"
-    "Close Session Filters"]
-   [:div
-    [:label "Starred"]
-    [:input {:type "checkbox"}]]
-   [:div
-    [:label "Participating"]
-    [:input {:type "checkbox"}]]
-   [:div
-    [:label "Spots available"]
-    [:input {:type "checkbox"}]]
-   [:div
-    [:label "Type"]
-    [:select
-     {:name "type"
-      :hx-include "select[name='location']"
-      :hx-get "/conf-sessions"
-      :hx-select "#sessions"
-      :hx-target "#sessions"}
-     [:option {:value "all"} "all"]
-     [:option {:value "talk"} "talk"]
-     [:option {:value "workshop"} "workshop"]
-     [:option {:value "keynote"} "keynote"]
-     [:option {:value "office-hours"} "office-hours"]
-     [:option {:value "session"} "session"]]]
-   [:div
-    [:label "Location"]
-    [:select
-     {:name "location"
-      :hx-include "select[name='type']"
-      :hx-get "/conf-sessions"
-      :hx-select "#sessions"
-      :hx-target "#sessions"}
-     [:option {:value "all"} "all"]
-     [:option {:value "depot"} "Het Depot"]
-     [:option {:value "hal5"} "Hal 5"]]]])
-
-(defn session-snippet
-  [sessions]
-  [:main#sessions
-   (for [session sessions]
-     [sessions/session-card session])])
+;; [:div
+;;  [:label "Starred"]
+;;  [:input {:type "checkbox"}]]
+;; [:div
+;;  [:label "Participating"]
+;;  [:input {:type "checkbox"}]]
+;; [:div
+;;  [:label "Spots available"]
+;;  [:input {:type "checkbox"}]]
+;; [:div
+;;  [:label "Type"]
+;;  [:select
+;;   {:name "type"
+;;    :hx-include "select[name='location']"
+;;    :hx-get "/conf-sessions"
+;;    :hx-select "#sessions"
+;;    :hx-target "#sessions"}
+;;   [:option {:value "all"} "all"]
+;;   [:option {:value "talk"} "talk"]
+;;   [:option {:value "workshop"} "workshop"]
+;;   [:option {:value "keynote"} "keynote"]
+;;   [:option {:value "office-hours"} "office-hours"]
+;;   [:option {:value "session"} "session"]]]
+;; [:div
+;;  [:label "Location"]
+;;  [:select
+;;   {:name "location"
+;;    :hx-include "select[name='type']"
+;;    :hx-get "/conf-sessions"
+;;    :hx-select "#sessions"
+;;    :hx-target "#sessions"}
+;;   [:option {:value "all"} "all"]
+;;   [:option {:value "depot"} "Het Depot"]
+;;   [:option {:value "hal5"} "Hal 5"]]]
 
 (o/defstyled home :div
-  [sessions/session-card :mb-3]
   ([{:keys [user sessions]}]
    [:<>
-    [filters-hidden]
-    [session-snippet sessions]]))
+    [filters]
+    [sessions/session-list sessions]]))
 
 (comment
   [sessions/session-card (sessions/rand-session)]

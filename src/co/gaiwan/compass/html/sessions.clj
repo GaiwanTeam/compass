@@ -8,7 +8,7 @@
    [lambdaisland.ornament :as o]))
 
 (o/defprop --arc-degrees "240deg")
-(o/defprop --arc-thickness "40px")
+(o/defprop --arc-thickness "30px")
 (o/defprop --arc-color --lime-5)
 
 (o/defstyled arc :div
@@ -26,12 +26,13 @@
   {:position "relative"}
   [:>* {:position "absolute" :top 0 :left 0}]
   [arc :w-full]
-  {--arc-thickness "10%"}
+  {--arc-thickness "7%"}
   [:.img :w-full
    {:padding --arc-thickness
     #_#_:margin-left "-100%"}
    [:>* :w-full :aspect-square :rounded-full
-    {:background-size "contain"}]]
+    {:background-size "cover"
+     :background-position "50% 50%"}]]
   ([{:keys [capacity image]}]
    [:<> {:style {--arc-degrees (str (* 360.0 capacity) "deg")}}
     [arc {:style {--arc-degrees "360deg"
@@ -42,16 +43,29 @@
      [:div
       {:style {:background-image image}}]]]))
 
+(o/defstyled session-actions :nav
+  :flex :justify-end :w-full
+  :mt-2
+  ([session]
+   [:<>
+    [:button "Sign up"]
+    [:button "Details"]]
+   )
+  )
+
 (o/defprop --session-type-color)
 
 (o/defstyled session-card :div
-  :flex :gap-3
-  :surface-2
-  :shadow-4
+  :flex :gap-1
+  :bg-surface-2
+  :shadow-2
   :boder :border-solid :border-surface-3
-  [:.title :font-size-3]
-  [:.datetime :flex-col :items-center :justify-center :font-size-3 :font-bold]
-  [:.guage :p-2 :self-center]
+  :text-center
+  [:.title :font-size-4 :font-semibold :mb-2]
+  [:.subtitle :font-size-3 :font-medium]
+  [:.guage :p-2]
+  [:.datetime :font-semibold :absolute :top-0 :right-0 :text-right :m-2]
+  [:.details :flex-col :w-full :items-center :py-3 :relative]
   [:.type :font-bold
    :p-1
    :text-center
@@ -60,28 +74,50 @@
     :transform "rotate(180deg)"
     :background-color --session-type-color}]
   [capacity-gauge :w-100px]
-  [:.details :flex-col :py-2]
-  ([{:session/keys [type title subtitle organized time location image] :as s}]
+  [session-actions :text-right]
+  [:.expansion {:display "none"}]
+  [:&.expanded [:.expansion {:display "block"}]]
+  ([{:session/keys [type title subtitle organized time location image] :as session}]
    [:<>
-    {:style {--session-type-color (:session.type/color type)}}
+    {:style {--session-type-color (:session.type/color type)}
+     :cx-toggle "expanded"
+     :cx-target (str "." session-card)}
     [:div.type (:session.type/name type)]
-    [:div.guage
-     [capacity-gauge {:capacity (rand)
-                      :image (if image
-                               (str "url(" image ")")
-                               (str "var(--gradient-" (inc (rand-int 7)) ")"))}]]
-    [:div.datetime
-     [:div
-      (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "]
-     [:div (time/format "dd.MM" time)]
-     [:div (str (time/truncate-to (time/local-time time) :minutes))]]
+
     [:div.details
+     [:div.guage
+      [capacity-gauge {:capacity (rand)
+                       :image (if image
+                                (str "url(" image ")")
+                                (str "var(--gradient-" (inc (rand-int 7)) ")"))}]]
      [:h2.title title]
      [:h3.subtitle subtitle]
-
+     [:div.datetime
+      [:div
+       (str (time/truncate-to (time/local-time time) :minutes))]
+      [:div
+       (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
+       (time/format "dd.MM" time)]
+      ]
+     [:div.expansion
+      [session-actions session]]
+     #_
      [:div.loc (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
 
+(o/defstyled session-list :main#sessions
+  :grid :gap-3
+  {:grid-template-columns "repeat(1, 1fr)"}
+  [:at-media {:min-width "40rem"} {:grid-template-columns "repeat(2, 1fr)"}]
+  [:at-media {:min-width "60rem"} {:grid-template-columns "repeat(3, 1fr)"}]
+  [:at-media {:min-width "80rem"} {:grid-template-columns "repeat(4, 1fr)"}]
+  ([sessions]
+   (for [session sessions]
+     [session-card session])))
+
+(o/defrules session-list-cols
+
+  )
 ;; Create / edit
 
 (o/defstyled session-form :div

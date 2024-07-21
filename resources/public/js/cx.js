@@ -5,7 +5,7 @@ addEventListener("DOMContentLoaded", (_) => {
     [...(document.querySelectorAll('[cx-toggle]'))].forEach((el) => {
         let klass    = el.getAttribute('cx-toggle')
         let selector = el.getAttribute('cx-target')
-        let target   = selector ? document.querySelector(selector) : el;
+        let target   = selector ? el.closest(selector) : el;
         el.addEventListener("click", (_) => target.classList.toggle(klass))
     })
 });

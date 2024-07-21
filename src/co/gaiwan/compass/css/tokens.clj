@@ -8,6 +8,9 @@
 
 (o/import-tokens! (charred/read-json (io/resource "open-props.tokens.json")) {:include-values? false})
 
+(o/defprop --size-0 0)
+(o/defprop --text-1)
+
 (o/defprop --hoc-pink "#e25f7d")
 (o/defprop --surface-1)
 (o/defprop --surface-2)

@@ -31,13 +31,8 @@
                        :sessions (all-sessions {:type "all"
                                                 :location "all"})}]})
 
-(defn GET-filters-showed [req]
-  {:html/head [:title "filter snippets"]
-   :html/body [h/filters-showed]})
-
-(defn GET-filters-hidden [req]
-  {:html/head [:title "filter snippets"]
-   :html/body [h/filters-hidden]})
+(defn GET-filters [req]
+  {:html/body [h/filters]})
 
 (defn GET-conf-sessions [req]
   (let [qs-m (uri/query-string->map (:query-string req))]
