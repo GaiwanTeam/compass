@@ -121,47 +121,50 @@
 ;; Create / edit
 
 (o/defstyled session-form :div
+  [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
   ([params]
    [:<>
     [:h2 "Create Activity"]
     [:form {:method "POST" :action "/sessions"}
-     [:div
-      [:label {:for "name"} "Activity Name"]
-      [:input {:id "name" :name "name" :type "text"}]]
+     [:label {:for "title"} "Title"]
+     [:input {:id "title" :name "title" :type "text"}]
 
-     [:div
-      [:label {:for "type"} "Type"]
-      [:select {:id "type" :name "type"}
-       [:option {:value "activity"} "activity"]]]
+     [:label {:for "subtitle"} "Subtitle"]
+     [:input {:id "subtitle" :name "subtitle" :type "text"}]
 
-     [:div
-      [:label {:for "location"} "Location"]
-      [:select {:id "location" :name "location"}
-       [:option {:value "depot-main-stage"} "Het Depot - main stage"]
-       [:option {:value "depot-bar"} "Het Depot - Bar"]
-       [:option {:value "hal5-zone-a"} "Hal 5 - zone A"]
-       [:option {:value "hal5-zone-b"} "Hal 5 - zone B"]
-       [:option {:value "hal5-hoc-cafe"} "Hal 5 - HoC Café"]
-       [:option {:value "hal5-foodcourt"} "Hal 5 - Foodcourt"]
-       [:option {:value "hal5-park"} "Hal 5 - park"]
-       [:option {:value "hal5-outside-seating"} "Hal 5 - outside seating"]
-       [:option {:value "hal5-long-table"} "Hal 5 - long table"]]]
+     [:label {:for "start-time"} "Start Time"]
+     [:input {:id "start-time" :name "start-time" :type "datetime-local"}]
 
-     [:div
-      [:label {:for "capacity"} "Capacity"]
-      [:input {:id "capacity" :name "capacity" :type "number"}]]
+     [:label {:for "end-time"} "End Time"]
+     [:input {:id "end-time" :name "end-time" :type "datetime-local"}]
 
-     [:div
-      [:label {:for "description"} "Description"]
-      [:textarea {:id "description" :name "description"}]]
+     [:label {:for "type"} "Type"]
+     [:select {:id "type" :name "type"}
+      [:option {:value "activity"} "activity"]]
 
-     [:div
-      [:label {:for "ticket"} "Requires Ticket?"]
-      [:input {:id "ticket" :name "ticket-required?" :type "checkbox"}]]
+     [:label {:for "location"} "Location"]
+     [:select {:id "location" :name "location"}
+      [:option {:value "depot-main-stage"} "Het Depot - main stage"]
+      [:option {:value "depot-bar"} "Het Depot - Bar"]
+      [:option {:value "hal5-zone-a"} "Hal 5 - zone A"]
+      [:option {:value "hal5-zone-b"} "Hal 5 - zone B"]
+      [:option {:value "hal5-hoc-cafe"} "Hal 5 - HoC Café"]
+      [:option {:value "hal5-foodcourt"} "Hal 5 - Foodcourt"]
+      [:option {:value "hal5-park"} "Hal 5 - park"]
+      [:option {:value "hal5-outside-seating"} "Hal 5 - outside seating"]
+      [:option {:value "hal5-long-table"} "Hal 5 - long table"]]
 
-     [:div
-      [:label {:for "published"} "Published/Visible?"]
-      [:input {:id "published" :name "published?" :type "checkbox"}]]
+     [:label {:for "capacity"} "Capacity"]
+     [:input {:id "capacity" :name "capacity" :type "number" :value 0}]
+
+     [:label {:for "description"} "Description"]
+     [:textarea {:id "description" :name "description"}]
+
+     [:label {:for "ticket"} "Requires Ticket?"]
+     [:input {:id "ticket" :name "ticket-required?" :type "checkbox"}]
+
+     [:label {:for "published"} "Published/Visible?"]
+     [:input {:id "published" :name "published?" :type "checkbox"}]
 
      [:input {:type "submit" :value "Create"}]]]))
 

@@ -2,25 +2,23 @@
   "Front page views and components"
   {:ornament/prefix "home-"}
   (:require
-   [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.html.sessions :as sessions]
-   [co.gaiwan.compass.css.tokens :as t :refer :all]
-   [co.gaiwan.compass.http.oauth :as oauth]
-   [co.gaiwan.compass.util :as util]
-   [clojure.datafy :as df]
+   [java-time.api :as time]
    [lambdaisland.ornament :as o]))
 
 (o/defstyled filters :section#filters
-  :flex :flex-wrap
+  :flex :flex-wrap :gap-1
   :my-3
-  [:button :font-normal :flex-grow]
-  ([]
+  [#{:button :.btn} :font-normal :flex-grow]
+  ([all-sessions]
    [:<>
-    [:button "Today"]
-    [:button "All"]
+    [:button "Today " (count (filter #(= (time/month-day)
+                                         (time/month-day (:session/time %)))
+                                     all-sessions))]
+    [:button "All " (count all-sessions)]
     [:button "My Activities"]
     [:button "Created By Me"]
-    [:button "Create An Activity"]
+    [:a.btn {:href "/sessions/new" :hx-boost "false"} "Create An Activity"]
     ]))
 
 ;; [:div
@@ -61,36 +59,5 @@
 (o/defstyled home :div
   ([{:keys [user sessions]}]
    [:<>
-    [filters]
+    [filters sessions]
     [sessions/session-list sessions]]))
-
-(comment
-  [sessions/session-card (sessions/rand-session)]
-
-;; Not in use now
-  (defn week-day-str [day]
-    (let [week-days ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"]]
-      (nth week-days (dec day))))
-
-  (defn session-model
-    "session data from database to frontend
-
-   input `x` is a vecotr of
-         `[session-graph type-keyword location-name]`"
-    [v]
-    (let [[session-graph type-keyword location-name] v
-          {:session/keys [time speaker name capacity organized
-                          duration]} session-graph
-          {:keys [day-of-week month day-of-month
-                  hour minute]} (df/datafy time)
-          day-of-week-str (week-day-str day-of-week)
-          date-str (format "%02d.%02d" day-of-month month)
-          time-str (format "%02d:%02d" hour minute)]
-      {:title name
-       :speaker speaker
-       :type type-keyword
-       :organized organized
-       :day day-of-week-str
-       :date date-str
-       :time time-str
-       :location location-name})))

@@ -149,6 +149,13 @@ body {
   background-position: 50% 50%;
 }
 
+.sessions-session_actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: var(--size-2);
+}
+
 .sessions-session_card {
   display: flex;
   gap: var(--size-1);
@@ -219,25 +226,6 @@ body {
   display: block;
 }
 
-.sessions-session_actions {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  margin-top: var(--size-2);
-}
-
-.home-filters {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: var(--size-3);
-  margin-bottom: var(--size-3);
-}
-
-.home-filters button {
-  font-weight: 400;
-  flex-grow: 1;
-}
-
 .sessions-session_list {
   display: grid;
   gap: var(--size-3);
@@ -266,4 +254,23 @@ body {
     grid-template-columns: repeat(4, 1fr);
   }
 
+}
+
+.sessions-session_form form {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: var(--size-2);
+}
+
+.home-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-1);
+  margin-top: var(--size-3);
+  margin-bottom: var(--size-3);
+}
+
+.home-filters button, .home-filters .btn {
+  font-weight: 400;
+  flex-grow: 1;
 }

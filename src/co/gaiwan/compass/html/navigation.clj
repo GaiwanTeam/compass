@@ -5,15 +5,6 @@
    [co.gaiwan.compass.http.oauth :as oauth]
    [lambdaisland.ornament :as o]))
 
-(defn hx-a
-  "Use like :a, but uses htmx to only swap out the <main> element, so everything
-  but the navbar and menu."
-  [attrs & children]
-  (into [:a attrs #_(assoc attrs
-                           :hx-target "main" :hx-select "main"
-                           :hx-get (get attrs :href))]
-        children))
-
 (o/defstyled nav-bar :nav
   :flex :items-center
   :bg-surface-1
@@ -24,7 +15,7 @@
   ([user]
    [:<>
     [graphics/compass-logo]
-    [:h1 [hx-a {:href "/"} "Compass"]]
+    [:h1 [:a {:href "/"} "Compass"]]
     [:button {:cx-toggle "menu-open" :cx-target "body"}
      [graphics/hamburger]]]))
 

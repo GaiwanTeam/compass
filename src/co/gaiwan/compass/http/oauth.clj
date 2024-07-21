@@ -12,16 +12,24 @@
 (def discord-oauth-endpoint "https://discord.com/oauth2/authorize")
 (def discord-api-endpoint "https://discord.com/api/v10")
 
+(def default-scopes  ["email" "identify"])
+
 (defn flow-init-url
   ([]
-   (flow-init-url ["email" "identify"]))
-  ([scopes]
-   (-> (uri/uri discord-oauth-endpoint)
-       (uri/assoc-query*
-        {:client_id     (config/value :discord/client-id)
-         :response_type "code"
-         :redirect_uri  (str (config/value :compass/origin) "/oauth2/discord/callback")
-         :scope         (str/join " " scopes)}))))
+   (flow-init-url nil))
+  ([{:keys [scopes redirect-url]
+     :or {scopes default-scopes}}]
+   (let [state (random-uuid)]
+     (when redirect-url
+       @(db/transact [{:oauth/state-id     state
+                       :oauth/redirect-url redirect-url}]))
+     (-> (uri/uri discord-oauth-endpoint)
+         (uri/assoc-query*
+          {:client_id     (config/value :discord/client-id)
+           :response_type "code"
+           :redirect_uri  (str (config/value :compass/origin) "/oauth2/discord/callback")
+           :scope         (str/join " " scopes)
+           :state         state})))))
 
 ;; Add as bot to server
 #_
@@ -47,7 +55,9 @@
 
 (defn GET-callback [{:keys [query-params]}]
   (let [code                  (get query-params "code")
-        {:keys [status body]} (exchange-code code)]
+        state                 (get query-params "state")
+        {:keys [status body]} (exchange-code code)
+        redirect-url (:oauth/redirect-url (db/entity [:oauth/state-id (java.util.UUID/fromString state)]))]
     (if (not= 200 status)
       {:status  302
        :headers {"Location" "/"}
@@ -70,7 +80,7 @@
         (def tx-data tx-data)
         @(db/transact tx-data )
         {:status  302
-         :headers {"Location" "/"}
+         :headers {"Location" (or redirect-url "/")}
          :flash   [:p "You are signed in!"]
          :session {:identity user-uuid}}))))
 

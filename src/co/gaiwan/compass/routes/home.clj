@@ -32,9 +32,6 @@
                        :sessions (all-sessions {:type "all"
                                                 :location "all"})}]})
 
-(defn GET-filters [req]
-  {:html/body [h/filters]})
-
 (defn GET-conf-sessions [req]
   (let [qs-m (uri/query-string->map (:query-string req))]
     {:html/head [:title "sessions"]
@@ -45,9 +42,5 @@
    ["/"
     {:name :index
      :get {:handler GET-home}}]
-   ["/show-filters"
-    {:get {:handler GET-filters-showed}}]
-   ["/hide-filters"
-    {:get {:handler GET-filters-hidden}}]
    ["/conf-sessions"
     {:get {:handler GET-conf-sessions}}]])

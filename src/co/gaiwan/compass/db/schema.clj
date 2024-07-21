@@ -14,8 +14,8 @@
    [:discord/expires-at :instant "Expiration timestamp for the OAuth2 token"]
    [:discord/refresh-token :string "Discord OAuth2 refresh-token"]
 
-   [:session/title :string "Title of the talk/workshop/activity" :identity]
-   [:session/subtitle :string "Subtitle of the session, for talks/workshops = speaker names" :identity]
+   [:session/title :string "Title of the talk/workshop/activity"]
+   [:session/subtitle :string "Subtitle of the session, for talks/workshops = speaker names"]
    [:session/description :string "Full description or abstract"]
    [:session/type :ref "Type of the session"]
    [:session/organized :ref "User who organizes this session"]
@@ -31,7 +31,10 @@
    [:session.type/name :string "Type of session, e.g. talk, activity"]
    [:session.type/color :string "CSS color or var reference used for rendering"]
 
-   [:location/name :string "Name of the location" :identity]])
+   [:location/name :string "Name of the location" :identity]
+   [:oauth/state-id :uuid "State parameter passed along with the oauth flow" :identity]
+   [:oauth/redirect-url :string "Location to redirect to after login"]
+   ])
 
 (defn inflate-schema [s]
   (for [[ident type doc & flags] s]
@@ -50,3 +53,6 @@
 
 (defn schema-tx []
   (inflate-schema schema))
+
+(comment
+  (user/reset))
