@@ -4,6 +4,7 @@
    [lambdaisland.uri :as uri]
    [clojure.string :as str]
    [co.gaiwan.compass.html.home :as h]
+   [co.gaiwan.compass.html.sessions :as sessions]
    [co.gaiwan.compass.db :as db]))
 
 (defn all-sessions
@@ -37,7 +38,7 @@
 (defn GET-conf-sessions [req]
   (let [qs-m (uri/query-string->map (:query-string req))]
     {:html/head [:title "sessions"]
-     :html/body [h/session-snippet (all-sessions qs-m)]}))
+     :html/body [sessions/session-list (all-sessions qs-m)]}))
 
 (defn routes []
   [""
