@@ -31,7 +31,8 @@ apt-get update && apt-get install -yq \
   python3-certbot-nginx \
   nginx \
   jq \
-  cron
+  cron \
+  locales-all
 
 # Install Clojure
 curl -sL https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh | bash
@@ -209,7 +210,7 @@ After=txor.service
 Restart=always
 RestartSec=1
 WorkingDirectory=/home/compass/app/current
-ExecStart=/usr/local/bin/clojure -A:prod -M -m co.gaiwan.compass run --env prod --config /home/compass/config.edn
+ExecStart=/usr/local/bin/clojure -J-Dclojure.main.report=stderr -A:prod -M -m co.gaiwan.compass run --env prod --config /home/compass/config.edn
 User=compass
 
 [Install]
