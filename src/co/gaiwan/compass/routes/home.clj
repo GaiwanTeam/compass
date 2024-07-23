@@ -1,14 +1,13 @@
 (ns co.gaiwan.compass.routes.home
   "Front page routes and business logic"
   (:require
-   [lambdaisland.uri :as uri]
    [clojure.string :as str]
    [co.gaiwan.compass.html.home :as h]
    [co.gaiwan.compass.html.sessions :as sessions]
    [co.gaiwan.compass.db :as db]))
 
 (defn all-sessions
-  [{:keys [location type]}]
+  [{:keys [location type] :or {location "all" type "all"}}]
   (->> (db/q
         '[:find
           [(pull ?e [* {:session/type [*]
@@ -33,7 +32,7 @@
                                                 :location "all"})}]})
 
 (defn GET-conf-sessions [req]
-  (let [qs-m (uri/query-string->map (:query-string req))]
+  (let [qs-m (:query-params req)]
     {:html/head [:title "sessions"]
      :html/body [sessions/session-list (all-sessions qs-m)]}))
 
