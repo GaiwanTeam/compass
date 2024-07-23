@@ -66,6 +66,8 @@
   ""
   [req]
   (if-not (:identity req)
+    ;; FIXME: we should redirect to /sessions/:id/participate after redirect (or
+    ;; similar, depending on what makes sense with htmx)
     (util/redirect (oauth/flow-init-url {:redirect-url "/sessions/new"}))
     (do
       (let [user-id-str (:identity req)
@@ -74,7 +76,7 @@
             capacity (:session/capacity session)
             current-pv (:session/participants session)
             next-pv (conj current-pv user-id-str)]
-        ;;TODO 
+        ;;TODO
         ;; Write some code to handle the case that :db/cas throws exception at race condition
         (if (< (count current-pv) capacity)
           @(db/transact [[:db/cas session-eid :session/participants current-pv next-pv]])
