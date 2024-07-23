@@ -27,14 +27,14 @@
    [:session/signup :long "Number of people that are currently signing up this session"]
    [:session/ticket-required? :boolean "If this session requires a ticket"]
    [:session/published? :boolean "If this session is published/visible?"]
+   [:session/participants :string "reference points to the user" :many]
 
    [:session.type/name :string "Type of session, e.g. talk, activity"]
    [:session.type/color :string "CSS color or var reference used for rendering"]
 
    [:location/name :string "Name of the location" :identity]
    [:oauth/state-id :uuid "State parameter passed along with the oauth flow" :identity]
-   [:oauth/redirect-url :string "Location to redirect to after login"]
-   ])
+   [:oauth/redirect-url :string "Location to redirect to after login"]])
 
 (defn inflate-schema [s]
   (for [[ident type doc & flags] s]
