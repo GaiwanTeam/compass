@@ -16,7 +16,7 @@
 
 ;; Test transact participants
 
-(def req {:identity "ccc"
+(def req {:identity {:user/email "ddd"}
           :path-params {:id "17592186045455"}})
 
 (def session-eid 17592186045455)
@@ -26,7 +26,7 @@
 
 (def session (db/entity (parse-long (get-in req [:path-params :id]))))
 
-(let [user-id-str (:identity req)
+(let [user-id-str (:user/email (:identity req))
       session-eid (parse-long (get-in req [:path-params :id]))
       ;; session (db/entity session-eid)
       capacity (:session/capacity session)
@@ -40,7 +40,7 @@
   (prn :curr-ps curr-participants)
   (prn :check (< signup capacity))
   (prn :debug-tx [[:db/cas session-eid :session/signup signup new-signup]
-                   [:db/add session-eid :session/participants user-id-str]])
+                  [:db/add session-eid :session/participants user-id-str]])
   (if (< signup capacity)
     @(db/transact [[:db/cas session-eid :session/signup signup new-signup]
                    [:db/add session-eid :session/participants user-id-str]])

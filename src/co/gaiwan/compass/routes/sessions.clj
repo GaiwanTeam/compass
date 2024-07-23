@@ -70,7 +70,7 @@
     ;; similar, depending on what makes sense with htmx)
     (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))
     (do
-      (let [user-id-str (:identity req)
+      (let [user-id-str (:user/email (:identity req))
             session-eid (parse-long (get-in req [:path-params :id]))
             session (db/entity session-eid)
             capacity (:session/capacity session)
