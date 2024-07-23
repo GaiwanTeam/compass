@@ -39,7 +39,7 @@
              :session/description description
              :session/type (keyword "session.type" type)
              :session/location (keyword "location.type" location)
-             :session/capacity (Integer/parseInt capacity)}
+             :session/capacity (parse-long capacity)}
       (= ticket-required? "on")
       (assoc :session/ticket-required? true)
       (= published? "on")
@@ -62,6 +62,25 @@
     (util/redirect ["/sessions" (get tempids "session")]
                    {:flash "Successfully created!"})))
 
+(defn participate-session
+  ""
+  [req]
+  (if-not (:identity req)
+    (util/redirect (oauth/flow-init-url {:redirect-url "/sessions/new"}))
+    (do
+      (let [user-id-str (:identity req)
+            session (db/entity (parse-long (get-in req [:path-params :id])))
+            session-eid (:db/id session)
+            capacity (:session/capacity session)
+            current-pv (:session/participants session)
+            next-pv (conj current-pv user-id-str)]
+        ;;TODO 
+        ;; Write some code to handle the case that :db/cas throws exception at race condition
+        (if (< (count current-pv) capacity)
+          @(db/transact [[:db/cas session-eid :session/participants current-pv next-pv]])
+          {:html/body "No enough capacity for this session"}))
+      {:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})))
+
 (defn routes []
   ["/sessions"
    [""
@@ -72,4 +91,5 @@
                       (if (= "new" (get-in req [:path-params :id]))
                         (new-session req)
                         (GET-session req)))}}]
-   ])
+   ["/:id/participate"
+    {:post {:handler participate-session}}]])
