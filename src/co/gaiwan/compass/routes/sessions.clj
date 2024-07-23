@@ -68,18 +68,17 @@
   (if-not (:identity req)
     ;; FIXME: we should redirect to /sessions/:id/participate after redirect (or
     ;; similar, depending on what makes sense with htmx)
-    (util/redirect (oauth/flow-init-url {:redirect-url "/sessions/new"}))
+    (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))
     (do
       (let [user-id-str (:identity req)
-            session (db/entity (parse-long (get-in req [:path-params :id])))
-            session-eid (:db/id session)
+            session-eid (parse-long (get-in req [:path-params :id]))
+            session (db/entity session-eid)
             capacity (:session/capacity session)
-            current-pv (:session/participants session)
-            next-pv (conj current-pv user-id-str)]
-        ;;TODO
-        ;; Write some code to handle the case that :db/cas throws exception at race condition
-        (if (< (count current-pv) capacity)
-          @(db/transact [[:db/cas session-eid :session/participants current-pv next-pv]])
+            current-participants (:session/participants session)]
+        (if (< (count current-participants) capacity)
+          (do
+            @(db/transact [[:db/add session-eid :session/participants user-id-str]])
+            {:html/body "success"})
           {:html/body "No enough capacity for this session"}))
       {:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})))
 

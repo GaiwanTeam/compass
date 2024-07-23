@@ -274,28 +274,3 @@ body {
   font-weight: 400;
   flex-grow: 1;
 }
-
-.repl-sessions_ornament-poke__my_compo >.title {
-  color: blue;
-}
-
-.repl-sessions_ornament-poke__my_compo >.subtitle {
-  font-weight: 500;
-}
-
-.repl-sessions_ornament-poke__action_button {
-  color: red;
-}
-
-.repl-sessions_ornament-poke__action_button:hover {
-  color: black;
-}
-
-.repl-sessions_ornament-poke__main_button {
-  color: red;
-  margin: 1rem;
-}
-
-.repl-sessions_ornament-poke__main_button:hover {
-  color: black;
-}
