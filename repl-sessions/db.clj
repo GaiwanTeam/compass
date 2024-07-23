@@ -18,20 +18,30 @@
 
 (def req {:identity "ccc"
           :path-params {:id "17592186045455"}})
-(def session (merge {:session/capacity 14}
-                    (db/entity (parse-long (get-in req [:path-params :id])))))
+
+(def session-eid 17592186045455)
+
+@(db/transact [[:db/add session-eid :session/capacity 14]
+               [:db/add session-eid :session/signup 0]])
+
+(def session (db/entity (parse-long (get-in req [:path-params :id]))))
 
 (let [user-id-str (:identity req)
       session-eid (parse-long (get-in req [:path-params :id]))
       ;; session (db/entity session-eid)
       capacity (:session/capacity session)
-      curr-participants (:session/participants session)]
+      curr-participants (:session/participants session)
+      signup (:session/signup session)
+      new-signup (inc signup)]
         ;;TODO 
         ;; Write some code to handle the case that :db/cas throws exception at race condition
   (prn :session-eid session-eid)
   (prn :capacity capacity)
   (prn :curr-ps curr-participants)
-  (prn :check (< (count curr-participants) capacity))
-  (if (< (count curr-participants) capacity)
-    @(db/transact [[:db/add session-eid :session/participants user-id-str]])
+  (prn :check (< signup capacity))
+  (prn :debug-tx [[:db/cas session-eid :session/signup signup new-signup]
+                   [:db/add session-eid :session/participants user-id-str]])
+  (if (< signup capacity)
+    @(db/transact [[:db/cas session-eid :session/signup signup new-signup]
+                   [:db/add session-eid :session/participants user-id-str]])
     {:html/body "No enough capacity for this session"}))
