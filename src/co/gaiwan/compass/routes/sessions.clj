@@ -73,17 +73,22 @@
       (let [user-id-str (:user/email (:identity req))
             session-eid (parse-long (get-in req [:path-params :id]))
             session (db/entity session-eid)
+            participants (:session/participants session)
             capacity (:session/capacity session)
             signup (:session/signup session)
             new-signup (inc signup)]
-        (if (< signup capacity)
+        (cond
+          (contains? participants user-id-str)
+          {:html/body (str "you have signed up the session: " (:session/title session))}
+          (< signup capacity)
           (do
             ;;TODO: add try/catch to handle :db/cas
             @(db/transact [[:db/cas session-eid :session/signup signup new-signup]
                            [:db/add session-eid :session/participants user-id-str]])
-            {:html/body "success"})
+            {:html/body "successfully signup"})
+          :else
           {:html/body "No enough capacity for this session"}))
-      {:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})))
+      #_{:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})))
 
 (defn routes []
   ["/sessions"
