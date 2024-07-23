@@ -48,10 +48,8 @@
   :mt-2
   ([session]
    [:<>
-    [:button "Sign up"]
-    [:button "Details"]]
-   )
-  )
+    [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")} "Participate"]
+    [:button "Details"]]))
 
 (o/defprop --session-type-color)
 
@@ -97,12 +95,10 @@
        (str (time/truncate-to (time/local-time time) :minutes))]
       [:div
        (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
-       (time/format "dd.MM" time)]
-      ]
+       (time/format "dd.MM" time)]]
      [:div.expansion
       [session-actions session]]
-     #_
-     [:div.loc (:location/name location)]
+     #_[:div.loc (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
 
 (o/defstyled session-list :main#sessions
@@ -115,9 +111,8 @@
    (for [session sessions]
      [session-card session])))
 
-(o/defrules session-list-cols
+(o/defrules session-list-cols)
 
-  )
 ;; Create / edit
 
 (o/defstyled session-form :div
