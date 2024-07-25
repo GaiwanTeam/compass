@@ -39,6 +39,7 @@
              :session/description description
              :session/type (keyword "session.type" type)
              :session/location (keyword "location.type" location)
+             :session/signup 0
              :session/capacity (parse-long capacity)}
       (= ticket-required? "on")
       (assoc :session/ticket-required? true)
