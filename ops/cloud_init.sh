@@ -32,6 +32,7 @@ apt-get update && apt-get install -yq \
   nginx \
   jq \
   cron \
+  tmux \
   locales-all
 
 # Install Clojure
