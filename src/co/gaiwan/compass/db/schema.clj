@@ -24,7 +24,7 @@
    [:session/location :ref "Where does the session take place"]
    [:session/image :string "Image URL, either absolute, or relative to compass root"]
    [:session/capacity :long "Number of people that are able to join this session"]
-   [:session/signup :long "Number of people that are currently signing up this session"]
+   [:session/signup-count :long "Number of people that are currently signing up this session"]
    [:session/ticket-required? :boolean "If this session requires a ticket"]
    [:session/published? :boolean "If this session is published/visible?"]
    [:session/participants :string "reference points to the user" :many]

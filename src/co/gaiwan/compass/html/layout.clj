@@ -10,6 +10,8 @@
    :p-2
    {:max-width "100vw"}
 
+   [:#app {:max-width "80rem" :margin "0 auto"}]
+
 
    ])
 
@@ -34,11 +36,12 @@
            ;; CSRF
            :hx-headers (charred/write-json-str {"x-csrf-token" anti-forgery/*anti-forgery-token*})
            }
-    [nav/menu-panel user]
-    [nav/nav-bar user]
-    [:main
-     (when flash
-       [:p.flash flash])
-     body
-     #_
-     [:pre (with-out-str (clojure.pprint/pprint request))]]]])
+    [:div#app
+     [nav/menu-panel user]
+     [nav/nav-bar user]
+     [:main
+      (when flash
+        [:p.flash flash])
+      body
+      #_
+      [:pre (with-out-str (clojure.pprint/pprint request))]]]]])

@@ -29,8 +29,13 @@ body.menu-open .co_gaiwan_compass_html_navigation__menu_panel {
 }
 
 body {
-  padding: 0.5rem;
+  padding: var(--size-2);
   max-width: 100vw;
+}
+
+body #app {
+  max-width: 80rem;
+  margin: 0 auto;
 }
 
 ul, ol {

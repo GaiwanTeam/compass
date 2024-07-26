@@ -6,6 +6,7 @@
    [datomic.api :as d]
    [integrant.core :as ig]
    [integrant.repl.state :as state]
+   [io.pedestal.log :as log]
    [potemkin.collections :as po-coll]))
 
 (declare transact)
@@ -68,6 +69,7 @@
   ([tx-data]
    (transact (conn) tx-data))
   ([conn tx-data]
+   (log/trace :datomic/transacting tx-data)
    (d/transact conn (walk/postwalk munge-to-db tx-data))))
 
 (defn q [& args]

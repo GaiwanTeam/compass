@@ -11,6 +11,7 @@
    [co.gaiwan.compass.html.sessions :as h]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.util :as util]
+   [io.pedestal.log :as log]
    [java-time.api :as time]))
 
 (defn new-session [req]
@@ -39,7 +40,7 @@
              :session/description description
              :session/type (keyword "session.type" type)
              :session/location (keyword "location.type" location)
-             :session/signup 0
+             :session/signup-count 0
              :session/capacity (parse-long capacity)}
       (= ticket-required? "on")
       (assoc :session/ticket-required? true)
@@ -76,15 +77,15 @@
             session (db/entity session-eid)
             participants (:session/participants session)
             capacity (:session/capacity session)
-            signup (:session/signup session)
-            new-signup (inc signup)]
+            signup-cnt (:session/signup-count session)
+            new-signup-cnt ((fnil inc 0) signup-cnt)]
         (cond
           (contains? participants user-id-str)
           {:html/body (str "you have signed up the session: " (:session/title session))}
-          (< signup capacity)
+          (< (or signup-cnt 0) capacity)
           (do
             ;;TODO: add try/catch to handle :db/cas
-            @(db/transact [[:db/cas session-eid :session/signup signup new-signup]
+            @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt new-signup-cnt]
                            [:db/add session-eid :session/participants user-id-str]])
             {:html/body "successfully signup"})
           :else
