@@ -21,7 +21,10 @@
      :html/body [h/session-form {}]}))
 
 (defn GET-session [req]
-  {:html/body (h/session-detail (db/entity (parse-long (get-in req [:path-params :id]))))})
+  (let [session-eid (parse-long (get-in req [:path-params :id]))
+        session-selector '[* {:session/type [*]
+                              :session/location [*]}]]
+    {:html/body (h/session-detail (db/pull session-selector session-eid))}))
 
 (defn params->session-data
   "convert the Http Post Params to data ready for DB transaction"
@@ -80,19 +83,19 @@
                               set)
             capacity (:session/capacity session)
             signup-cnt (:session/signup-count session)
-            session-seletor '[* {:session/type [*]
-                                 :session/location [*]}]]
+            session-selector '[* {:session/type [*]
+                                  :session/location [*]}]]
         (cond
           (participants user-id)
           (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
                              [:db/retract session-eid :session/participants user-id]])
-              {:html/body [h/session-card (db/pull! session-seletor session-eid) user]})
+              {:html/body [h/session-card (db/pull session-selector session-eid) user]})
           (< (or signup-cnt 0) capacity)
           (do
             ;;TODO: add try/catch to handle :db/cas
             @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt ((fnil inc 0) signup-cnt)]
                            [:db/add session-eid :session/participants user-id]])
-            {:html/body [h/session-card (db/pull! session-seletor session-eid) user]})
+            {:html/body [h/session-card (db/pull session-selector session-eid) user]})
           :else
           {:html/body [h/session-card session user]}))
       #_{:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})

@@ -163,7 +163,9 @@
        (time/format "dd.MM" time)]]
      [:div.description
       [:div (m/component (m/md->hiccup description))]]
-     [:div.loc (:location/name location)]
+     [:div.location
+      [:div "Location "]
+      [:div (:location/name location)]]
      [:div.capacity
       [:div "Location capacity:"]
       [:div capacity]]
@@ -173,7 +175,8 @@
      [:div.participants
       [:div "Participants:"]
       [:div participants]]
-     [:p.host "Organized by " organized]]]))
+     [:p.host "Organized by " organized]
+     #_[:p (pr-str session)]]]))
 
 (o/defstyled session-list :main#sessions
   :grid :gap-3
