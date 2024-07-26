@@ -60,6 +60,7 @@
    [:<>
     [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
               :hx-target (str "closest ." session-card)
+              :hx-select (str "." session-card)
               :hx-swap "outerHTML"}
      "Participate"]
     [:a {:href (str "/sessions/" (:db/id session))}

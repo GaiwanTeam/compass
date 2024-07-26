@@ -65,9 +65,14 @@
    :published? \"on\"}"
   [{:keys [params]}]
   (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
-    (def tempids tempids)
     (util/redirect ["/sessions" (get tempids "session")]
                    {:flash "Successfully created!"})))
+
+(defn just-the-body [{:keys [body]}] body)
+
+(defn session-card-response [session user]
+  {:html/layout just-the-body
+   :html/body [h/session-card session user]})
 
 (defn participate-session
   ""
@@ -78,28 +83,30 @@
     (do
       (let [user-id (:db/id user)
             session-eid (parse-long (get-in req [:path-params :id]))
-            session (db/entity session-eid)
+            session-seletor '[* {:session/type [*]
+                                 :session/location [*]}]
+            pull-session #(db/pull session-seletor session-eid)
+            session (pull-session)
             participants (->> session
                               :session/participants
                               (map :db/id)
                               set)
             capacity (:session/capacity session)
             signup-cnt (:session/signup-count session)
-            session-selector '[* {:session/type [*]
-                                  :session/location [*]}]]
+            ]
         (cond
           (participants user-id)
           (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
                              [:db/retract session-eid :session/participants user-id]])
-              {:html/body [h/session-card (db/pull session-selector session-eid) user]})
+              (session-card-response (pull-session) user))
           (< (or signup-cnt 0) capacity)
           (do
             ;;TODO: add try/catch to handle :db/cas
             @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt ((fnil inc 0) signup-cnt)]
                            [:db/add session-eid :session/participants user-id]])
-            {:html/body [h/session-card (db/pull session-selector session-eid) user]})
+            (session-card-response (pull-session) user))
           :else
-          {:html/body [h/session-card session user]}))
+          (session-card-response session user)))
       #_{:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})
     (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))))
 
