@@ -56,7 +56,9 @@
   :mt-2
   ([session]
    [:<>
-    [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")} "Participate"]
+    [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
+              :hx-target (str "closest ." session-card)}
+     "Participate"]
     [:a {:href (str "/sessions/" (:db/id session))}
      [:button "Details"]]]))
 
