@@ -143,8 +143,7 @@
   ([{:session/keys [type title subtitle organized
                     time location image capacity
                     signup-count description
-                    participants] :as session
-     :or {participants [{:user/handle "aaa"} {:user/handle "bbb"}]}}]
+                    participants] :as session}]
    [:<>
     {:style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
@@ -182,6 +181,16 @@
       [:ol (map attendee participants)]]
      (when (:session/ticket-required? session)
        [:p "Required Ticket"])
+     [:div.actions
+      [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
+                :hx-target (str "closest ." session-card)
+                :hx-swap "outerHTML"}
+       "Sign Up"]
+      [:button {:hx-post (str "/sessions/" (:db/id session) "/leave")
+                :hx-target (str "closest ." session-card)
+                :hx-swap "outerHTML"}
+       "Leave"]
+      [:button "Edit"]]
      #_[:p.host "Organized by " organized]
      #_[:p (pr-str session)]]]))
 
