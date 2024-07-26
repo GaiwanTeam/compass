@@ -117,6 +117,10 @@
      #_[:div.loc (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
 
+(o/defstyled attendee :li
+  ([{:user/keys [name email handle uuid]}]
+   handle))
+
 (o/defstyled session-detail :div
   :flex :gap-1
   :bg-surface-2
@@ -139,7 +143,8 @@
   ([{:session/keys [type title subtitle organized
                     time location image capacity
                     signup-count description
-                    participants] :as session}]
+                    participants] :as session
+     :or {participants [{:user/handle "aaa"} {:user/handle "bbb"}]}}]
    [:<>
     {:style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
@@ -174,8 +179,10 @@
       [:div signup-count]]
      [:div.participants
       [:div "Participants:"]
-      [:div participants]]
-     [:p.host "Organized by " organized]
+      [:ol (map attendee participants)]]
+     (when (:session/ticket-required? session)
+       [:p "Required Ticket"])
+     #_[:p.host "Organized by " organized]
      #_[:p (pr-str session)]]]))
 
 (o/defstyled session-list :main#sessions

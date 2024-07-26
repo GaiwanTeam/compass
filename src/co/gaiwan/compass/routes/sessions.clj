@@ -23,7 +23,9 @@
 (defn GET-session [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))
         session-selector '[* {:session/type [*]
-                              :session/location [*]}]]
+                              :session/location [*]
+                              :session/participants [*]
+                              :session/organized [*]}]]
     {:html/body (h/session-detail (db/pull session-selector session-eid))}))
 
 (defn params->session-data
