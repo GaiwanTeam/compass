@@ -72,7 +72,7 @@
     ;; similar, depending on what makes sense with htmx)
     (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))
     (do
-      (let [user-id-str (:user/email (:identity req))
+      (let [user-id (:db/id (:identity req))
             session-eid (parse-long (get-in req [:path-params :id]))
             session (db/entity session-eid)
             participants (:session/participants session)
@@ -80,13 +80,13 @@
             signup-cnt (:session/signup-count session)
             new-signup-cnt ((fnil inc 0) signup-cnt)]
         (cond
-          (contains? participants user-id-str)
+          (contains? participants user-id)
           {:html/body (str "you have signed up the session: " (:session/title session))}
           (< (or signup-cnt 0) capacity)
           (do
             ;;TODO: add try/catch to handle :db/cas
             @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt new-signup-cnt]
-                           [:db/add session-eid :session/participants user-id-str]])
+                           [:db/add session-eid :session/participants user-id]])
             {:html/body "successfully signup"})
           :else
           {:html/body "No enough capacity for this session"}))
