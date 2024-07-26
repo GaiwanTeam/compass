@@ -5,7 +5,8 @@
    [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [java-time.api :as time]
-   [lambdaisland.ornament :as o]))
+   [lambdaisland.ornament :as o]
+   [markdown-to-hiccup.core :as m]))
 
 (o/defprop --arc-degrees "240deg")
 (o/defprop --arc-thickness "30px")
@@ -154,19 +155,18 @@
       [:div
        (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
        (time/format "dd.MM" time)]]
+     [:div.description
+      [:div (m/component (m/md->hiccup description))]]
      [:div.loc (:location/name location)]
      [:div.capacity
       [:div "Location capacity:"]
       [:div capacity]]
      [:div.signup-count
-      [:div "Current Signup count:"]
+      [:div "Current Signup:"]
       [:div signup-count]]
      [:div.participants
       [:div "Participants:"]
       [:div participants]]
-     [:div.description
-      [:div "Description:"]
-      [:div description]]
      [:p.host "Organized by " organized]]]))
 
 (o/defstyled session-list :main#sessions

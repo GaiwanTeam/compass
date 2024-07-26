@@ -15,7 +15,7 @@
   com.lambdaisland/hiccup   {:mvn/version "0.9.48"}
   com.lambdaisland/ornament {:git/sha "0af129132bfbfeba940705031f83b60250e71dcf" ;; ornament-next with defprop/defrules/import-tokens
                              :git/url "https://github.com/lambdaisland/ornament.git"}
-  #_                        {:local/root "/home/arne/github/lambdaisland/ornament"}
+  #_{:local/root "/home/arne/github/lambdaisland/ornament"}
 
   io.pedestal/pedestal.log       {:mvn/version "0.7.0"}
   ch.qos.logback/logback-classic {:mvn/version "1.5.6"}
@@ -31,7 +31,9 @@
   java-time-literals/java-time-literals {:mvn/version "2018-04-06"}
 
   potemkin/potemkin {:mvn/version "0.4.7"} ; def-map-type
-  }
+
+  ;; Markdown 
+  markdown-to-hiccup {:mvn/version "0.6.2"}}
 
  :aliases
  {:dev
