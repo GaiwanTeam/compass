@@ -67,31 +67,36 @@
 (defn participate-session
   ""
   [req]
-  (if-not (:identity req)
+  (if-let [user (:identity req)]
     ;; FIXME: we should redirect to /sessions/:id/participate after redirect (or
     ;; similar, depending on what makes sense with htmx)
-    (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))
     (do
-      (let [user-id (:db/id (:identity req))
+      (let [user-id (:db/id user)
             session-eid (parse-long (get-in req [:path-params :id]))
             session (db/entity session-eid)
-            participants (set (map :db/id (:session/participants session)))
+            participants (->> session
+                              :session/participants
+                              (map :db/id)
+                              set)
             capacity (:session/capacity session)
             signup-cnt (:session/signup-count session)
-            new-signup-cnt ((fnil inc 0) signup-cnt)]
-
+            session-seletor '[* {:session/type [*]
+                                 :session/location [*]}]]
         (cond
           (participants user-id)
-          {:html/body (str "you have signed up the session: " (:session/title session))}
+          (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
+                             [:db/retract session-eid :session/participants user-id]])
+              {:html/body [h/session-card (db/pull! session-seletor session-eid) user]})
           (< (or signup-cnt 0) capacity)
           (do
             ;;TODO: add try/catch to handle :db/cas
-            @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt new-signup-cnt]
+            @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt ((fnil inc 0) signup-cnt)]
                            [:db/add session-eid :session/participants user-id]])
-            {:html/body "successfully signup"})
+            {:html/body [h/session-card (db/pull! session-seletor session-eid) user]})
           :else
-          {:html/body "No enough capacity for this session"}))
-      #_{:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})))
+          {:html/body [h/session-card session user]}))
+      #_{:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})
+    (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))))
 
 (defn routes []
   ["/sessions"

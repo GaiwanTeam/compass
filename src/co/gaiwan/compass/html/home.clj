@@ -60,4 +60,5 @@
   ([{:keys [user sessions]}]
    [:<>
     [filters sessions]
-    [sessions/session-list sessions]]))
+    [sessions/session-list {:user user
+                            :sessions sessions}]]))

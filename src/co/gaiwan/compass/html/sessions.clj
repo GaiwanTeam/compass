@@ -51,13 +51,16 @@
       {:style {:background-image image}}]]
     [:div.checkmark [:div "✓"]]]))
 
+(declare session-card)
+
 (o/defstyled session-actions :nav
   :flex :justify-end :w-full
   :mt-2
   ([session]
    [:<>
     [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
-              :hx-target (str "closest ." session-card)}
+              :hx-target (str "closest ." session-card)
+              :hx-swap "outerHTML"}
      "Participate"]
     [:a {:href (str "/sessions/" (:db/id session))}
      [:button "Details"]]]))
@@ -86,7 +89,8 @@
   [session-actions :text-right]
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
-  ([{:session/keys [type title subtitle organized time location image] :as session}]
+  ([{:session/keys [type title subtitle organized time location image participants] :as session}
+    {user-id :db/id}]
    [:<>
     {:style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
@@ -99,7 +103,7 @@
                        :image (if image
                                 (str "url(" image ")")
                                 (str "var(--gradient-" (inc (rand-int 7)) ")"))
-                       :checked? (rand-nth [true false])}]]
+                       :checked? ((set (map :db/id participants)) user-id)}]]
      [:h2.title title]
      [:h3.subtitle subtitle]
      [:div.datetime
@@ -177,9 +181,9 @@
   [:at-media {:min-width "40rem"} {:grid-template-columns "repeat(2, 1fr)"}]
   [:at-media {:min-width "60rem"} {:grid-template-columns "repeat(3, 1fr)"}]
   [:at-media {:min-width "80rem"} {:grid-template-columns "repeat(4, 1fr)"}]
-  ([sessions]
+  ([{:keys [user sessions]}]
    (for [session sessions]
-     [session-card session])))
+     [session-card session user])))
 
 (o/defrules session-list-cols)
 

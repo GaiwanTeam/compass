@@ -65,6 +65,9 @@
     :else
     value))
 
+(defn pull! [selector id]
+  (walk/postwalk munge-from-db (d/pull (db) selector id)))
+
 (defn transact
   ([tx-data]
    (transact (conn) tx-data))

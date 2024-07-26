@@ -34,7 +34,8 @@
 (defn GET-conf-sessions [req]
   (let [qs-m (:query-params req)]
     {:html/head [:title "sessions"]
-     :html/body [sessions/session-list (all-sessions qs-m)]}))
+     :html/body [sessions/session-list {:sessions (all-sessions qs-m)
+                                        :user (:identity req)}]}))
 
 (defn routes []
   [""
