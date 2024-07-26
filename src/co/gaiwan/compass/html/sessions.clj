@@ -194,7 +194,7 @@
      #_[:p.host "Organized by " organized]
      #_[:p (pr-str session)]]]))
 
-(o/defstyled session-list :main#sessions
+(o/defstyled session-list :section#sessions
   :grid :gap-3
   {:grid-template-columns "repeat(1, 1fr)"}
   [:at-media {:min-width "40rem"} {:grid-template-columns "repeat(2, 1fr)"}]
