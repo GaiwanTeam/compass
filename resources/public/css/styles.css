@@ -141,6 +141,24 @@ body {
   width: 100%;
 }
 
+.sessions-capacity_gauge .checkmark {
+  display: none;
+  width: 100%;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+  font-size: 5rem;
+  color: var(--hoc-pink);
+}
+
+.sessions-capacity_gauge.checked .checkmark {
+  display: flex;
+}
+
+.sessions-capacity_gauge.checked .img {
+  filter: brightness(50%);
+}
+
 .sessions-capacity_gauge .img {
   width: 100%;
   padding: var(--sessions-arc-thickness);

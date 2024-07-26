@@ -27,21 +27,29 @@
   [:>* {:position "absolute" :top 0 :left 0}]
   [arc :w-full]
   {--arc-thickness "7%"}
+  [:.checkmark :hidden :w-full :justify-center :h-full :items-center
+   {:font-size "5rem"
+    :color --hoc-pink}]
+  [:&.checked
+   [:.checkmark :flex]
+   [:.img {:filter "brightness(50%)"}]]
   [:.img :w-full
    {:padding --arc-thickness
-    #_#_:margin-left "-100%"}
+    #_#_:margin-left "-100%"
+    }
    [:>* :w-full :aspect-square :rounded-full
     {:background-size "cover"
      :background-position "50% 50%"}]]
-  ([{:keys [capacity image]}]
-   [:<> {:style {--arc-degrees (str (* 360.0 capacity) "deg")}}
+  ([{:keys [capacity image checked?]}]
+   [:<> {:class [(when checked? "checked")]
+         :style {--arc-degrees (str (* 360.0 capacity) "deg")}}
     [arc {:style {--arc-degrees "360deg"
                   --arc-color "white"}}]
     [arc]
-
     [:div.img
      [:div
-      {:style {:background-image image}}]]]))
+      {:style {:background-image image}}]]
+    [:div.checkmark [:div "✓"]]]))
 
 (o/defstyled session-actions :nav
   :flex :justify-end :w-full
@@ -87,7 +95,8 @@
       [capacity-gauge {:capacity (rand)
                        :image (if image
                                 (str "url(" image ")")
-                                (str "var(--gradient-" (inc (rand-int 7)) ")"))}]]
+                                (str "var(--gradient-" (inc (rand-int 7)) ")"))
+                       :checked? (rand-nth [true false])}]]
      [:h2.title title]
      [:h3.subtitle subtitle]
      [:div.datetime
@@ -162,4 +171,3 @@
      [:input {:id "published" :name "published?" :type "checkbox"}]
 
      [:input {:type "submit" :value "Create"}]]]))
-
