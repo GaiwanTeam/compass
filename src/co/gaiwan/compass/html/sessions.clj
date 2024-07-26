@@ -90,7 +90,9 @@
   [session-actions :text-right]
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
-  ([{:session/keys [type title subtitle organized time location image participants] :as session}
+  ([{:session/keys [type title subtitle organized time
+                    location image participants
+                    capacity signup-count] :as session}
     {user-id :db/id}]
    [:<>
     {:style {--session-type-color (:session.type/color type)}
@@ -100,7 +102,7 @@
 
     [:div.details
      [:div.guage
-      [capacity-gauge {:capacity (rand)
+      [capacity-gauge {:capacity (/ (or signup-count 0) capacity)
                        :image (if image
                                 (str "url(" image ")")
                                 (str "var(--gradient-" (inc (rand-int 7)) ")"))
@@ -153,7 +155,7 @@
 
     [:div.details
      [:div.guage
-      [capacity-gauge {:capacity (rand)
+      [capacity-gauge {:capacity (/ (or signup-count 0) capacity)
                        :image (if image
                                 (str "url(" image ")")
                                 (str "var(--gradient-" (inc (rand-int 7)) ")"))
