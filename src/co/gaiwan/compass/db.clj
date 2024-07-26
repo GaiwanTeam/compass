@@ -22,8 +22,7 @@
     @(transact conn (data/schedule))
     conn))
 
-(defmethod ig/halt-key! :compass/db [_ conn]
-  )
+(defmethod ig/halt-key! :compass/db [_ conn])
 
 (defn conn []
   (:compass/db state/system))
@@ -65,7 +64,7 @@
     :else
     value))
 
-(defn pull! [selector id]
+(defn pull [selector id]
   (walk/postwalk munge-from-db (d/pull (db) selector id)))
 
 (defn transact
