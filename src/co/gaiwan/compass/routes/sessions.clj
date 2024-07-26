@@ -75,12 +75,13 @@
       (let [user-id (:db/id (:identity req))
             session-eid (parse-long (get-in req [:path-params :id]))
             session (db/entity session-eid)
-            participants (:session/participants session)
+            participants (set (map :db/id (:session/participants session)))
             capacity (:session/capacity session)
             signup-cnt (:session/signup-count session)
             new-signup-cnt ((fnil inc 0) signup-cnt)]
+
         (cond
-          (contains? participants user-id)
+          (participants user-id)
           {:html/body (str "you have signed up the session: " (:session/title session))}
           (< (or signup-cnt 0) capacity)
           (do
