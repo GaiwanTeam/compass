@@ -21,7 +21,7 @@
      :html/body [h/session-form {}]}))
 
 (defn GET-session [req]
-  {:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})
+  {:html/body (h/session-detail (db/entity (parse-long (get-in req [:path-params :id]))))})
 
 (defn params->session-data
   "convert the Http Post Params to data ready for DB transaction"

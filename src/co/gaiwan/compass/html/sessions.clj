@@ -35,8 +35,7 @@
    [:.img {:filter "brightness(50%)"}]]
   [:.img :w-full
    {:padding --arc-thickness
-    #_#_:margin-left "-100%"
-    }
+    #_#_:margin-left "-100%"}
    [:>* :w-full :aspect-square :rounded-full
     {:background-size "cover"
      :background-position "50% 50%"}]]
@@ -57,7 +56,8 @@
   ([session]
    [:<>
     [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")} "Participate"]
-    [:button "Details"]]))
+    [:a {:href (str "/sessions/" (:db/id session))}
+     [:button "Details"]]]))
 
 (o/defprop --session-type-color)
 
@@ -109,6 +109,65 @@
       [session-actions session]]
      #_[:div.loc (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
+
+(o/defstyled session-detail :div
+  :flex :gap-1
+  :bg-surface-2
+  :shadow-2
+  :boder :border-solid :border-surface-3
+  :text-center
+  [:.title :font-size-4 :font-semibold :mb-2]
+  [:.subtitle :font-size-3 :font-medium]
+  [:.guage :p-2]
+  [:.datetime :font-semibold :absolute :top-0 :right-0 :text-right :m-2]
+  [:.details :flex-col :w-full :items-center :py-3 :relative]
+  [:.type :font-bold
+   :p-1
+   :text-center
+   :small-caps
+   {:writing-mode "vertical-lr"
+    :transform "rotate(180deg)"
+    :background-color --session-type-color}]
+  [capacity-gauge :w-100px]
+  ([{:session/keys [type title subtitle organized
+                    time location image capacity
+                    signup-count description
+                    participants] :as session}]
+   [:<>
+    {:style {--session-type-color (:session.type/color type)}
+     :cx-toggle "expanded"
+     :cx-target (str "." session-card)}
+    [:div.type (:session.type/name type)]
+
+    [:div.details
+     [:div.guage
+      [capacity-gauge {:capacity (rand)
+                       :image (if image
+                                (str "url(" image ")")
+                                (str "var(--gradient-" (inc (rand-int 7)) ")"))
+                       :checked? (rand-nth [true false])}]]
+     [:h2.title title]
+     [:h3.subtitle subtitle]
+     [:div.datetime
+      [:div
+       (str (time/truncate-to (time/local-time time) :minutes))]
+      [:div
+       (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
+       (time/format "dd.MM" time)]]
+     [:div.loc (:location/name location)]
+     [:div.capacity
+      [:div "Location capacity:"]
+      [:div capacity]]
+     [:div.signup-count
+      [:div "Current Signup count:"]
+      [:div signup-count]]
+     [:div.participants
+      [:div "Participants:"]
+      [:div participants]]
+     [:div.description
+      [:div "Description:"]
+      [:div description]]
+     [:p.host "Organized by " organized]]]))
 
 (o/defstyled session-list :main#sessions
   :grid :gap-3
