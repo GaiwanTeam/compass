@@ -224,10 +224,18 @@
      [:input {:id "subtitle" :name "subtitle" :type "text"}]
 
      [:label {:for "start-time"} "Start Time"]
-     [:input {:id "start-time" :name "start-time" :type "datetime-local"}]
+     [:div
+      [:select {:id "start-date" :name "start-date"}
+       (let [day-before 3
+             day-after 3]
+         (for [day (range (- 18 day-before) (+ 18 day-after))]
+           [:option {:value (str "2024-09-" day)} (str "2024-09-" day)]))]
+      [:input {:id "start-time" :name "start-time" :type "time"
+               :min "08:00" :max "19:00"}]]
 
-     [:label {:for "end-time"} "End Time"]
-     [:input {:id "end-time" :name "end-time" :type "datetime-local"}]
+     [:label {:for "duration-time"} "Duration Time"]
+     [:input.html-duration-picker
+      {:id "duration-time" :name "duration-time" :data-hide-seconds true}]
 
      [:label {:for "type"} "Type"]
      [:select {:id "type" :name "type"}

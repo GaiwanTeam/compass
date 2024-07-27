@@ -7,6 +7,7 @@
   organized by participants.
   "
   (:require
+   [clojure.string :as str]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.sessions :as h]
    [co.gaiwan.compass.http.oauth :as oauth]
@@ -28,20 +29,32 @@
                               :session/organized [*]}]]
     {:html/body (h/session-detail (db/pull session-selector session-eid))}))
 
+(defn duration-string-to-iso8601
+  "Convert \"03:00\" to iso8601 format \"PT3H\" "
+  [duration-str]
+  (let [[hours minutes] (map #(Integer/parseInt %) (str/split duration-str #":"))
+        hours-str (if (pos? hours) (str "PT" hours "H") "")
+        minutes-str (if (pos? minutes) (str minutes "M") "")]
+    (str hours-str minutes-str)))
+
 (defn params->session-data
   "convert the Http Post Params to data ready for DB transaction"
-  [{:keys [title subtitle start-time end-time description
+  [{:keys [title subtitle start-date start-time duration-time description
            type location
            capacity
            ticket-required? published?]}]
-  (let [start    (time/zoned-date-time start-time db/event-time-zone)
-        end      (time/zoned-date-time end-time db/event-time-zone)
-        duration (time/duration start end)]
+  (let [local-date (time/local-date start-date)
+        local-time (time/local-time start-time)
+        local-date-time (time/local-date-time local-date local-time)
+        start    (time/zoned-date-time local-date-time db/event-time-zone)
+        ;; end      (time/zoned-date-time end-time db/event-time-zone)
+        duration (duration-string-to-iso8601 duration-time)
+        _ (prn :debug-duration duration)]
     (cond-> {:db/id "session"
              :session/title title
              :session/subtitle subtitle
              :session/time start
-             :session/duration (str duration)
+             :session/duration duration
              :session/description description
              :session/type (keyword "session.type" type)
              :session/location (keyword "location.type" location)
@@ -92,8 +105,7 @@
                               (map :db/id)
                               set)
             capacity (:session/capacity session)
-            signup-cnt (:session/signup-count session)
-            ]
+            signup-cnt (:session/signup-count session)]
         (cond
           (participants user-id)
           (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
