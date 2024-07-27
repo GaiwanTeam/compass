@@ -4,6 +4,7 @@
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
+   [co.gaiwan.compass.model.session :as session]
    [java-time.api :as time]
    [lambdaisland.ornament :as o]
    [markdown-to-hiccup.core :as m]))
@@ -56,17 +57,29 @@
 (o/defstyled session-actions :nav
   :flex :justify-end :w-full
   :mt-2
-  ([session]
+  ([session user]
    [:<>
     [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
               :hx-target (str "closest ." session-card)
               :hx-select (str "." session-card)
               :hx-swap "outerHTML"}
-     "Participate"]
+     (if (session/participating? session user)
+       "Leave"
+       "Participate")]
     [:a {:href (str "/sessions/" (:db/id session))}
      [:button "Details"]]]))
 
 (o/defprop --session-type-color)
+
+(o/defstyled session-image+guage
+  :p-2
+  [capacity-gauge :w-100px]
+  ([{:session/keys [signup-count capacity image] :as session} user]
+   [capacity-gauge {:capacity (/ (or signup-count 0) capacity)
+                    :image (if image
+                             (str "url(" image ")")
+                             (str "var(--gradient-" (inc (rand-int 7)) ")"))
+                    :checked? (session/participating? session user)}]))
 
 (o/defstyled session-card :div
   :flex :gap-1
@@ -76,7 +89,6 @@
   :text-center
   [:.title :font-size-4 :font-semibold :mb-2]
   [:.subtitle :font-size-3 :font-medium]
-  [:.guage :p-2]
   [:.datetime :font-semibold :absolute :top-0 :right-0 :text-right :m-2]
   [:.details :flex-col :w-full :items-center :py-3 :relative]
   [:.type :font-bold
@@ -86,14 +98,13 @@
    {:writing-mode "vertical-lr"
     :transform "rotate(180deg)"
     :background-color --session-type-color}]
-  [capacity-gauge :w-100px]
   [session-actions :text-right]
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
   ([{:session/keys [type title subtitle organized time
                     location image participants
                     capacity signup-count] :as session}
-    {user-id :db/id}]
+    user]
    [:<>
     {:style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
@@ -101,12 +112,7 @@
     [:div.type (:session.type/name type)]
 
     [:div.details
-     [:div.guage
-      [capacity-gauge {:capacity (/ (or signup-count 0) capacity)
-                       :image (if image
-                                (str "url(" image ")")
-                                (str "var(--gradient-" (inc (rand-int 7)) ")"))
-                       :checked? ((set (map :db/id participants)) user-id)}]]
+     [session-image+guage session user]
      [:h2.title title]
      [:h3.subtitle subtitle]
      [:div.datetime
@@ -116,7 +122,7 @@
        (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
        (time/format "dd.MM" time)]]
      [:div.expansion
-      [session-actions session]]
+      [session-actions session user]]
      #_[:div.loc (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
 
@@ -125,28 +131,12 @@
    handle))
 
 (o/defstyled session-detail :div
-  :flex :gap-1
-  :bg-surface-2
-  :shadow-2
-  :boder :border-solid :border-surface-3
-  :text-center
-  [:.title :font-size-4 :font-semibold :mb-2]
-  [:.subtitle :font-size-3 :font-medium]
-  [:.guage :p-2]
-  [:.datetime :font-semibold :absolute :top-0 :right-0 :text-right :m-2]
-  [:.details :flex-col :w-full :items-center :py-3 :relative]
-  [:.type :font-bold
-   :p-1
-   :text-center
-   :small-caps
-   {:writing-mode "vertical-lr"
-    :transform "rotate(180deg)"
-    :background-color --session-type-color}]
   [capacity-gauge :w-100px]
   ([{:session/keys [type title subtitle organized
                     time location image capacity
                     signup-count description
-                    participants] :as session}]
+                    participants] :as session}
+    user]
    [:<>
     {:style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
@@ -154,12 +144,8 @@
     [:div.type (:session.type/name type)]
 
     [:div.details
-     [:div.guage
-      [capacity-gauge {:capacity (/ (or signup-count 0) capacity)
-                       :image (if image
-                                (str "url(" image ")")
-                                (str "var(--gradient-" (inc (rand-int 7)) ")"))
-                       :checked? (rand-nth [true false])}]]
+     [session-image+guage session user]
+
      [:h2.title title]
      [:h3.subtitle subtitle]
      [:div.datetime

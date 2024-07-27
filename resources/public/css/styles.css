@@ -29,7 +29,7 @@ body.menu-open .co_gaiwan_compass_html_navigation__menu_panel {
 }
 
 body {
-  padding: var(--size-2);
+  padding: 0.5rem;
   max-width: 100vw;
 }
 
@@ -200,10 +200,6 @@ body {
   font-weight: 500;
 }
 
-.sessions-session_card .guage {
-  padding: var(--size-2);
-}
-
 .sessions-session_card .datetime {
   font-weight: 600;
   position: absolute;
@@ -233,10 +229,6 @@ body {
   background-color: var(--sessions-session-type-color);
 }
 
-.sessions-session_card .sessions-capacity_gauge {
-  width: 100px;
-}
-
 .sessions-session_card .sessions-session_actions {
   text-align: right;
 }
@@ -247,60 +239,6 @@ body {
 
 .sessions-session_card.expanded .expansion {
   display: block;
-}
-
-.sessions-session_detail {
-  display: flex;
-  gap: var(--size-1);
-  background-color: var(--surface-2);
-  box-shadow: var(--shadow-2);
-  border-style: solid;
-  border-color: var(--surface-3);
-  text-align: center;
-}
-
-.sessions-session_detail .title {
-  font-size: var(--size-4);
-  font-weight: 600;
-  margin-bottom: var(--size-2);
-}
-
-.sessions-session_detail .subtitle {
-  font-size: var(--size-3);
-  font-weight: 500;
-}
-
-.sessions-session_detail .guage {
-  padding: var(--size-2);
-}
-
-.sessions-session_detail .datetime {
-  font-weight: 600;
-  position: absolute;
-  top: var(--size-0);
-  right: var(--size-0);
-  text-align: right;
-  margin: var(--size-2);
-}
-
-.sessions-session_detail .details {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  padding-top: var(--size-3);
-  padding-bottom: var(--size-3);
-  position: relative;
-}
-
-.sessions-session_detail .type {
-  font-weight: 700;
-  padding: var(--size-1);
-  text-align: center;
-  font-variant: small-caps;
-  writing-mode: vertical-lr;
-  transform: rotate(180deg);
-  background-color: var(--sessions-session-type-color);
 }
 
 .sessions-session_detail .sessions-capacity_gauge {
@@ -354,4 +292,8 @@ body {
 .home-filters button, .home-filters .btn {
   font-weight: 400;
   flex-grow: 1;
+}
+
+.sessions-session_image_PLUS_guage .sessions-capacity_gauge {
+  width: 100px;
 }

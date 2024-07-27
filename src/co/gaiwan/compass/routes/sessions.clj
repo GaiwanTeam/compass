@@ -22,12 +22,10 @@
      :html/body [h/session-form {}]}))
 
 (defn GET-session [req]
-  (let [session-eid (parse-long (get-in req [:path-params :id]))
-        session-selector '[* {:session/type [*]
-                              :session/location [*]
-                              :session/participants [*]
-                              :session/organized [*]}]]
-    {:html/body (h/session-detail (db/pull session-selector session-eid))}))
+  (let [session-eid (parse-long (get-in req [:path-params :id]))]
+    {:html/body [h/session-detail
+                 (db/entity session-eid)
+                 (:identity req)]}))
 
 (defn duration-string-to-iso8601
   "Convert \"03:00\" to iso8601 format \"PT3H\" "
@@ -81,18 +79,14 @@
     (util/redirect ["/sessions" (get tempids "session")]
                    {:flash "Successfully created!"})))
 
-(defn just-the-body [{:keys [body]}] body)
-
 (defn session-card-response [session user]
-  {:html/layout just-the-body
+  {:html/layout false
    :html/body [h/session-card session user]})
 
 (defn participate-session
   ""
   [req]
   (if-let [user (:identity req)]
-    ;; FIXME: we should redirect to /sessions/:id/participate after redirect (or
-    ;; similar, depending on what makes sense with htmx)
     (do
       (let [user-id (:db/id user)
             session-eid (parse-long (get-in req [:path-params :id]))
