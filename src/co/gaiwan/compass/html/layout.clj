@@ -23,6 +23,7 @@
     [:link {:rel "stylesheet" :href "/css/styles.css"}]
     [:script {:src "/js/htmx-1.9.12.js"}]
     [:script {:src "/js/cx.js"}]
+    [:script {:src "/js/utils.js"}]
     [:script {:src "/js/live.js#css"}]
     [:script {:src "/js/html-duration-picker.min.js"}]
     head]

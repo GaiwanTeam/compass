@@ -11,6 +11,7 @@
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.sessions :as h]
    [co.gaiwan.compass.http.oauth :as oauth]
+   [co.gaiwan.compass.model.session :as session]
    [co.gaiwan.compass.util :as util]
    [io.pedestal.log :as log]
    [java-time.api :as time]))
@@ -94,14 +95,10 @@
                                  :session/location [*]}]
             pull-session #(db/pull session-seletor session-eid)
             session (pull-session)
-            participants (->> session
-                              :session/participants
-                              (map :db/id)
-                              set)
             capacity (:session/capacity session)
             signup-cnt (:session/signup-count session)]
         (cond
-          (participants user-id)
+          (session/participating? session user)
           (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
                              [:db/retract session-eid :session/participants user-id]])
               (session-card-response (pull-session) user))

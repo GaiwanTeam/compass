@@ -54,7 +54,7 @@
 
 (declare session-card)
 
-(o/defstyled session-actions :nav
+(o/defstyled session-card-actions :nav
   :flex :justify-end :w-full
   :mt-2
   ([session user]
@@ -62,7 +62,9 @@
     [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
               :hx-target (str "closest ." session-card)
               :hx-select (str "." session-card)
-              :hx-swap "outerHTML"}
+              :hx-swap "outerHTML"
+              :on-click "event.stopPropagation()"
+              :hx-indicator (str ".c" (:db/id session)) }
      (if (session/participating? session user)
        "Leave"
        "Participate")]
@@ -98,7 +100,7 @@
    {:writing-mode "vertical-lr"
     :transform "rotate(180deg)"
     :background-color --session-type-color}]
-  [session-actions :text-right]
+  [session-card-actions :text-right]
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
   ([{:session/keys [type title subtitle organized time
@@ -112,6 +114,7 @@
     [:div.type (:session.type/name type)]
 
     [:div.details
+     {:class ["session-card-pulse" (str "c" (:db/id session))]}
      [session-image+guage session user]
      [:h2.title title]
      [:h3.subtitle subtitle]
@@ -122,7 +125,7 @@
        (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
        (time/format "dd.MM" time)]]
      [:div.expansion
-      [session-actions session user]]
+      [session-card-actions session user]]
      #_[:div.loc (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
 

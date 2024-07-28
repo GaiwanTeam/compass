@@ -117,6 +117,26 @@ body {
   font-size: var(--font-size-3);
 }
 
+.htmx-request.session-card-pulse {
+  opacity: 0.5;
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* don't know if this makes sense or could be delayed. */
+  background-color: var(--sessions-session-type-color);
+  /* It looks okay for long requests */
+  /* ... incidentally: perhaps this is even a better participating indicator than the check mark */
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 .sessions-arc {
   aspect-ratio: var(--ratio-square);
   padding: var(--sessions-arc-thickness);
