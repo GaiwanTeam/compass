@@ -17,3 +17,4 @@ function add_handle_cx_toggle() {
 
 addEventListener('DOMContentLoaded', add_handle_cx_toggle);
 addEventListener('htmx:afterSwap', add_handle_cx_toggle);
+addEventListener('popstate', () => setTimeout(add_handle_cx_toggle, 0));
