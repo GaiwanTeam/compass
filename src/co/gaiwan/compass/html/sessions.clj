@@ -64,7 +64,7 @@
               :hx-select (str "." session-card)
               :hx-swap "outerHTML"
               :on-click "event.stopPropagation()"
-              :hx-indicator (str ".c" (:db/id session)) }
+              :hx-indicator (str ".c" (:db/id session))}
      (if (session/participating? session user)
        "Leave"
        "Participate")]
@@ -130,8 +130,9 @@
      #_[:p.host "Organized by " organized]]]))
 
 (o/defstyled attendee :li
-  ([{:user/keys [name email handle uuid]}]
-   handle))
+  ([{:db/keys [id]}]
+   (let [{:user/keys [name]} (session/attendee id)]
+     name)))
 
 (o/defstyled session-detail :div
   [capacity-gauge :w-100px]
@@ -163,14 +164,13 @@
       [:div "Location "]
       [:div (:location/name location)]]
      [:div.capacity
-      [:div "Location capacity:"]
-      [:div capacity]]
-     [:div.signup-count
-      [:div "Current Signup:"]
-      [:div signup-count]]
-     [:div.participants
-      [:div "Participants:"]
-      [:ol (map attendee participants)]]
+      [:div "Spots available:"]
+      [:div (- (or capacity 0) (or signup-count 0))]]
+     (when (session/organizing? organized user)
+      ;; Only show the participants' list to organizer.
+       [:div.participants
+        [:div "Participants:"]
+        [:ol (map attendee participants)]])
      (when (:session/ticket-required? session)
        [:p "Required Ticket"])
      [:div.actions
@@ -184,6 +184,7 @@
        "Leave"]
       [:button "Edit"]]
      #_[:p.host "Organized by " organized]
+     #_[:p (pr-str user)]
      #_[:p (pr-str session)]]]))
 
 (o/defstyled session-list :section#sessions
