@@ -14,23 +14,6 @@
  (db/transact [[:db/retractEntity 17592186045468]]))
 (user/conn)
 
-(db/transact  [{:user/email "aa@gmail.com"
-                :user/handle "laurence.chen"
-                :user/name "Laurence"}])
-
-(db/q
- '[:find
-   [(pull ?e [*]) ...]
-   :where
-   [?e :user/email]]
- (db/db))
-
-(def session-eid 17592186045438)
-
-(db/transact [{:db/id session-eid
-               :session/participants  17592186045458}])
-
-(first (:session/participants (db/entity session-eid)))
 ;; Test transact participants
 
 (def req {:identity {:user/email "ddd"}
