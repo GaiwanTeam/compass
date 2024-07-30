@@ -130,9 +130,11 @@
      #_[:p.host "Organized by " organized]]]))
 
 (o/defstyled attendee :li
-  ([{:db/keys [id]}]
-   (let [{:user/keys [name]} (session/attendee id)]
-     name)))
+  ([participant]
+   ;; (prn "debug datatype " (type participant))
+   ;; participant is of `Datomic.query.EntityMap` type
+   ;; So, we can access its attribute directly
+   (:user/handle participant)))
 
 (o/defstyled session-detail :div
   [capacity-gauge :w-100px]
@@ -184,6 +186,7 @@
        "Leave"]
       [:button "Edit"]]
      #_[:p.host "Organized by " organized]
+     #_[:ol (map attendee participants)]
      #_[:p (pr-str user)]
      #_[:p (pr-str session)]]]))
 

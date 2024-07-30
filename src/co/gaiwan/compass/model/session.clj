@@ -1,6 +1,4 @@
-(ns co.gaiwan.compass.model.session
-  (:require
-   [co.gaiwan.compass.db :as db]))
+(ns co.gaiwan.compass.model.session)
 
 (defn participating? [session user]
   (some (comp #{(:db/id user)} :db/id)
@@ -10,6 +8,3 @@
   (and
    (some? organized)
    (= (:db/id user) (:db/id organized))))
-
-(defn attendee [id]
-  (db/entity id))
