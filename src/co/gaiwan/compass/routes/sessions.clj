@@ -80,9 +80,15 @@
     (util/redirect ["/sessions" (get tempids "session")]
                    {:flash "Successfully created!"})))
 
-(defn session-card-response [session user]
-  {:html/layout false
-   :html/body [h/session-card session user]})
+(defn session-updated-response [session-eid]
+  {:status 200
+   :headers {"HX-Trigger" (str "session-" session-eid "-updated")}
+   :body ""})
+
+(defn session-unchanged-response [session-eid]
+  {:status 200
+   :headers {"HX-Trigger" (str "session-" session-eid "-unchanged")}
+   :body ""})
 
 (defn participate-session
   ""
@@ -101,15 +107,15 @@
           (session/participating? session user)
           (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
                              [:db/retract session-eid :session/participants user-id]])
-              (session-card-response (pull-session) user))
+              (session-updated-response session-eid))
           (< (or signup-cnt 0) capacity)
           (do
             ;;TODO: add try/catch to handle :db/cas
             @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt ((fnil inc 0) signup-cnt)]
                            [:db/add session-eid :session/participants user-id]])
-            (session-card-response (pull-session) user))
+            (session-updated-response session-eid))
           :else
-          (session-card-response session user)))
+          (session-unchanged-response session-eid)))
       #_{:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})
     (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))))
 
