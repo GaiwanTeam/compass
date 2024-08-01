@@ -60,9 +60,6 @@
   ([session user]
    [:<>
     [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
-              :hx-target (str "closest ." session-card)
-              :hx-select (str "." session-card)
-              :hx-swap "outerHTML"
               :on-click "event.stopPropagation()"
               :hx-indicator (str ".c" (:db/id session))}
      (if (session/participating? session user)
@@ -108,7 +105,11 @@
                     capacity signup-count] :as session}
     user]
    [:<>
-    {:style {--session-type-color (:session.type/color type)}
+    {:hx-get (str "/sessions/" (:db/id session) "/card")
+     :hx-trigger (str "session-" (:db/id session) "-updated from:body")
+     :hx-target (str "closest ." session-card)
+     :hx-select (str "." session-card " > *")
+     :style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
      :cx-target (str "." session-card)}
     [:div.type (:session.type/name type)]

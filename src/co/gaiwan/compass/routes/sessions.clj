@@ -28,6 +28,12 @@
                  (db/entity session-eid)
                  (:identity req)]}))
 
+(defn GET-session-card [req]
+  (let [session-eid (parse-long (get-in req [:path-params :id]))]
+    {:html/body [h/session-card
+                 (db/entity session-eid)
+                 (:identity req)]}))
+
 (defn duration-string-to-iso8601
   "Convert \"03:00\" to iso8601 format \"PT3H\" "
   [duration-str]
@@ -130,4 +136,6 @@
                         (new-session req)
                         (GET-session req)))}}]
    ["/:id/participate"
-    {:post {:handler participate-session}}]])
+    {:post {:handler participate-session}}]
+   ["/:id/card"
+    {:get {:handler GET-session-card}}]])
