@@ -146,9 +146,12 @@
                     participants] :as session}
     user]
    [:<>
-    {:style {--session-type-color (:session.type/color type)}
-     :cx-toggle "expanded"
-     :cx-target (str "." session-card)}
+    {:hx-get (str "/sessions/" (:db/id session))
+     :hx-trigger (str "session-" (:db/id session) "-updated from:body")
+     :hx-target (str "closest ." session-detail)
+     :hx-select (str "." session-detail " > *")
+     :hx-disinherit "hx-target hx-select "
+     :style {--session-type-color (:session.type/color type)}}
     [:div.type (:session.type/name type)]
 
     [:div.details
@@ -171,7 +174,7 @@
       [:div "Spots available:"]
       [:div (- (or capacity 0) (or signup-count 0))]]
      (when (session/organizing? organized user)
-      ;; Only show the participants' list to organizer.
+       ;; Only show the participants' list to organizer.
        [:div.participants
         [:div "Participants:"]
         [:ol (map attendee participants)]])
@@ -179,14 +182,14 @@
        [:p "Required Ticket"])
      [:div.actions
       [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
-                :hx-target (str "closest ." session-card)
-                :hx-swap "outerHTML"}
-       "Sign Up"]
-      [:button {:hx-post (str "/sessions/" (:db/id session) "/leave")
-                :hx-target (str "closest ." session-card)
-                :hx-swap "outerHTML"}
-       "Leave"]
-      [:button "Edit"]]
+                :on-click "event.stopPropagation()"
+                :hx-indicator (str ".c" (:db/id session))}
+       (if (session/participating? session user)
+         "Leave"
+         "Sign Up")]
+      (when (session/organizing? organized user)
+        ;; Only allow the event organizer to edit this event
+        [:button "Edit"])]
      #_[:p.host "Organized by " organized]
      #_[:ol (map attendee participants)]
      #_[:p (pr-str user)]
