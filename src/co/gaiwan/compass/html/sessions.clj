@@ -109,6 +109,7 @@
      :hx-trigger (str "session-" (:db/id session) "-updated from:body")
      :hx-target (str "closest ." session-card)
      :hx-select (str "." session-card " > *")
+     :hx-disinherit "hx-target hx-select "
      :style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
      :cx-target (str "." session-card)}
