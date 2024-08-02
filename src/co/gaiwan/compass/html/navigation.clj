@@ -50,6 +50,8 @@
          [:p "Welcome, " name]
          [:a {:href "/logout"} "Sign out"]]
         [:a {:href (oauth/flow-init-url)} "Sign-in with Discord"])]
+     (when user
+       [:li [:a {:href (str "/profiles/" (:db/id user))} "My Profile"]])
      [:li [:a {:href "/"} "Sessions & Activities"]]
      [:li [:a {:href "/"} "Attendees"]]
      [:li [:a {:href "/"} "Profile & Settings"]]
