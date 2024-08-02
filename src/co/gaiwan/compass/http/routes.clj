@@ -3,6 +3,7 @@
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.routes.sessions :as sessions]
+   [co.gaiwan.compass.routes.profiles :as profiles]
    [co.gaiwan.compass.routes.home :as home]
    [co.gaiwan.compass.routes.meta :as meta]
    [hato.client :as hato]
@@ -12,6 +13,7 @@
   [(meta/routes)
    (home/routes)
    (sessions/routes)
+   (profiles/routes)
    (oauth/routes)
    ["/fail" {:get {:handler (fn [_] (throw (ex-info "fail" {:fail 1})))}}]])
 
