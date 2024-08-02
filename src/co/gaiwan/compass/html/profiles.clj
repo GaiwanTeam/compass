@@ -26,12 +26,11 @@
 (o/defstyled profile-detail :div
   [image-frame :w-100px]
   ([{:discord/keys [access-token id refresh-token expires-at]
-     :user/keys [email handle name uuid image] :as profile}
-    user]
+     :user/keys [email handle name uuid image] :as user}]
    [:<>
     [image-frame {:profile/image
                   (if image
                     (str "url(" image ")")
                     (str "var(--gradient-" (inc (rand-int 7)) ")"))} user]
     [:div.details
-     (pr-str profile)]]))
+     (pr-str user)]]))

@@ -10,13 +10,22 @@
    [java-time.api :as time]))
 
 (defn GET-profile [req]
-  (let [profile-eid (parse-long (get-in req [:path-params :id]))]
-    {:html/body [h/profile-detail
-                 (db/entity profile-eid)
-                 (:identity req)]}))
+  {:html/body [h/profile-detail
+               (:identity req)]})
+
+(defn GET-profile-form [req]
+  {:html/body [h/profile-detail
+               (:identity req)]})
+
+(defn save-profile [req]
+  {:html/body [h/profile-detail
+               (:identity req)]})
 
 (defn routes []
   ["/profiles"
-   ["/:id"
-    {:get {:handler (fn [req]
-                      (GET-profile req))}}]])
+   [""
+    {:get {:handler GET-profile}}]
+   ["/edit"
+    {:get {:handler GET-profile-form}}]
+   ["/save"
+    {:post {:handler save-profile}}]])
