@@ -4,14 +4,12 @@
   --sessions-arc-color: var(--lime-5);
   --hoc-pink: #e25f7d;
   --hoc-pink-3: var(--hoc-pink);
-  --co-gaiwan-compass-html-components--toggle-radius: 0.5rem;
   --sessions-arc-degrees: 240deg;
   --profiles-arc-thickness: 30px;
   --sessions-arc-thickness: 30px;
   --hoc-pink-1: #e7879d;
   --hoc-pink-2: #cd4e6a;
   --hoc-pink-4: #c0415b;
-  --hoc-purple: #003eaa;
   --co-gaiwan-compass-html-components--toggle-radius-right: 0.5rem;
 }
 
@@ -129,6 +127,56 @@ body {
   border-style: solid;
   border-color: var(--surface-4);
   font-size: var(--font-size-3);
+}
+
+.co_gaiwan_compass_html_components__toggle_button {
+  color: var(--text-2);
+}
+
+.co_gaiwan_compass_html_components__toggle_button input {
+  display: none;
+}
+
+.co_gaiwan_compass_html_components__toggle_button >.btn {
+  width: 100%;
+  border-top-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
+  border-bottom-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
+  border-top-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
+  border-bottom-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
+}
+
+.co_gaiwan_compass_html_components__toggle_button input:checked ~ .btn {
+  font-weight: 600;
+  color: var(--text-1);
+  background-color: var(--highlight);
+}
+
+.co_gaiwan_compass_html_components__toggle_group {
+  display: flex;
+  flex-direction: row;
+  --co-gaiwan-compass-html-components--toggle-radius-left: 0;
+  --co-gaiwan-compass-html-components--toggle-radius-right: 0;
+}
+
+.co_gaiwan_compass_html_components__toggle_group :first-child > .btn {
+  --co-gaiwan-compass-html-components--toggle-radius-left: 0.5em;
+}
+
+.co_gaiwan_compass_html_components__toggle_group :last-child > .btn {
+  --co-gaiwan-compass-html-components--toggle-radius-right: 0.5em;
+}
+
+.filters-filter_section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-1);
+  margin-top: var(--size-3);
+  margin-bottom: var(--size-3);
+}
+
+.filters-filter_section button, .filters-filter_section .co_gaiwan_compass_html_components__toggle_button, .filters-filter_section .btn {
+  font-weight: 400;
+  flex-grow: 1;
 }
 
 .sessions-arc {
@@ -314,106 +362,4 @@ body {
 
 .profiles-profile_detail .profiles-image_frame {
   width: 100px;
-}
-
-.home-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--size-1);
-  margin-top: var(--size-3);
-  margin-bottom: var(--size-3);
-}
-
-.home-filters button, .home-filters .btn, .home-filters .home-toggle_button {
-  font-weight: 400;
-  flex-grow: 1;
-}
-
-.home-toggle_button {
-  color: var(--text-2);
-}
-
-.home-toggle_button input {
-  display: none;
-}
-
-.home-toggle_button >.btn {
-  width: 100%;
-}
-
-.home-toggle_button input:checked ~ .btn {
-  font-weight: 600;
-  color: var(--text-1);
-  background-color: var(--highlight);
-}
-
-.co_gaiwan_compass_html_components__toggle_button {
-  color: var(--text-2);
-}
-
-.co_gaiwan_compass_html_components__toggle_button input {
-  display: none;
-}
-
-.co_gaiwan_compass_html_components__toggle_button >.btn {
-  width: 100%;
-  border-top-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
-  border-bottom-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
-  border-top-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
-  border-bottom-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
-}
-
-.co_gaiwan_compass_html_components__toggle_button input:checked ~ .btn {
-  font-weight: 600;
-  color: var(--text-1);
-  background-color: var(--highlight);
-}
-
-.filters-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--size-1);
-  margin-top: var(--size-3);
-  margin-bottom: var(--size-3);
-}
-
-.filters-filters button, .filters-filters .co_gaiwan_compass_html_components__toggle_button, .filters-filters .btn {
-  font-weight: 400;
-  flex-grow: 1;
-}
-
-.filters-filter_section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--size-1);
-  margin-top: var(--size-3);
-  margin-bottom: var(--size-3);
-}
-
-.filters-filter_section button, .filters-filter_section .co_gaiwan_compass_html_components__toggle_button, .filters-filter_section .btn {
-  font-weight: 400;
-  flex-grow: 1;
-}
-
-.filters-filter_group :first-child > .btn {
-  border-radius: 1em 0 0 1em;
-}
-
-.filters-filter_group :last-child > .btn {
-  border-radius: 0 1em 1em 0;
-}
-
-.co_gaiwan_compass_html_components__toggle_group {
-  display: flex;
-  flex-direction: row;
-  --co-gaiwan-compass-html-components--toggle-radius-left: 0;
-  --co-gaiwan-compass-html-components--toggle-radius-right: 0;
-}
-
-.co_gaiwan_compass_html_components__toggle_group :first-child > .btn {
-  --co-gaiwan-compass-html-components--toggle-radius-left: 0.5em;
-}
-
-.co_gaiwan_compass_html_components__toggle_group :last-child > .btn {
-  --co-gaiwan-compass-html-components--toggle-radius-right: 0.5em;
 }

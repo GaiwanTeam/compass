@@ -14,7 +14,6 @@
    (some? organized)
    (= (:db/id user) (:db/id organized))))
 
-f
 ;; => {:day :today,
 ;;     :type :all-types,
 ;;     :my-activities :my-activities,

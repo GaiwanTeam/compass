@@ -19,6 +19,14 @@
     [:button {:cx-toggle "menu-open" :cx-target "body"}
      [graphics/hamburger]]]))
 
+(defn a-auth [props & children]
+  (if (:user props)
+    (into [:a props] children)
+    (into
+     [:a {:hx-target "#modal"
+          :hx-get (str "/login?next=" (:href props))}]
+     children)))
+
 (o/defstyled menu-panel :nav
   :bg-surface-2
   :h-screen
@@ -53,9 +61,9 @@
      (when user
        [:li [:a {:href (str "/profiles/" (:db/id user))} "My Profile"]])
      [:li [:a {:href "/"} "Sessions & Activities"]]
-     [:li [:a {:href "/"} "Attendees"]]
-     [:li [:a {:href "/"} "Profile & Settings"]]
-     [:li [:a {:href "/sessions/new"} "Create Activity"]]]]))
+     [:li [a-auth {:href "/attendees"} "Attendees"]]
+     [:li [a-auth {:href "/profile"} "Profile & Settings"]]
+     [:li [a-auth {:href "/sessions/new"} "Create Activity"]]]]))
 
 (o/defrules toggle-menu-button)
 

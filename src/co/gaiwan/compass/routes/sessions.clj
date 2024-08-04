@@ -17,11 +17,11 @@
    [java-time.api :as time]))
 
 (defn GET-session-new [req]
-  (if-not
-      true #_(:identity req)
-      (util/redirect (oauth/flow-init-url {:redirect-url "/sessions/new"}))
-      {:html/head [:title "Create new session"]
-       :html/body [session-html/session-form {}]}))
+  (if-not (:identity req)
+    {:status 200
+     :headers {"HX-Trigger" "login-required"}} #_(util/redirect)
+    {:html/head [:title "Create new session"]
+     :html/body [session-html/session-form {}]}))
 
 (defn GET-session [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]

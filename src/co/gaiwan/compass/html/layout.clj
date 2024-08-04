@@ -34,6 +34,7 @@
            :hx-disinherit "hx-target hx-select"
            ;; CSRF
            :hx-headers (charred/write-json-str {"x-csrf-token" anti-forgery/*anti-forgery-token*})}
+    [:dialog#modal {} "keepme"]
     [:div#app
      [nav/menu-panel user]
      [:main

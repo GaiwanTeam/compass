@@ -55,19 +55,25 @@
 
 (declare session-card)
 
+(o/defstyled participate-btn :button
+  ([session user]
+   [:<> (if user
+          {:hx-post (str "/sessions/" (:db/id session) "/participate")
+           :hx-indicator (str ".c" (:db/id session))}
+          {:hx-target "#modal"
+           :hx-get "/login"})
+    (if (session/participating? session user)
+      "Leave"
+      "Participate")]))
+
 (o/defstyled session-card-actions :nav
   :flex :justify-end :w-full
   :mt-2
   ([session user]
    [:<>
-    [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
-              :on-click "event.stopPropagation()"
-              :hx-indicator (str ".c" (:db/id session))}
-     (if (session/participating? session user)
-       "Leave"
-       "Participate")]
-    [:a {:href (str "/sessions/" (:db/id session))}
-     [:button "Details"]]]))
+    [participate-btn session user]
+    [:a.btn {:href (str "/sessions/" (:db/id session))}
+     "Details"]]))
 
 (o/defprop --session-type-color)
 
@@ -112,7 +118,8 @@
      :hx-select (str "." session-card " > *")
      :style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
-     :cx-target (str "." session-card)}
+     :cx-target (str "." session-card)
+     :hx-disinherit "hx-target hx-select"}
     [:div.type (:session.type/name type)]
 
     [:div.details
@@ -181,12 +188,7 @@
      (when (:session/ticket-required? session)
        [:p "Required Ticket"])
      [:div.actions
-      [:button {:hx-post (str "/sessions/" (:db/id session) "/participate")
-                :on-click "event.stopPropagation()"
-                :hx-indicator (str ".c" (:db/id session))}
-       (if (session/participating? session user)
-         "Leave"
-         "Sign Up")]
+      [participate-btn session user]
       (when (session/organizing? organized user)
         ;; Only allow the event organizer to edit this event
         [:button "Edit"])]
@@ -206,7 +208,8 @@
     {:hx-get     "/sessions"
      :hx-trigger "filters-updated from:body"
      :hx-swap    "outerHTML"
-     :hx-select  "#sessions"}
+     :hx-select  "#sessions"
+     :hx-disinherit "hx-swap"}
     (for [session sessions]
       [session-card session user])]))
 
