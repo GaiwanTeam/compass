@@ -1,9 +1,16 @@
 :where(html) {
-  --hoc-pink: #e25f7d;
   --size-0: 0;
-  --sessions-arc-thickness: 30px;
+  --co-gaiwan-compass-html-components--toggle-radius-left: 0.5rem;
   --sessions-arc-color: var(--lime-5);
+  --hoc-pink: #e25f7d;
+  --hoc-pink-3: var(--hoc-pink);
   --sessions-arc-degrees: 240deg;
+  --profiles-arc-thickness: 30px;
+  --sessions-arc-thickness: 30px;
+  --hoc-pink-1: #e7879d;
+  --hoc-pink-2: #cd4e6a;
+  --hoc-pink-4: #c0415b;
+  --co-gaiwan-compass-html-components--toggle-radius-right: 0.5rem;
 }
 
 :where(html) {
@@ -11,6 +18,7 @@
   --workshop-color: var(--teal-2);
   --office-hours-color: var(--red-2);
   --activity-color: var(--red-2);
+  --highlight: var(--hoc-pink-1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,6 +28,7 @@
     --workshop-color: var(--teal-8);
     --office-hours-color: var(--red-9);
     --activity-color: var(--red-9);
+    --highlight: var(--hoc-pink-4);
   }
 
 }
@@ -29,13 +38,16 @@ body.menu-open .co_gaiwan_compass_html_navigation__menu_panel {
 }
 
 body {
-  padding: 0.5rem;
   max-width: 100vw;
 }
 
 body #app {
   max-width: 80rem;
   margin: 0 auto;
+}
+
+body #app >main {
+  padding: var(--size-2);
 }
 
 ul, ol {
@@ -117,24 +129,54 @@ body {
   font-size: var(--font-size-3);
 }
 
-.htmx-request.session-card-pulse {
-  opacity: 0.5;
-  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-
-  /* don't know if this makes sense or could be delayed. */
-  background-color: var(--sessions-session-type-color);
-  /* It looks okay for long requests */
-  /* ... incidentally: perhaps this is even a better participating indicator than the check mark */
+.co_gaiwan_compass_html_components__toggle_button {
+  color: var(--text-2);
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+.co_gaiwan_compass_html_components__toggle_button input {
+  display: none;
+}
+
+.co_gaiwan_compass_html_components__toggle_button >.btn {
+  width: 100%;
+  border-top-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
+  border-bottom-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
+  border-top-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
+  border-bottom-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
+}
+
+.co_gaiwan_compass_html_components__toggle_button input:checked ~ .btn {
+  font-weight: 600;
+  color: var(--text-1);
+  background-color: var(--highlight);
+}
+
+.co_gaiwan_compass_html_components__toggle_group {
+  display: flex;
+  flex-direction: row;
+  --co-gaiwan-compass-html-components--toggle-radius-left: 0;
+  --co-gaiwan-compass-html-components--toggle-radius-right: 0;
+}
+
+.co_gaiwan_compass_html_components__toggle_group :first-child > .btn {
+  --co-gaiwan-compass-html-components--toggle-radius-left: 0.5em;
+}
+
+.co_gaiwan_compass_html_components__toggle_group :last-child > .btn {
+  --co-gaiwan-compass-html-components--toggle-radius-right: 0.5em;
+}
+
+.filters-filter_section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-1);
+  margin-top: var(--size-3);
+  margin-bottom: var(--size-3);
+}
+
+.filters-filter_section button, .filters-filter_section .co_gaiwan_compass_html_components__toggle_button, .filters-filter_section .btn {
+  font-weight: 400;
+  flex-grow: 1;
 }
 
 .sessions-arc {
@@ -192,11 +234,15 @@ body {
   background-position: 50% 50%;
 }
 
-.sessions-session_actions {
+.sessions-session_card_actions {
   display: flex;
   justify-content: flex-end;
   width: 100%;
   margin-top: var(--size-2);
+}
+
+.sessions-session_image_PLUS_guage .sessions-capacity_gauge {
+  width: 100px;
 }
 
 .sessions-session_card {
@@ -249,7 +295,7 @@ body {
   background-color: var(--sessions-session-type-color);
 }
 
-.sessions-session_card .sessions-session_actions {
+.sessions-session_card .sessions-session_card_actions {
   text-align: right;
 }
 
@@ -301,19 +347,19 @@ body {
   gap: var(--size-2);
 }
 
-.home-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--size-1);
-  margin-top: var(--size-3);
-  margin-bottom: var(--size-3);
+.profiles-image_frame .img {
+  width: 100%;
+  padding: var(--profiles-arc-thickness);
 }
 
-.home-filters button, .home-filters .btn {
-  font-weight: 400;
-  flex-grow: 1;
+.profiles-image_frame .img >* {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 9999px;
+  background-size: cover;
+  background-position: 50% 50%;
 }
 
-.sessions-session_image_PLUS_guage .sessions-capacity_gauge {
+.profiles-profile_detail .profiles-image_frame {
   width: 100px;
 }

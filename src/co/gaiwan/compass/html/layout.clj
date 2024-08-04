@@ -7,18 +7,17 @@
 
 (o/defrules layout
   [:body
-   :p-2
    {:max-width "100vw"}
-
-   [:#app {:max-width "80rem" :margin "0 auto"}]])
+   [:#app {:max-width "80rem" :margin "0 auto"}
+    [:>main :p-2]]])
 
 (defn base-layout [{:keys [head body flash user request] :as opts}]
   [:html
    [:head
     [:meta {:charset "UTF-8"}]
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-    [:link {:rel "stylesheet" :href "https://unpkg.com/open-props"}]
-    [:link {:rel "stylesheet" :href "https://unpkg.com/open-props/normalize.min.css"}]
+    [:link {:rel "stylesheet" :href "/css/open-props.min.css"}]
+    [:link {:rel "stylesheet" :href "/css/open-props-normalize.min.css"}]
     [:link {:rel "stylesheet" :href "/css/buttons.css"}]
     [:link {:rel "stylesheet" :href "/css/styles.css"}]
     [:script {:src "/js/htmx-1.9.12.js"}]
@@ -31,13 +30,16 @@
            ;; Only replace what's in <main>, the navbar/menu don't get replaced
            :hx-select "main"
            :hx-target "main"
+
+           :hx-disinherit "hx-target hx-select"
            ;; CSRF
            :hx-headers (charred/write-json-str {"x-csrf-token" anti-forgery/*anti-forgery-token*})}
+    [:dialog#modal {} "keepme"]
     [:div#app
      [nav/menu-panel user]
-     [nav/nav-bar user]
      [:main
       (when flash
         [:p.flash flash])
+      [nav/nav-bar user]
       body
       #_[:pre (with-out-str (clojure.pprint/pprint request))]]]]])

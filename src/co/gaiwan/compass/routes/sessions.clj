@@ -9,28 +9,29 @@
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.db :as db]
-   [co.gaiwan.compass.html.sessions :as h]
+   [co.gaiwan.compass.db.queries :as q]
+   [co.gaiwan.compass.html.sessions :as session-html]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.model.session :as session]
    [co.gaiwan.compass.util :as util]
-   [io.pedestal.log :as log]
    [java-time.api :as time]))
 
-(defn new-session [req]
+(defn GET-session-new [req]
   (if-not (:identity req)
-    (util/redirect (oauth/flow-init-url {:redirect-url "/sessions/new"}))
+    {:status 200
+     :headers {"HX-Trigger" "login-required"}} #_(util/redirect)
     {:html/head [:title "Create new session"]
-     :html/body [h/session-form {}]}))
+     :html/body [session-html/session-form {}]}))
 
 (defn GET-session [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
-    {:html/body [h/session-detail
+    {:html/body [session-html/session-detail
                  (db/entity session-eid)
                  (:identity req)]}))
 
 (defn GET-session-card [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
-    {:html/body [h/session-card
+    {:html/body [session-html/session-card
                  (db/entity session-eid)
                  (:identity req)]}))
 
@@ -96,7 +97,7 @@
    :headers {"HX-Trigger" (str "session-" session-eid "-unchanged")}
    :body ""})
 
-(defn participate-session
+(defn POST-participate
   ""
   [req]
   (if-let [user (:identity req)]
@@ -125,17 +126,30 @@
       #_{:html/body (pr-str (db/entity (parse-long (get-in req [:path-params :id]))))})
     (util/redirect (oauth/flow-init-url {:redirect-url (str "/sessions/" (get-in req [:path-params :id]) "/participate")}))))
 
+(defn GET-sessions [req]
+  (let [filters  (-> req :session :session-filters)
+        sessions (q/all-sessions)
+        user     (:identity req)]
+    {:html/body
+     [session-html/session-list+filters
+      {:filters  filters
+       :user     user
+       :sessions (session/apply-filters sessions user filters)}]}))
+
 (defn routes []
-  ["/sessions"
-   [""
-    {:name :activity/save
-     :post {:handler save-session}}]
-   ["/:id"
-    {:get {:handler (fn [req]
-                      (if (= "new" (get-in req [:path-params :id]))
-                        (new-session req)
-                        (GET-session req)))}}]
-   ["/:id/participate"
-    {:post {:handler participate-session}}]
-   ["/:id/card"
-    {:get {:handler GET-session-card}}]])
+  [[""
+    ["/" {:get {:handler GET-sessions}}]]
+   ["/sessions"
+    [""
+     {:name :activity/save
+      :get {:handler GET-sessions}
+      :post {:handler save-session}}]
+    ["/:id"
+     {:get {:handler (fn [req]
+                       (if (= "new" (get-in req [:path-params :id]))
+                         (GET-session-new req)
+                         (GET-session req)))}}]
+    ["/:id/participate"
+     {:post {:handler POST-participate}}]
+    ["/:id/card"
+     {:get {:handler GET-session-card}}]]])

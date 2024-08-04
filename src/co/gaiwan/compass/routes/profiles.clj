@@ -4,7 +4,7 @@
    [clojure.string :as str]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.profiles :as h]
-   [co.gaiwan.compass.http.oauth :as oauth]
+   [co.gaiwan.compass.routes.oauth :as oauth]
    [co.gaiwan.compass.util :as util]
    [io.pedestal.log :as log]
    [java-time.api :as time]))
