@@ -1,20 +1,18 @@
 (ns co.gaiwan.compass.http.routes
+  "Combined HTTP routing table"
   (:require
-   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.http.oauth :as oauth]
-   [co.gaiwan.compass.routes.sessions :as sessions]
-   [co.gaiwan.compass.routes.profiles :as profiles]
-   [co.gaiwan.compass.routes.home :as home]
+   [co.gaiwan.compass.routes.filters :as filters]
    [co.gaiwan.compass.routes.meta :as meta]
-   [hato.client :as hato]
-   [lambdaisland.uri :as uri]))
+   [co.gaiwan.compass.routes.profiles :as profiles]
+   [co.gaiwan.compass.routes.sessions :as sessions]))
 
 (defn routing-table []
   [(meta/routes)
-   (home/routes)
    (sessions/routes)
    (profiles/routes)
    (oauth/routes)
+   (filters/routes)
    ["/fail" {:get {:handler (fn [_] (throw (ex-info "fail" {:fail 1})))}}]])
 
 ;; - Sessions

@@ -10,8 +10,14 @@
 
 (o/defprop --size-0 0)
 (o/defprop --text-1)
+(o/defprop --text-2)
 
 (o/defprop --hoc-pink "#e25f7d")
+(o/defprop --hoc-pink-1 "#e7879d")
+(o/defprop --hoc-pink-2 "#cd4e6a")
+(o/defprop --hoc-pink-3 --hoc-pink)
+(o/defprop --hoc-pink-4 "#c0415b")
+
 (o/defprop --surface-1)
 (o/defprop --surface-2)
 (o/defprop --surface-3)
@@ -22,12 +28,15 @@
 (o/defprop --office-hours-color)
 (o/defprop --activity-color)
 
+(o/defprop --highlight)
+
 (o/defrules session-colors
   [":where(html)"
    {--talk-color         --blue-2
     --workshop-color     --teal-2
     --office-hours-color --red-2
-    --activity-color     --red-2}]
+    --activity-color     --red-2
+    --highlight          --hoc-pink-1}]
 
   (gs/at-media
    {:prefers-color-scheme 'dark}
@@ -35,4 +44,5 @@
     {--talk-color         --blue-9
      --workshop-color     --teal-8
      --office-hours-color --red-9
-     --activity-color     --red-9}]))
+     --activity-color     --red-9
+     --highlight          --hoc-pink-4}]))

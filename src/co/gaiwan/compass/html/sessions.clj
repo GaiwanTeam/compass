@@ -4,6 +4,7 @@
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
+   [co.gaiwan.compass.html.filters :as filters]
    [co.gaiwan.compass.model.session :as session]
    [java-time.api :as time]
    [lambdaisland.ornament :as o]
@@ -74,7 +75,7 @@
   :p-2
   [capacity-gauge :w-100px]
   ([{:session/keys [signup-count capacity image] :as session} user]
-   [capacity-gauge {:capacity (/ (or signup-count 0) capacity)
+   [capacity-gauge {:capacity (/ (or signup-count 0) (max capacity 1))
                     :image (if image
                              (str "url(" image ")")
                              (str "var(--gradient-" (inc (rand-int 7)) ")"))
@@ -109,7 +110,6 @@
      :hx-trigger (str "session-" (:db/id session) "-updated from:body")
      :hx-target (str "closest ." session-card)
      :hx-select (str "." session-card " > *")
-     :hx-disinherit "hx-target hx-select "
      :style {--session-type-color (:session.type/color type)}
      :cx-toggle "expanded"
      :cx-target (str "." session-card)}
@@ -202,8 +202,13 @@
   [:at-media {:min-width "60rem"} {:grid-template-columns "repeat(3, 1fr)"}]
   [:at-media {:min-width "80rem"} {:grid-template-columns "repeat(4, 1fr)"}]
   ([{:keys [user sessions]}]
-   (for [session sessions]
-     [session-card session user])))
+   [:<>
+    {:hx-get     "/sessions"
+     :hx-trigger "filters-updated from:body"
+     :hx-swap    "outerHTML"
+     :hx-select  "#sessions"}
+    (for [session sessions]
+      [session-card session user])]))
 
 (o/defrules session-list-cols)
 
@@ -226,8 +231,8 @@
       [:select {:id "start-date" :name "start-date"}
        (let [day-before 3
              day-after 3]
-         (for [day (range (- 18 day-before) (+ 18 day-after))]
-           [:option {:value (str "2024-09-" day)} (str "2024-09-" day)]))]
+         (for [day (range (- 4 day-before) (+ 4 day-after))]
+           [:option {:value (format "2024-08-%02d" day)} (format "2024-08-%02d" day)]))]
       [:input {:id "start-time" :name "start-time" :type "time"
                :min "08:00" :max "19:00"}]]
 
@@ -264,3 +269,10 @@
      [:input {:id "published" :name "published?" :type "checkbox"}]
 
      [:input {:type "submit" :value "Create"}]]]))
+
+(o/defstyled session-list+filters :div
+  ([{:keys [user sessions filters]}]
+   [:<>
+    [filters/filter-section filters]
+    [session-list {:user user
+                   :sessions sessions}]]))
