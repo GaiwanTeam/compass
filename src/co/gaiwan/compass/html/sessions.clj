@@ -219,33 +219,37 @@
 
 (o/defstyled session-form :div
   [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
+  [:div.date-time {:display "flex" :gap "0.5rem"}]
   ([params]
    [:<>
     [:h2 "Create Activity"]
     [:form {:method "POST" :action "/sessions"}
      [:label {:for "title"} "Title"]
-     [:input {:id "title" :name "title" :type "text"}]
+     [:input {:id "title" :name "title" :type "text"
+              :required true :min-length 2}]
 
      [:label {:for "subtitle"} "Subtitle"]
-     [:input {:id "subtitle" :name "subtitle" :type "text"}]
+     [:input {:id "subtitle" :name "subtitle" :type "text"
+              :min-length 10}]
 
      [:label {:for "start-time"} "Start Time"]
-     [:div
+     [:div.date-time
       [:select {:id "start-date" :name "start-date"}
        (let [day-before 3
              day-after 3]
          (for [day (range (- 4 day-before) (+ 4 day-after))]
            [:option {:value (format "2024-08-%02d" day)} (format "2024-08-%02d" day)]))]
       [:input {:id "start-time" :name "start-time" :type "time"
-               :min "08:00" :max "19:00"}]]
+               :min "06:00" :max "23:00" :required true
+               :step (* 5 60)}]]
 
      [:label {:for "duration-time"} "Duration Time"]
      [:input.html-duration-picker
       {:id "duration-time" :name "duration-time" :data-hide-seconds true}]
 
      [:label {:for "type"} "Type"]
-     [:select {:id "type" :name "type"}
-      [:option {:value "activity"} "activity"]]
+    [:select {:id "type" :name "type"}
+      [:option {:value "activity"} "Activity"]]
 
      [:label {:for "location"} "Location"]
      [:select {:id "location" :name "location"}
@@ -260,10 +264,12 @@
       [:option {:value "hal5-long-table"} "Hal 5 - long table"]]
 
      [:label {:for "capacity"} "Capacity"]
-     [:input {:id "capacity" :name "capacity" :type "number" :value 0}]
+     [:input {:id "capacity" :name "capacity" :type "number"
+              :min 2 :value 2 :required true }]
 
      [:label {:for "description"} "Description"]
-     [:textarea {:id "description" :name "description"}]
+     [:textarea {:id "description" :name "description"
+                 :required true}]
 
      [:label {:for "ticket"} "Requires Ticket?"]
      [:input {:id "ticket" :name "ticket-required?" :type "checkbox"}]

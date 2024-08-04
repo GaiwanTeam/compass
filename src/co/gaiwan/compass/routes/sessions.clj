@@ -50,7 +50,8 @@
   [{:keys [title subtitle start-date start-time duration-time description
            type location
            capacity
-           ticket-required? published?]}]
+           ticket-required? published?]
+    :or {type "activity"}}]
   (let [local-date (time/local-date start-date)
         local-time (time/local-time start-time)
         local-date-time (time/local-date-time local-date local-time)

@@ -63,7 +63,8 @@
      [:li [:a {:href "/"} "Sessions & Activities"]]
      [:li [a-auth {:href "/attendees"} "Attendees"]]
      [:li [a-auth {:href "/profile"} "Profile & Settings"]]
-     [:li [a-auth {:href "/sessions/new"} "Create Activity"]]]]))
+     [:li [a-auth {:href "/sessions/new"
+                   :user user} "Create Activity"]]]]))
 
 (o/defrules toggle-menu-button)
 
