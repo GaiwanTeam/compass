@@ -93,7 +93,8 @@
 (defn router []
   (ring/router
    (routes/routing-table)
-   {:data {:middleware [ex-mw]}}))
+   {:data {:middleware [ex-mw]}
+    :conflicts nil}))
 
 (defn handler []
   (ring/ring-handler

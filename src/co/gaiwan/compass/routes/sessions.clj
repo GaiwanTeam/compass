@@ -144,11 +144,10 @@
      {:name :activity/save
       :get {:handler GET-sessions}
       :post {:handler save-session}}]
+    ["/new"
+     {:get {:handler GET-session-new}}]
     ["/:id"
-     {:get {:handler (fn [req]
-                       (if (= "new" (get-in req [:path-params :id]))
-                         (GET-session-new req)
-                         (GET-session req)))}}]
+     {:get {:handler GET-session}}]
     ["/:id/participate"
      {:post {:handler POST-participate}}]
     ["/:id/card"
