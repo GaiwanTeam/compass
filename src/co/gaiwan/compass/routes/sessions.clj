@@ -32,7 +32,9 @@
 (defn GET-session-card [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
     {:html/body [session-html/session-card
-                 (db/entity session-eid)
+                 (db/pull '[* {:session/type [*]
+                               :session/location [*]
+                               :session.type [*]}] session-eid)
                  (:identity req)]}))
 
 (defn duration-string-to-iso8601
