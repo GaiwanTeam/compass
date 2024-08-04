@@ -32,8 +32,8 @@
 
   potemkin/potemkin {:mvn/version "0.4.7"} ; def-map-type
 
-  ;; Markdown 
-  markdown-to-hiccup {:mvn/version "0.6.2"}}
+  ;; Markdown
+  markdown-to-hiccup/markdown-to-hiccup {:mvn/version "0.6.2"}}
 
  :aliases
  {:dev
