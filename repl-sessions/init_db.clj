@@ -63,4 +63,24 @@
 (type (-> session-entity
           :session/participants
           first))
-;; => co.gaiwan.compass.db.munged-entity
+;; => datomic.query.EntityMap
+
+(-> session-eid
+    db/entity
+    :session/type
+    db/entity
+    :session.type/color)
+;; => "var(--talk-color)"
+
+(-> session-eid
+    db/entity
+    :session/type
+    db/entity
+    (merge {}))
+
+;; => {:db/ident :session.type/keynote,
+;;     :session.type/name "Keynote",
+;;     :session.type/color "var(--talk-color)"}
+
+(db/pull '[* {:session/type [*]
+              :session/location [*]}] session-eid)
