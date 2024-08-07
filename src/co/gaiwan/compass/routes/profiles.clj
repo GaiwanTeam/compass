@@ -17,7 +17,7 @@
   {:html/body [h/profile-detail
                (:identity req)]})
 
-(defn save-profile [req]
+(defn POST-save-profile [req]
   {:html/body [h/profile-detail
                (:identity req)]})
 
@@ -28,4 +28,4 @@
    ["/edit"
     {:get {:handler GET-profile-form}}]
    ["/save"
-    {:post {:handler save-profile}}]])
+    {:post {:handler POST-save-profile}}]])

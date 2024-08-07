@@ -23,6 +23,13 @@
      [:div
       {:style {:background-image image}}]]]))
 
+(o/defstyled edit-profile-btn :button
+  ([user]
+   [:<>
+    {:hx-post (str "/sessions/" (:db/id user) "/participate")
+     :hx-indicator (str ".c" (:db/id user))}
+    "Edit Profile"]))
+
 (o/defstyled profile-detail :div
   [image-frame :w-100px]
   ([{:discord/keys [access-token id refresh-token expires-at]
@@ -33,4 +40,7 @@
                     (str "url(" image ")")
                     (str "var(--gradient-" (inc (rand-int 7)) ")"))} user]
     [:div.details
-     (pr-str user)]]))
+     [:h3.title name]
+     [:h3.subtitle email]]
+    [:div.actions
+     [edit-profile-btn user]]]))
