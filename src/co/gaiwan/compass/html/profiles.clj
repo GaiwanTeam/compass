@@ -52,7 +52,7 @@
   ([user]
    [:<>
     [:h2 "Edit Profile"]
-    [:form {:method "POST" :action "/profiles/save"}
+    [:form {:method "POST" :action "/profiles/save" :enctype "multipart/form-data"}
      [:input {:type "hidden" :name "user-id" :value (:db/id user)}]
      [:div
       [:label {:for "name"} "Display Name"]
@@ -61,5 +61,8 @@
      [:div
       [:label {:for "title"} "title"]
       [:input {:id "title" :name "title" :type "text"
-               :min-length 10}]]
+               :min-length 2}]]
+     [:div
+      [:label {:for "image"} "Profile Image"]
+      [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
      [:input {:type "submit" :value "Save"}]]]))

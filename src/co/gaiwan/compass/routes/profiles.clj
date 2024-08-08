@@ -2,12 +2,15 @@
   "We need a page/route for user's profile"
   (:require
    [clojure.string :as str]
+   [clojure.java.io :as io]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.profiles :as h]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.util :as util]
    [io.pedestal.log :as log]
    [java-time.api :as time]))
+
+(def upload-dir "uploads")
 
 (defn wrap-authentication [handler]
   (fn [req]
@@ -27,7 +30,8 @@
                (:identity req)]})
 
 (defn params->profile-data
-  [{:keys [name title user-id]}]
+  [{:keys [name title user-id] :as params}]
+  ;; (prn :params params)
   {:db/id (parse-long user-id)
    :user/name name
    :user/title title})
@@ -37,9 +41,16 @@
   
   The typical params is like:
   {:name \"Arne\"
-   :tityle \"CEO of Gaiwan\"}"
-  [{:keys [params]}]
-  (let [{:keys [tempids]} @(db/transact [(params->profile-data params)])]
+   :tityle \"CEO of Gaiwan\"
+   :image {:content-type :filename :size :tempfile}}"
+  [{:keys [params identity] :as req}]
+  (let [{:keys [filename tempfile] :as image}  (:image params)
+        {:keys [tempids]} @(db/transact [(params->profile-data params)])
+        file-id (str (:db/id identity))]
+    (tap> req)
+    (tap> (str upload-dir "/" file-id "_" filename))
+    ;; Copy the image file content to the uploads directory
+    (io/copy tempfile (io/file (str upload-dir "/" file-id "_" filename)))
     (util/redirect ["/profiles"]
                    {:flash "Successfully Saved!"})))
 
