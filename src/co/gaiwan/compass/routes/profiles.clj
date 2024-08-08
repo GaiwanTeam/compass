@@ -9,12 +9,14 @@
    [io.pedestal.log :as log]
    [java-time.api :as time]))
 
-(defn wrap-login-check [handler]
+(defn wrap-authentication [handler]
   (fn [req]
     (log/trace ::login-check (:identity req))
     (if-let [user (:identity req)]
       (handler req)
-      (util/redirect (oauth/flow-init-url {:redirect-url "/profiles"})))))
+      {:status 401
+       :headers {"Content-Type" "text/plain"}
+       :body "Unauthorized"})))
 
 (defn GET-profile [req]
   {:html/body [h/profile-detail
@@ -44,10 +46,10 @@
 (defn routes []
   ["/profiles"
    [""
-    {:middleware [wrap-login-check]
+    {:middleware [wrap-authentication]
      :get {:handler GET-profile}}]
    ["/edit"
     {:get {:handler GET-profile-form}}]
    ["/save"
-    {:middleware [wrap-login-check]
+    {:middleware [wrap-authentication]
      :post {:handler POST-save-profile}}]])
