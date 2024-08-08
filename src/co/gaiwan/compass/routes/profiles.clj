@@ -5,7 +5,7 @@
    [clojure.java.io :as io]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.profiles :as h]
-   [co.gaiwan.compass.http.oauth :as oauth]
+   [ring.util.response :as response]
    [co.gaiwan.compass.util :as util]
    [io.pedestal.log :as log]
    [java-time.api :as time]))
@@ -45,22 +45,32 @@
    :image {:content-type :filename :size :tempfile}}"
   [{:keys [params identity] :as req}]
   (let [{:keys [filename tempfile] :as image}  (:image params)
-        {:keys [tempids]} @(db/transact [(params->profile-data params)])
-        file-id (str (:db/id identity))]
-    (tap> req)
-    (tap> (str upload-dir "/" file-id "_" filename))
+        file-id (str (:db/id identity))
+        filepath (str upload-dir "/" file-id "_" filename)
+        {:keys [tempids]} @(db/transact [(merge
+                                          {:user/image-path filepath}
+                                          (params->profile-data params))])]
+    ;; (tap> req)
     ;; Copy the image file content to the uploads directory
-    (io/copy tempfile (io/file (str upload-dir "/" file-id "_" filename)))
+    (io/copy tempfile (io/file filepath))
     (util/redirect ["/profiles"]
                    {:flash "Successfully Saved!"})))
 
+(defn file-handler [req]
+  (let [file (io/file "uploads" (get-in req [:path-params :filename]))]
+    (if (.exists file)
+      (response/file-response (.getPath file))
+      (response/not-found "File not found"))))
+
 (defn routes []
-  ["/profiles"
-   [""
-    {:middleware [wrap-authentication]
-     :get {:handler GET-profile}}]
-   ["/edit"
-    {:get {:handler GET-profile-form}}]
-   ["/save"
-    {:middleware [wrap-authentication]
-     :post {:handler POST-save-profile}}]])
+  [["/profiles"
+    [""
+     {:middleware [wrap-authentication]
+      :get {:handler GET-profile}}]
+    ["/edit"
+     {:get {:handler GET-profile-form}}]
+    ["/save"
+     {:middleware [wrap-authentication]
+      :post {:handler POST-save-profile}}]]
+   ["/uploads/:filename"
+    {:get {:handler file-handler}}]])

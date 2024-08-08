@@ -9,6 +9,7 @@
    [:user/name :string "User name, e.g. 'Arne'"]
    [:user/handle :string "User handle, e.g. 'sunnyplexus'"]
    [:user/title :string "User's job title or any description, e.g. 'CEO of Gaiwan'"]
+   [:user/image-path :string "User image path in the compass web server"]
 
    [:discord/id :string "Unique user id on discord, a 'snowflake', i.e. uint64 encoded as string"]
    [:discord/access-token :string "Discord OAuth2 access-token"]
