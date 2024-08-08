@@ -42,19 +42,22 @@
                  [:pre (util/pprint-str body)]]
        :session {:identity nil}}
       (let [{:keys [access_token refresh_token expires_in]} body
-            {:keys [id global_name email username]}         (fetch-user-info access_token)
+            {:keys [id global_name email username] :as user-info}         (fetch-user-info access_token)
+            avatar-url (str "https://cdn.discordapp.com/avatars/" id "/" (:avatar user-info) ".png")
+            ;;_ (prn :avatar-url avatar-url)
             user-uuid                                       (:user/uuid (d/entity (db/db) [:user/email email]) (random-uuid))
             tx-data
             [{:user/uuid             user-uuid
               :user/email            email
               :user/name             global_name
               :user/handle           username
+              :discord/avatar-url    avatar-url
               :discord/id            id
               :discord/access-token  access_token
               :discord/refresh-token refresh_token
               :discord/expires-at    (.plusSeconds (java.time.Instant/now) (- expires_in 60))}]]
         (def tx-data tx-data)
-        @(db/transact tx-data )
+        @(db/transact tx-data)
         {:status  302
          :headers {"Location" (or redirect-url "/")}
          :flash   [:p "You are signed in!"]
@@ -74,6 +77,6 @@
    ["/logout"
     {:get {:handler (fn [req]
                       (assoc
-                        (response/redirect "/")
-                        :flash "You were signed out"
-                        :session {}))}}]])
+                       (response/redirect "/")
+                       :flash "You were signed out"
+                       :session {}))}}]])

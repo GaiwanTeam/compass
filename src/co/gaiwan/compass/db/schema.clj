@@ -14,6 +14,7 @@
    [:discord/access-token :string "Discord OAuth2 access-token"]
    [:discord/expires-at :instant "Expiration timestamp for the OAuth2 token"]
    [:discord/refresh-token :string "Discord OAuth2 refresh-token"]
+   [:discord/avatar-url :string "Discord Avatar URL"]
 
    [:session/title :string "Title of the talk/workshop/activity"]
    [:session/subtitle :string "Subtitle of the session, for talks/workshops = speaker names"]
