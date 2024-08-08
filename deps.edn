@@ -38,7 +38,7 @@
  :aliases
  {:dev
   {:extra-paths ["dev"]
-   :extra-deps  {}}
+   :extra-deps  {djblue/portal {:mvn/version "0.57.1"}}}
 
   :prod
   {:extra-deps
