@@ -33,7 +33,7 @@
   (let [code                  (get query-params "code")
         state                 (get query-params "state")
         {:keys [status body]} (exchange-code code)
-        redirect-url (:oauth/redirect-url (db/entity [:oauth/state-id (java.util.UUID/fromString state)]))]
+        redirect-url (:oauth/redirect-url (db/entity [:oauth/state-id (parse-uuid state)]))]
     (if (not= 200 status)
       {:status  302
        :headers {"Location" "/"}
