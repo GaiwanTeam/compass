@@ -7,13 +7,19 @@
    [datomic.api :as d]
    [hato.client :as hato]
    [lambdaisland.uri :as uri]
-   [ring.util.response :as response])
+   [ring.util.response :as response]
+   [io.pedestal.log :as log])
   (:import (java.time Instant)))
 
 (def discord-oauth-endpoint "https://discord.com/oauth2/authorize")
 (def discord-api-endpoint "https://discord.com/api/v10")
 
+
 (def default-scopes  ["email" "identify" "guilds.join" "role_connections.write"])
+
+(defn bot-auth-headers []
+  {"Authorization" (str "Bot " (config/value :discord/bot-token))})
+
 
 (defn flow-init-url
   ([]
@@ -88,11 +94,22 @@
           (:access_token body)))
       (:discord/access-token oauth-data))))
 
+
 (defn fetch-user-info [token]
   (:body
    (hato/get (str discord-api-endpoint "/users/@me")
              {:as :auto
-              :headers {"Authorization" (str "Bearer " token)}})))
+              :oauth-token token})))
+
+(defn join-server [token]
+  (let [{:keys [id username]} (fetch-user-info token)]
+    (log/trace :discord/adding-user username)
+    (hato/put
+     (str discord-api-endpoint "/guilds/" (config/value :discord/server-id) "/members/" id)
+     {:as :auto
+      :content-type :json
+      :form-params {:access_token token}
+      :headers (bot-auth-headers)})))
 
 (defn GET-callback [{:keys [query-params]}]
   (let [code                  (get query-params "code")
@@ -115,12 +132,14 @@
               :discord/id            id
               :discord/access-token  access_token
               :discord/refresh-token refresh_token
-              :discord/expires-at (expires-in->instant expires_in)}]]
-        (def tx-data tx-data)
-        @(db/transact tx-data )
+              :discord/expires-at (expires-in->instant expires_in)}]
+            {:keys [status]} (join-server access_token)]
+        @(db/transact tx-data)
         {:status  302
          :headers {"Location" "/"}
-         :flash   [:p "You are signed in!"]
+         :flash   [:p "You are signed in!"
+                   (when-not (= status 200)
+                     [:br "Unfortunately, adding you to our Discord server didn't work."])]
          :session {:identity user-uuid}}))))
 
 (defn routes []
@@ -128,7 +147,7 @@
    ["/oauth2"
     ["/discord"
      ["/callback"
-      {:get {:handler GET-callback}}]]]
+      {:get {:handler #'GET-callback}}]]]
    ["/logout"
     {:get {:handler (fn [req]
                       (assoc
