@@ -248,7 +248,7 @@
       {:id "duration-time" :name "duration-time" :data-hide-seconds true}]
 
      [:label {:for "type"} "Type"]
-    [:select {:id "type" :name "type"}
+     [:select {:id "type" :name "type"}
       [:option {:value "activity"} "Activity"]]
 
      [:label {:for "location"} "Location"]
@@ -265,7 +265,7 @@
 
      [:label {:for "capacity"} "Capacity"]
      [:input {:id "capacity" :name "capacity" :type "number"
-              :min 2 :value 2 :required true }]
+              :min 2 :value 2 :required true}]
 
      [:label {:for "description"} "Description"]
      [:textarea {:id "description" :name "description"
@@ -276,6 +276,9 @@
 
      [:label {:for "published"} "Published/Visible?"]
      [:input {:id "published" :name "published?" :type "checkbox"}]
+
+     [:label {:for "image"} "Activity Image"]
+     [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]
 
      [:input {:type "submit" :value "Create"}]]]))
 
