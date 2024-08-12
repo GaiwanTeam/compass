@@ -8,6 +8,7 @@
   "
   (:require
    [clojure.string :as str]
+   [clojure.java.io :as io]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.sessions :as session-html]
@@ -74,7 +75,7 @@
       (= published? "on")
       (assoc :session/published? true))))
 
-(defn save-session
+(defn POST-save-session
   "Save session to Datomic
 
   The typical params is:
@@ -87,6 +88,13 @@
    :published? \"on\"}"
   [{:keys [params]}]
   (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
+    (when (:image params)
+      (let [{:keys [filename tempfile]} (:image params)
+            session-eid (get tempids "session")
+            file-path  (str util/upload-dir "/" session-eid "_" filename)]
+        (io/copy tempfile (io/file file-path))
+        @(db/transact [{:db/id (get tempids "session")
+                        :session/image (str util/upload-dir "/" (get tempids "session") "_" filename)}])))
     (util/redirect ["/sessions" (get tempids "session")]
                    {:flash "Successfully created!"})))
 
@@ -114,13 +122,14 @@
             capacity (:session/capacity session)
             signup-cnt (:session/signup-count session)]
         (cond
+          ;; user leaves the session
           (session/participating? session user)
           (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
                              [:db/retract session-eid :session/participants user-id]])
               (session-updated-response session-eid))
           (< (or signup-cnt 0) capacity)
+          ;; user participates the session
           (do
-            ;;TODO: add try/catch to handle :db/cas
             @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt ((fnil inc 0) signup-cnt)]
                            [:db/add session-eid :session/participants user-id]])
             (session-updated-response session-eid))
@@ -146,7 +155,7 @@
     [""
      {:name :activity/save
       :get {:handler GET-sessions}
-      :post {:handler save-session}}]
+      :post {:handler POST-save-session}}]
     ["/new"
      {:get {:handler GET-session-new}}]
     ["/:id"

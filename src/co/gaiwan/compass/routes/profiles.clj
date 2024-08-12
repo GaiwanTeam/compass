@@ -10,8 +10,6 @@
    [io.pedestal.log :as log]
    [java-time.api :as time]))
 
-(def upload-dir "uploads")
-
 (defn wrap-authentication [handler]
   (fn [req]
     (log/trace ::login-check (:identity req))
@@ -46,7 +44,7 @@
   [{:keys [params identity] :as req}]
   (let [{:keys [filename tempfile] :as image}  (:image params)
         file-id (str (:db/id identity))
-        filepath (str upload-dir "/" file-id "_" filename)
+        filepath (str util/upload-dir "/" file-id "_" filename)
         {:keys [tempids]} @(db/transact [(merge
                                           {:user/image-path filepath}
                                           (params->profile-data params))])]
@@ -57,7 +55,7 @@
                    {:flash "Successfully Saved!"})))
 
 (defn file-handler [req]
-  (let [file (io/file "uploads" (get-in req [:path-params :filename]))]
+  (let [file (io/file util/upload-dir (get-in req [:path-params :filename]))]
     (if (.exists file)
       (response/file-response (.getPath file))
       (response/not-found "File not found"))))

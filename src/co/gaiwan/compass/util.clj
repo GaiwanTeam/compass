@@ -8,6 +8,8 @@
   (:import
    (java.time Instant ZonedDateTime ZoneId)))
 
+(def upload-dir "uploads")
+
 (defn datafy-instant
   "Output:
    ```

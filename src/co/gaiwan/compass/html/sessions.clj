@@ -223,7 +223,8 @@
   ([params]
    [:<>
     [:h2 "Create Activity"]
-    [:form {:method "POST" :action "/sessions"}
+    [:form {:method "POST" :action "/sessions"
+            :enctype "multipart/form-data"}
      [:label {:for "title"} "Title"]
      [:input {:id "title" :name "title" :type "text"
               :required true :min-length 2}]
