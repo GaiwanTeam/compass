@@ -46,7 +46,7 @@
         file-id (str (:db/id identity))
         filepath (str util/upload-dir "/" file-id "_" filename)
         {:keys [tempids]} @(db/transact [(merge
-                                          {:user/image-path filepath}
+                                          {:user/image-path (str "/" filepath)}
                                           (params->profile-data params))])]
     ;; (tap> req)
     ;; Copy the image file content to the uploads directory

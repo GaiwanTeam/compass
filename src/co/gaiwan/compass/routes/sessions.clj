@@ -94,7 +94,7 @@
             file-path  (str util/upload-dir "/" session-eid "_" filename)]
         (io/copy tempfile (io/file file-path))
         @(db/transact [{:db/id (get tempids "session")
-                        :session/image (str util/upload-dir "/" (get tempids "session") "_" filename)}])))
+                        :session/image (str "/" file-path)}])))
     (util/redirect ["/sessions" (get tempids "session")]
                    {:flash "Successfully created!"})))
 
