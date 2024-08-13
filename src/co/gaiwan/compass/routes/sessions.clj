@@ -22,7 +22,7 @@
     {:status 200
      :headers {"HX-Trigger" "login-required"}} #_(util/redirect)
     {:html/head [:title "Create new session"]
-     :html/body [session-html/session-form {}]}))
+     :html/body [session-html/session-form (:identity req)]}))
 
 (defn GET-session [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
@@ -42,7 +42,7 @@
   "convert the Http Post Params to data ready for DB transaction"
   [{:keys [title subtitle start-date start-time duration-time description
            type location
-           capacity
+           capacity organizer-id
            ticket-required? published?]
     :or {type "activity"}}
    identity]
@@ -62,6 +62,7 @@
              :session/description description
              :session/type (keyword "session.type" type)
              :session/location (keyword "location.type" location)
+             :session/organized (parse-long organizer-id)
              :session/signup-count 0
              :session/capacity (parse-long capacity)}
       (= ticket-required? "on")
@@ -73,7 +74,8 @@
   "Create new session, save to Datomic
 
   The typical params is:
-  {:name \"dsafa\",
+  {:organizer-id \"455\"
+   :name \"dsafa\",
    :description \"dsafa\",
    :type \"activity\",
    :location \"depot-main-stage\",

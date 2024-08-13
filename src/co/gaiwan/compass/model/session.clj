@@ -9,10 +9,10 @@
   (some (comp #{(:db/id user)} :db/id)
         (:session/participants session)))
 
-(defn organizing? [organized user]
+(defn organizing? [session user]
   (and
-   (some? organized)
-   (= (:db/id user) (:db/id organized))))
+   (= (:db/id user)
+      (:db/id (:session/organized session)))))
 
 ;; => {:day :today,
 ;;     :type :all-types,
@@ -90,5 +90,4 @@
    (fn [sessions [k v]]
      (apply-filter sessions user k v))
    sessions
-   filters)
-  )
+   filters))
