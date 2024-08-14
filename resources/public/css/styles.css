@@ -47,7 +47,7 @@ body #app {
 }
 
 body #app >main {
-  padding: var(--size-2);
+  padding: 0.5rem;
 }
 
 ul, ol {
@@ -59,6 +59,14 @@ ul, ol {
 body {
   overflow-x: hidden;
   width: 100vw;
+}
+
+h5, h4, h2, h1, h3 {
+  max-inline-size: inherit;
+}
+
+button, .btn {
+  border-radius: 0.5rem;
 }
 
 .graphics-compass_logo path {
@@ -234,11 +242,21 @@ body {
   background-position: 50% 50%;
 }
 
+.sessions-participate_btn {
+  --_bg: var(--surface-3);
+  --_border: none;
+  --_text: var(--text-2);
+}
+
 .sessions-session_card_actions {
   display: flex;
   justify-content: flex-end;
   width: 100%;
   margin-top: var(--size-2);
+}
+
+.sessions-session_image_PLUS_guage {
+  padding: var(--size-2);
 }
 
 .sessions-session_image_PLUS_guage .sessions-capacity_gauge {
@@ -252,34 +270,33 @@ body {
   box-shadow: var(--shadow-2);
   border-style: solid;
   border-color: var(--surface-3);
-  text-align: center;
+}
+
+.sessions-session_card .left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  float: left;
+  margin-left: var(--size-2);
+  margin-right: var(--size-2);
 }
 
 .sessions-session_card .title {
   font-size: var(--size-4);
   font-weight: 600;
+  margin-top: var(--size-3);
   margin-bottom: var(--size-2);
 }
 
 .sessions-session_card .subtitle {
   font-size: var(--size-3);
   font-weight: 500;
-}
-
-.sessions-session_card .datetime {
-  font-weight: 600;
-  position: absolute;
-  top: var(--size-0);
-  right: var(--size-0);
-  text-align: right;
-  margin: var(--size-2);
+  margin-bottom: var(--size-3);
+  color: var(--text-2);
 }
 
 .sessions-session_card .details {
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  align-items: center;
   padding-top: var(--size-3);
   padding-bottom: var(--size-3);
   position: relative;
@@ -293,6 +310,10 @@ body {
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   background-color: var(--sessions-session-type-color);
+}
+
+.sessions-session_card .loc {
+  color: var(--text-2);
 }
 
 .sessions-session_card .sessions-session_card_actions {
@@ -311,7 +332,7 @@ body {
   width: 100px;
 }
 
-.sessions-session_list {
+.sessions-session_list .sessions {
   display: grid;
   gap: var(--size-3);
   grid-template-columns: repeat(1, 1fr);
@@ -319,24 +340,38 @@ body {
 
 @media (min-width: 40rem) {
 
-  .sessions-session_list {
-    grid-template-columns: repeat(2, 1fr);
+  .sessions-session_list .sessions {
+    grid-template-columns: repeat(1, 1fr);
   }
 
 }
 
 @media (min-width: 60rem) {
 
-  .sessions-session_list {
-    grid-template-columns: repeat(3, 1fr);
+  .sessions-session_list .sessions {
+    grid-template-columns: repeat(2, 1fr);
   }
 
 }
 
-@media (min-width: 80rem) {
+.sessions-session_list >h2 {
+  margin-bottom: var(--size-4);
+  margin-top: var(--size-8);
+  font-size: var(--font-size-3);
+}
 
-  .sessions-session_list {
-    grid-template-columns: repeat(4, 1fr);
+@media (min-width: 24rem) {
+
+  .sessions-session_list >h2 {
+    font-size: var(--font-size-4);
+  }
+
+}
+
+@media (min-width: 40rem) {
+
+  .sessions-session_list >h2 {
+    font-size: var(--font-size-5);
   }
 
 }
@@ -345,6 +380,11 @@ body {
   display: grid;
   grid-template-columns: 10rem 1fr;
   gap: var(--size-2);
+}
+
+.sessions-session_form div.date-time {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .profiles-image_frame .img {
@@ -362,4 +402,10 @@ body {
 
 .profiles-profile_detail .profiles-image_frame {
   width: 100px;
+}
+
+.profiles-profile_form form {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: var(--size-2);
 }

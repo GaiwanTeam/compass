@@ -56,15 +56,19 @@
 (declare session-card)
 
 (o/defstyled participate-btn :button
+  {:--_bg t/--surface-3
+   :--_border "none"
+   :--_text t/--text-2}
   ([session user]
    [:<> (if user
           {:hx-post (str "/sessions/" (:db/id session) "/participate")
-           :hx-indicator (str ".c" (:db/id session))}
+           :hx-indicator (str ".c" (:db/id session))
+           :hx-swap "none"}
           {:hx-target "#modal"
            :hx-get "/login"})
     (if (session/participating? session user)
       "Leave"
-      "Participate")]))
+      "Join")]))
 
 (o/defstyled session-card-actions :nav
   :flex :justify-end :w-full
@@ -77,7 +81,7 @@
 
 (o/defprop --session-type-color)
 
-(o/defstyled session-image+guage
+(o/defstyled session-image+guage :div
   :p-2
   [capacity-gauge :w-100px]
   ([{:session/keys [signup-count capacity image] :as session} user]
@@ -92,11 +96,12 @@
   :bg-surface-2
   :shadow-2
   :boder :border-solid :border-surface-3
-  :text-center
-  [:.title :font-size-4 :font-semibold :mb-2]
-  [:.subtitle :font-size-3 :font-medium]
-  [:.datetime :font-semibold :absolute :top-0 :right-0 :text-right :m-2]
-  [:.details :flex-col :w-full :items-center :py-3 :relative]
+  #_:text-center
+  [:.left :flex-col :items-center {:float "left"} :mx-2]
+  [:.title :font-size-4 :font-semibold :mt-3 :mb-2]
+  [:.subtitle :font-size-3 :font-medium :mb-3
+   {:color t/--text-2}]
+  [:.details :w-full #_:items-center :py-3 :relative]
   [:.type :font-bold
    :p-1
    :text-center
@@ -104,6 +109,8 @@
    {:writing-mode "vertical-lr"
     :transform "rotate(180deg)"
     :background-color --session-type-color}]
+  [:.loc {:color t/--text-2}]
+
   [session-card-actions :text-right]
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
@@ -117,25 +124,25 @@
      :hx-target (str "closest ." session-card)
      :hx-select (str "." session-card " > *")
      :style {--session-type-color (:session.type/color type)}
-     :cx-toggle "expanded"
-     :cx-target (str "." session-card)
+     ;; :cx-toggle "expanded"
+     ;; :cx-target (str "." session-card)
      :hx-disinherit "hx-target hx-select"}
     [:div.type (:session.type/name type)]
 
     [:div.details
      {:class ["session-card-pulse" (str "c" (:db/id session))]}
-     [session-image+guage session user]
-     [:h2.title title]
+     [:div.left
+      [session-image+guage session user]
+      [participate-btn session user]]
+
+     [:h2.title
+      [:span.datetime
+       (str (time/truncate-to (time/local-time time) :minutes)) " · "]
+      title]
      [:h3.subtitle subtitle]
-     [:div.datetime
-      [:div
-       (str (time/truncate-to (time/local-time time) :minutes))]
-      [:div
-       (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
-       (time/format "dd.MM" time)]]
-     [:div.expansion
-      [session-card-actions session user]]
-     #_[:div.loc (:location/name location)]
+     #_[:div.expansion
+        [session-card-actions session user]]
+     [:div.loc "@ " (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
 
 (o/defstyled attendee :li
@@ -163,8 +170,7 @@
 
     [:div.details
      [session-image+guage session user]
-
-     [:h2.title title]
+     [:h3.title title]
      [:h3.subtitle subtitle]
      [:div.datetime
       [:div
@@ -198,11 +204,16 @@
      #_[:p (pr-str session)]]]))
 
 (o/defstyled session-list :section#sessions
-  :grid :gap-3
-  {:grid-template-columns "repeat(1, 1fr)"}
-  [:at-media {:min-width "40rem"} {:grid-template-columns "repeat(2, 1fr)"}]
-  [:at-media {:min-width "60rem"} {:grid-template-columns "repeat(3, 1fr)"}]
-  [:at-media {:min-width "80rem"} {:grid-template-columns "repeat(4, 1fr)"}]
+  [:.sessions
+   :grid :gap-3
+   {:grid-template-columns "repeat(1, 1fr)"}
+   [:at-media {:min-width "40rem"} {:grid-template-columns "repeat(1, 1fr)"}]
+   [:at-media {:min-width "60rem"} {:grid-template-columns "repeat(2, 1fr)"}]
+   #_[:at-media {:min-width "80rem"} {:grid-template-columns "repeat(3, 1fr)"}]]
+  [:>h2 :mb-4 :mt-8
+   {:font-size t/--font-size-3}
+   [:at-media {:min-width "24rem"} {:font-size t/--font-size-4}]
+   [:at-media {:min-width "40rem"} {:font-size t/--font-size-5}]]
   ([{:keys [user sessions]}]
    [:<>
     {:hx-get     "/sessions"
@@ -210,10 +221,12 @@
      :hx-swap    "outerHTML"
      :hx-select  "#sessions"
      :hx-disinherit "hx-swap"}
-    (for [session sessions]
-      [session-card session user])]))
-
-(o/defrules session-list-cols)
+    (for [[day sessions] (group-by #(time/truncate-to (:session/time %) :days) sessions)]
+      [:<>
+       [:h2 (time/format "EEEE, dd'th of' LLLL" day)]
+       [:div.sessions
+        (for [session (sort-by :session/time sessions)]
+          [session-card session user])]])]))
 
 ;; Create / edit
 
