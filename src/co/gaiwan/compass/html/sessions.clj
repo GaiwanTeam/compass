@@ -251,33 +251,45 @@
 ;; Create / edit
 
 (o/defstyled session-form :div
-  [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
-  [:div.date-time {:display "flex" :gap "0.5rem"}]
+  [#{:label :input} :block]
+  [:label
+   :mb-1 :mt-2
+   {:font-size t/--font-size-3
+    :font-weight t/--font-weight-6}]
+  [#{:input :textarea :select} ["&:not([type=checkbox])" :w-full :mb-3]]
+  [:label
+   :justify-start
+   :items-center
+   ["&:has([type=checkbox])"
+    :flex
+    :gap-3]]
+  [:div.date-time :flex :gap-2]
   ([params]
    [:<>
     [:h2 "Create Activity"]
     [:form {:method "POST" :action "/sessions"
             :enctype "multipart/form-data"}
-     [:label {:for "title"} "Title"]
+     [:label {:for "title"} "Name of Your Activity"]
      [:input {:id "title" :name "title" :type "text"
               :required true :min-length 2}]
 
-     [:label {:for "subtitle"} "Subtitle"]
+     [:label {:for "subtitle"} "Subtitle (optional)"]
      [:input {:id "subtitle" :name "subtitle" :type "text"
               :min-length 10}]
 
-     [:label {:for "start-time"} "Start Time"]
+     [:label {:for "start-time"} "Day and Start Time"]
      [:div.date-time
       [:select {:id "start-date" :name "start-date"}
+       ;; FIXME!
        (let [day-before 3
              day-after 3]
-         (for [day (range (- 4 day-before) (+ 4 day-after))]
+         (for [day (range (- 15 day-before) (+ 15 day-after))]
            [:option {:value (format "2024-08-%02d" day)} (format "2024-08-%02d" day)]))]
       [:input {:id "start-time" :name "start-time" :type "time"
                :min "06:00" :max "23:00" :required true
                :step (* 5 60)}]]
 
-     [:label {:for "duration-time"} "Duration Time"]
+     [:label {:for "duration-time"} "Duration"]
      [:input.html-duration-picker
       {:id "duration-time" :name "duration-time" :data-hide-seconds true}]
 
@@ -297,19 +309,21 @@
       [:option {:value "hal5-outside-seating"} "Hal 5 - outside seating"]
       [:option {:value "hal5-long-table"} "Hal 5 - long table"]]
 
-     [:label {:for "capacity"} "Capacity"]
+     [:label {:for "capacity"} "How many people can you accomodate?"]
      [:input {:id "capacity" :name "capacity" :type "number"
-              :min 2 :value 2 :required true}]
+              :min 2 :value 5 :required true}]
 
      [:label {:for "description"} "Description"]
      [:textarea {:id "description" :name "description"
                  :required true}]
 
-     [:label {:for "ticket"} "Requires Ticket?"]
-     [:input {:id "ticket" :name "ticket-required?" :type "checkbox"}]
+     [:label {:for "ticket"}
+      [:input {:id "ticket" :name "ticket-required?" :type "checkbox"}]
+      "Requires Ticket?"]
 
-     [:label {:for "published"} "Published/Visible?"]
-     [:input {:id "published" :name "published?" :type "checkbox"}]
+     [:label {:for "published"}
+      [:input {:id "published" :name "published?" :type "checkbox"}]
+      "Published/Visible?"]
 
      [:label {:for "image"} "Activity Image"]
      [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]

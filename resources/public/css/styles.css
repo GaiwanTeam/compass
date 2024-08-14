@@ -464,15 +464,35 @@ body {
 
 }
 
-.sessions-session_form form {
-  display: grid;
-  grid-template-columns: 10rem 1fr;
-  gap: var(--size-2);
+.sessions-session_form label, .sessions-session_form input {
+  display: block;
+}
+
+.sessions-session_form label {
+  margin-bottom: var(--size-1);
+  margin-top: var(--size-2);
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-6);
+}
+
+.sessions-session_form textarea:not([type=checkbox]), .sessions-session_form input:not([type=checkbox]), .sessions-session_form select:not([type=checkbox]) {
+  width: 100%;
+  margin-bottom: var(--size-3);
+}
+
+.sessions-session_form label {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sessions-session_form label:has([type=checkbox]) {
+  display: flex;
+  gap: var(--size-3);
 }
 
 .sessions-session_form div.date-time {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--size-2);
 }
 
 .profiles-image_frame .img {

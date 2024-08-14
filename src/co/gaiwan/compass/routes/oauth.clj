@@ -60,7 +60,7 @@
         @(db/transact tx-data)
         {:status  302
          :headers {"Location" (or redirect-url "/")}
-         :flash   [:p "You are signed in!"]
+         #_#_:flash   [:p "You are signed in!"]
          :session {:identity user-uuid}}))))
 
 (defn GET-login [req]

@@ -24,7 +24,8 @@
     (into [:a props] children)
     (into
      [:a {:hx-target "#modal"
-          :hx-get (str "/login?next=" (:href props))}]
+          :hx-get (str "/login?next=" (:href props))
+          :href "#"}]
      children)))
 
 (o/defstyled menu-panel :nav
@@ -63,7 +64,8 @@
      [:li [a-auth {:href (str "/profiles")
                    :user user} "Profile & Settings"]]
      [:li [a-auth {:href "/sessions/new"
-                   :user user} "Create Activity"]]]]))
+                   :user user}
+           "Create Activity"]]]]))
 
 (o/defrules toggle-menu-button)
 
