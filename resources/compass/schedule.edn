@@ -9,6 +9,7 @@
   :session/location :location.type/depot,
   :session/code "RDA8K9",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T17:40+02:00[Europe/Brussels]",
   :session/image
@@ -20,6 +21,7 @@
   :session/location :location.type/depot,
   :session/code "JYHR9S",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T12:30+02:00[Europe/Brussels]",
   :session/image
@@ -31,6 +33,7 @@
   :session/location :location.type/depot,
   :session/code "SEFW3N",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T14:00+02:00[Europe/Brussels]",
   :session/image
@@ -43,6 +46,7 @@
   :session/location :location.type/hal5,
   :session/code "XXE9RM",
   :session/type :session.type/workshop,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T15:30+02:00[Europe/Brussels]",
   :session/image
@@ -54,6 +58,7 @@
   :session/location :location.type/depot,
   :session/code "9WTPNL",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-19T18:05+02:00[Europe/Brussels]",
   :session/image
@@ -65,6 +70,7 @@
   :session/location :location.type/depot,
   :session/code "ULRJXZ",
   :session/type :session.type/keynote,
+  :session/capacity 300,
   :session/duration "PT45M"}
  {:session/time #time/zdt "2024-09-18T14:30+02:00[Europe/Brussels]",
   :session/image
@@ -77,6 +83,7 @@
   :session/location :location.type/hal5,
   :session/code "RYJ78V",
   :session/type :session.type/workshop,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-19T15:30+02:00[Europe/Brussels]",
   :session/image
@@ -89,6 +96,7 @@
   :session/location :location.type/depot,
   :session/code "3PV78J",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T16:00+02:00[Europe/Brussels]",
   :session/image
@@ -100,6 +108,7 @@
   :session/location :location.type/hal5,
   :session/code "W8JQNR",
   :session/type :session.type/workshop,
+  :session/capacity 300,
   :session/duration "PT90M"}
  {:session/time #time/zdt "2024-09-19T16:10+02:00[Europe/Brussels]",
   :session/image
@@ -112,6 +121,7 @@
   :session/location :location.type/depot,
   :session/code "FCPHWU",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-19T15:00+02:00[Europe/Brussels]",
   :session/image
@@ -123,6 +133,7 @@
   :session/location :location.type/hal5,
   :session/code "R8UFRM",
   :session/type :session.type/office-hours,
+  :session/capacity 300,
   :session/duration "PT90M"}
  {:session/time #time/zdt "2024-09-18T15:30+02:00[Europe/Brussels]",
   :session/image
@@ -134,6 +145,7 @@
   :session/location :location.type/hal5,
   :session/code "RYKWPQ",
   :session/type :session.type/session,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-19T09:50+02:00[Europe/Brussels]",
   :session/image
@@ -146,6 +158,7 @@
   :session/location :location.type/depot,
   :session/code "DHG7BC",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T17:00+02:00[Europe/Brussels]",
   :session/image
@@ -157,6 +170,7 @@
   :session/location :location.type/depot,
   :session/code "L8VJWX",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T15:00+02:00[Europe/Brussels]",
   :session/image
@@ -168,6 +182,7 @@
   :session/location :location.type/hal5,
   :session/code "7CHPV8",
   :session/type :session.type/workshop,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T16:10+02:00[Europe/Brussels]",
   :session/image
@@ -180,6 +195,7 @@
   :session/location :location.type/depot,
   :session/code "KPLYME",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-19T10:30+02:00[Europe/Brussels]",
   :session/image
@@ -192,6 +208,7 @@
   :session/location :location.type/depot,
   :session/code "SL7C7G",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-19T11:30+02:00[Europe/Brussels]",
   :session/image
@@ -203,6 +220,7 @@
   :session/location :location.type/depot,
   :session/code "MZV7H9",
   :session/type :session.type/talk,
+  :session/capacity 300,
   :session/duration "PT30M"}
  {:session/time #time/zdt "2024-09-18T09:35+02:00[Europe/Brussels]",
   :session/image
@@ -214,6 +232,7 @@
   :session/location :location.type/depot,
   :session/code "GJF8UZ",
   :session/type :session.type/keynote,
+  :session/capacity 300,
   :session/duration "PT45M"}
  {:session/time #time/zdt "2024-09-18T11:05+02:00[Europe/Brussels]",
   :session/image
@@ -225,4 +244,5 @@
   :session/location :location.type/depot,
   :session/code "3ULPRX",
   :session/type :session.type/keynote,
+  :session/capacity 300,
   :session/duration "PT45M"})
