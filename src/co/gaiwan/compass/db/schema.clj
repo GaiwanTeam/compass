@@ -17,6 +17,7 @@
    [:discord/refresh-token :string "Discord OAuth2 refresh-token"]
    [:discord/avatar-url :string "Discord Avatar URL"]
 
+   [:session/code :string "Corresponding Pretalx code, to prevent the import from creating duplicates" :identity]
    [:session/title :string "Title of the talk/workshop/activity"]
    [:session/subtitle :string "Subtitle of the session, for talks/workshops = speaker names"]
    [:session/description :string "Full description or abstract"]

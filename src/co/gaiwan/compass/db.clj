@@ -82,4 +82,8 @@
 
 (comment
   ;; reload schema and data
-  (user/reset))
+  (user/reset)
+
+  (transact [{:db/id 17592186045437,
+              :session/capacity 1}])
+  )

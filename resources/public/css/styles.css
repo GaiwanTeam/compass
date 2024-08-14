@@ -4,6 +4,7 @@
   --sessions-arc-color: var(--lime-5);
   --hoc-pink: #e25f7d;
   --hoc-pink-3: var(--hoc-pink);
+  --hoc-green: #99db70;
   --sessions-arc-degrees: 240deg;
   --profiles-arc-thickness: 30px;
   --sessions-arc-thickness: 30px;
@@ -47,7 +48,7 @@ body #app {
 }
 
 body #app >main {
-  padding: 0.5rem;
+  padding: var(--size-2);
 }
 
 ul, ol {
@@ -66,7 +67,23 @@ h5, h4, h2, h1, h3 {
 }
 
 button, .btn {
-  border-radius: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+dialog {
+  padding: var(--size-0);
+}
+
+body {
+  font-family: Open Sans, sans-serif;
+}
+
+@keyframes dash {
+
+  to {
+    stroke-dashoffset: 0;
+  }
+
 }
 
 .graphics-compass_logo path {
@@ -135,6 +152,51 @@ button, .btn {
   border-style: solid;
   border-color: var(--surface-4);
   font-size: var(--font-size-3);
+}
+
+.co_gaiwan_compass_html_auth__popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-4);
+}
+
+.co_gaiwan_compass_html_auth__popup .top {
+  display: flex;
+  align-self: flex-end;
+  padding: var(--size-2);
+}
+
+.co_gaiwan_compass_html_auth__popup p {
+  margin: var(--size-4);
+}
+
+.co_gaiwan_compass_html_auth__popup .discord-login {
+  margin-bottom: var(--size-4);
+  padding-top: var(--size-3);
+  padding-bottom: var(--size-3);
+  padding-left: var(--size-4);
+  padding-right: var(--size-4);
+  background-color: #7289da;
+  border-radius: 0.5rem;
+  color: var(--gray-0);
+  text-align: center;
+}
+
+.co_gaiwan_compass_html_auth__popup .discord-login:hover {
+  text-decoration: none;
+}
+
+.co_gaiwan_compass_html_auth__popup .graphics-cross {
+  width: 3rem;
+  height: 2.25rem;
+  padding: 0.4rem;
+}
+
+.co_gaiwan_compass_html_auth__popup .graphics-discord {
+  height: 2rem;
+  width: 2rem;
+  --_logo-color: var(--gray-0);
 }
 
 .co_gaiwan_compass_html_components__toggle_button {
@@ -218,7 +280,6 @@ button, .btn {
   height: 100%;
   align-items: center;
   font-size: 5rem;
-  color: var(--hoc-pink);
 }
 
 .sessions-capacity_gauge.checked .checkmark {
@@ -240,6 +301,11 @@ button, .btn {
   border-radius: 9999px;
   background-size: cover;
   background-position: 50% 50%;
+}
+
+.sessions-capacity_gauge .graphics-checkmark {
+  padding: var(--size-3);
+  --icon-color: var(--hoc-green);
 }
 
 .sessions-participate_btn {
@@ -286,6 +352,10 @@ button, .btn {
   font-weight: 600;
   margin-top: var(--size-3);
   margin-bottom: var(--size-2);
+}
+
+.sessions-session_card .title a {
+  color: var(--text-1);
 }
 
 .sessions-session_card .subtitle {
@@ -408,4 +478,20 @@ button, .btn {
   display: grid;
   grid-template-columns: 10rem 1fr;
   gap: var(--size-2);
+}
+
+.graphics-discord {
+  --_logo-color: #5865F2;
+}
+
+.graphics-discord path {
+  fill: var(--_logo-color);
+}
+
+.graphics-checkmark path {
+  stroke: var(--icon-color);
+  stroke-width: 0.8;
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: dash 1s linear forwards;
 }

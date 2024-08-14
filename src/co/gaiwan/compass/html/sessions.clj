@@ -5,6 +5,7 @@
    [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.html.filters :as filters]
+   [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.model.session :as session]
    [java-time.api :as time]
    [lambdaisland.ornament :as o]
@@ -31,8 +32,7 @@
   [arc :w-full]
   {--arc-thickness "7%"}
   [:.checkmark :hidden :w-full :justify-center :h-full :items-center
-   {:font-size "5rem"
-    :color --hoc-pink}]
+   {:font-size "5rem"}]
   [:&.checked
    [:.checkmark :flex]
    [:.img {:filter "brightness(50%)"}]]
@@ -42,16 +42,22 @@
    [:>* :w-full :aspect-square :rounded-full
     {:background-size "cover"
      :background-position "50% 50%"}]]
+  [graphics/checkmark :p-3 {t/--icon-color t/--hoc-green}]
   ([{:keys [capacity image checked?]}]
    [:<> {:class [(when checked? "checked")]
          :style {--arc-degrees (str (* 360.0 capacity) "deg")}}
     [arc {:style {--arc-degrees "360deg"
                   --arc-color "white"}}]
-    [arc]
+    [arc {:style {--arc-color (if (< capacity 0.5)
+                                t/--hoc-green
+                                t/--hoc-pink-4)
+                  :filter (str "brightness(" (if (< capacity 0.5)
+                                               (* 110 (+ 1 (- 0.5 capacity)))
+                                               (* 110 (- 1.5 (- capacity 0.5)))) "%)")}}]
     [:div.img
      [:div
       {:style {:background-image image}}]]
-    [:div.checkmark [:div "✓"]]]))
+    [:div.checkmark [:div [graphics/checkmark]]]]))
 
 (declare session-card)
 
@@ -85,11 +91,22 @@
   :p-2
   [capacity-gauge :w-100px]
   ([{:session/keys [signup-count capacity image] :as session} user]
-   [capacity-gauge {:capacity (/ (or signup-count 0) (max capacity 1))
+   [capacity-gauge {:capacity #_(rand) (/ (or signup-count 0) (max capacity 1))
                     :image (if image
                              (str "url(" image ")")
                              (str "var(--gradient-" (inc (rand-int 7)) ")"))
                     :checked? (session/participating? session user)}]))
+
+(defn fmt-dur [dur-str]
+  (let [d (time/duration dur-str)
+        h (.toHours d)
+        m (.toMinutesPart d)]
+    (str
+     (when (< 0 h)
+       (str h " hrs ")
+       )
+     (when (< 0 m)
+       (str m " min")))))
 
 (o/defstyled session-card :div
   :flex :gap-1
@@ -98,7 +115,8 @@
   :boder :border-solid :border-surface-3
   #_:text-center
   [:.left :flex-col :items-center {:float "left"} :mx-2]
-  [:.title :font-size-4 :font-semibold :mt-3 :mb-2]
+  [:.title :font-size-4 :font-semibold :mt-3 :mb-2
+   [:a {:color t/--text-1}]]
   [:.subtitle :font-size-3 :font-medium :mb-3
    {:color t/--text-2}]
   [:.details :w-full #_:items-center :py-3 :relative]
@@ -115,7 +133,7 @@
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
   ([{:session/keys [type title subtitle organized time
-                    location image participants
+                    location image participants duration
                     capacity signup-count] :as session}
     user]
    [:<>
@@ -136,13 +154,14 @@
       [participate-btn session user]]
 
      [:h2.title
-      [:span.datetime
-       (str (time/truncate-to (time/local-time time) :minutes)) " · "]
-      title]
+      [:a {:href (str "/sessions/" (:db/id session))}
+       [:span.datetime
+        (str (time/truncate-to (time/local-time time) :minutes)) " · "]
+       title]]
      [:h3.subtitle subtitle]
      #_[:div.expansion
         [session-card-actions session user]]
-     [:div.loc "@ " (:location/name location)]
+     [:div.loc (fmt-dur duration) " @ " (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
 
 (o/defstyled attendee :li

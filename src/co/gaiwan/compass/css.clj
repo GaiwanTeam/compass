@@ -8,7 +8,8 @@
    [garden.compiler :as gc]
    [lambdaisland.ornament :as o]))
 
-(require 'co.gaiwan.compass.css.styles)
+(require 'co.gaiwan.compass.css.styles
+         )
 
 (o/set-tokens!
  {:components (with-meta components/girouette-components {:replace true})

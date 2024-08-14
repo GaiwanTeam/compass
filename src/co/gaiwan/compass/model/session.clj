@@ -61,10 +61,12 @@
             sessions)))
 
 (defmethod apply-filter :my-activities [sessions user k v]
-  ;; TODO filter on
-  ;; - user participates
-  ;; - user created
-  sessions)
+  (filter (fn [{:session/keys [participants organized]}]
+            (or
+             (= (:db/id user) (:db/id organized))
+             (some (comp #{(:db/id user)} :db/id)
+                   participants)))
+          sessions))
 
 (defmethod apply-filter :include-past [sessions user k v]
   (let [now (time/zoned-date-time)]
@@ -73,6 +75,13 @@
       (remove
        #(time/before? (:session/time %) now)
        sessions))))
+
+(defmethod apply-filter :spots-available [sessions user k v]
+  (filter (fn [{:session/keys [capacity participants]}]
+            (< (count participants) capacity))
+          sessions))
+
+
 
 (defn apply-filters [sessions user filters]
   (def sessions sessions)

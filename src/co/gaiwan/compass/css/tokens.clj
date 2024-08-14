@@ -17,11 +17,14 @@
 (o/defprop --hoc-pink-2 "#cd4e6a")
 (o/defprop --hoc-pink-3 --hoc-pink)
 (o/defprop --hoc-pink-4 "#c0415b")
+(o/defprop --hoc-green "#99db70")
 
 (o/defprop --surface-1)
 (o/defprop --surface-2)
 (o/defprop --surface-3)
 (o/defprop --surface-4)
+
+(o/defprop --icon-color)
 
 (o/defprop --talk-color)
 (o/defprop --workshop-color)
