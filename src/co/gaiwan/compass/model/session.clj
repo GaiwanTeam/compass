@@ -5,14 +5,29 @@
   (:require
    [java-time.api :as time]))
 
-(defn participating? [session user]
+(defn participating?
+  "If user participates this session"
+  [session user]
   (some (comp #{(:db/id user)} :db/id)
         (:session/participants session)))
 
-(defn organizing? [session user]
-  (and
-   (= (:db/id user)
-      (:db/id (:session/organized session)))))
+(defn organizing?
+  "If user organizes this session"
+  [session user]
+  (let [organized (:session/organized session)]
+    (and
+     ;; first make sure that user is already login
+     (some? user)
+     (or
+     ;; Condition 1: organized property record the user's :db/id 
+      (= (:db/id user)
+         (:db/id organized))
+     ;; Condition 2: organized property record the user's group :db/id
+      (some (comp #{(:db/id user)} :db/id)
+            (:user-group/users organized))
+     ;; Condition 3: The user belongs to orga group 
+      (some :user-group/orga
+            (:user-group/_users user))))))
 
 ;; => {:day :today,
 ;;     :type :all-types,
