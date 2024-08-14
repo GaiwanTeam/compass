@@ -114,12 +114,12 @@
   :shadow-2
   :boder :border-solid :border-surface-3
   #_:text-center
-  [:.left :flex-col :items-center {:float "left"} :mx-2]
+  [:.left :flex-col :items-center :py-3 :mx-2]
   [:.title :font-size-4 :font-semibold :mt-3 :mb-2
    [:a {:color t/--text-1}]]
   [:.subtitle :font-size-3 :font-medium :mb-3
    {:color t/--text-2}]
-  [:.details :w-full #_:items-center :py-3 :relative]
+  [:.details :w-full #_:items-center :py-3 :mr-2 :relative]
   [:.type :font-bold
    :p-1
    :text-center
@@ -147,11 +147,12 @@
      :hx-disinherit "hx-target hx-select"}
     [:div.type (:session.type/name type)]
 
+    [:div.left
+     [session-image+guage session user]
+     [participate-btn session user]]
+
     [:div.details
      {:class ["session-card-pulse" (str "c" (:db/id session))]}
-     [:div.left
-      [session-image+guage session user]
-      [participate-btn session user]]
 
      [:h2.title
       [:a {:href (str "/sessions/" (:db/id session))}

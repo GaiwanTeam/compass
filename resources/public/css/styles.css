@@ -34,6 +34,14 @@
 
 }
 
+@keyframes dash {
+
+  to {
+    stroke-dashoffset: 0;
+  }
+
+}
+
 body.menu-open .co_gaiwan_compass_html_navigation__menu_panel {
   transform: translate(0, 0);
 }
@@ -48,7 +56,7 @@ body #app {
 }
 
 body #app >main {
-  padding: var(--size-2);
+  padding: 0.5rem;
 }
 
 ul, ol {
@@ -78,14 +86,6 @@ body {
   font-family: Open Sans, sans-serif;
 }
 
-@keyframes dash {
-
-  to {
-    stroke-dashoffset: 0;
-  }
-
-}
-
 .graphics-compass_logo path {
   fill: var(--hoc-pink);
 }
@@ -100,6 +100,22 @@ body {
   stroke-width: 13%;
   stroke-linecap: round;
   stroke: var(--text-1);
+}
+
+.graphics-discord {
+  --_logo-color: #5865F2;
+}
+
+.graphics-discord path {
+  fill: var(--_logo-color);
+}
+
+.graphics-checkmark path {
+  stroke: var(--icon-color);
+  stroke-width: 0.8;
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: dash 1s linear forwards;
 }
 
 .co_gaiwan_compass_html_navigation__nav_bar {
@@ -342,7 +358,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  float: left;
+  padding-top: var(--size-3);
+  padding-bottom: var(--size-3);
   margin-left: var(--size-2);
   margin-right: var(--size-2);
 }
@@ -369,6 +386,7 @@ body {
   width: 100%;
   padding-top: var(--size-3);
   padding-bottom: var(--size-3);
+  margin-right: var(--size-2);
   position: relative;
 }
 
@@ -478,20 +496,4 @@ body {
   display: grid;
   grid-template-columns: 10rem 1fr;
   gap: var(--size-2);
-}
-
-.graphics-discord {
-  --_logo-color: #5865F2;
-}
-
-.graphics-discord path {
-  fill: var(--_logo-color);
-}
-
-.graphics-checkmark path {
-  stroke: var(--icon-color);
-  stroke-width: 0.8;
-  stroke-dasharray: 10;
-  stroke-dashoffset: 10;
-  animation: dash 1s linear forwards;
 }

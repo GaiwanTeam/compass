@@ -27,25 +27,32 @@
          :hx-swap    "outerHTML"}
 
     [filter-group
-     {:value   (:day state :any-day)
-      :name    "day"
-      :options [[:any-day "All Days"]
-                [:today "Today"]
-                [:tomorrow "Tomorrow"]]}]
-
-    [filter-group
      {:value   (:type state :all-types)
       :name    "type"
       :options [[:all-types "All Types"]
                 [:talks "Talks"]
                 [:activities "Activities"]]}]
 
-    (for [[id caption] [[:my-activities "My Activities"]
-                        [:include-past "Include Past"]
-                        [:spots-available "Spots Available"]]]
-      [filter-btn {:id       id
-                   :caption  caption
-                   :checked? (get state id)}]
-      )
+    [filter-group
+     {:value   (:day state :any-day)
+      :name    "day"
+      :options [[:any-day "All Days"]
+                [:today "Today"]
+                [:tomorrow "Tomorrow"]]}]
+
+    [filter-btn
+     {:id :include-past,
+      :caption "Include Past",
+      :checked? (get state :include-past)}]
+
+    [filter-btn
+     {:id :my-activities,
+      :caption "My Activities",
+      :checked? (get state :my-activities)}]
+
+    [filter-btn
+     {:id :spots-available,
+      :caption "Spots Available",
+      :checked? (get state :spots-available)}]
     #_[:a.btn {:href "/sessions/new" :hx-boost "false"} "Create An Activity"]
     ]))
