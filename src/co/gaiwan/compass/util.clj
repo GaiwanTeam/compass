@@ -96,3 +96,7 @@
     (vector? res) (mapv deep-underscorize-keys res)
     (map? res)    (update-vals (underscorize-keys res) deep-underscorize-keys)
     :else         res))
+
+(defn expires-in->instant
+  [expires-in]
+  (.plusSeconds (Instant/now) (- expires-in 60)))

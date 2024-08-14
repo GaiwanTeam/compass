@@ -4,12 +4,9 @@
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.util :as util]
-   [datomic.api :as d]
    [hato.client :as hato]
    [lambdaisland.uri :as uri]
-   [ring.util.response :as response]
-   [io.pedestal.log :as log])
-  (:import (java.time Instant)))
+   [io.pedestal.log :as log]))
 
 (def discord-oauth-endpoint "https://discord.com/oauth2/authorize")
 (def discord-api-endpoint "https://discord.com/api/v10")
@@ -19,7 +16,6 @@
 
 (defn bot-auth-headers []
   {"Authorization" (str "Bot " (config/value :discord/bot-token))})
-
 
 (defn flow-init-url
   ([]
@@ -62,10 +58,6 @@
    {:grant_type "refresh_token"
     :refresh_token refresh-token}))
 
-(defn- expires-in->instant
-  [expires-in]
-  (.plusSeconds (Instant/now) (- expires-in 60)))
-
 (defn current-access-token
   "Get a valid Discord bearer access token for a user.
 
@@ -90,7 +82,7 @@
           (db/transact [{:user/uuid user-id
                          :discord/access-token (:access_token body)
                          :discord/refresh-token (:refresh_token body)
-                         :discord/expires-at (expires-in->instant (:discord/expires_in body))}])
+                         :discord/expires-at (util/expires-in->instant (:discord/expires_in body))}])
           (:access_token body)))
       (:discord/access-token oauth-data))))
 
@@ -102,55 +94,12 @@
               :oauth-token token})))
 
 (defn join-server [token]
-  (let [{:keys [id username]} (fetch-user-info token)]
-    (log/trace :discord/adding-user username)
-    (hato/put
-     (str discord-api-endpoint "/guilds/" (config/value :discord/server-id) "/members/" id)
-     {:as :auto
-      :content-type :json
-      :form-params {:access_token token}
-      :headers (bot-auth-headers)})))
-
-(defn GET-callback [{:keys [query-params]}]
-  (let [code                  (get query-params "code")
-        {:keys [status body]} (exchange-code code)]
-    (if (not= 200 status)
-      {:status  302
-       :headers {"Location" "/"}
-       :flash   [:p
-                 "Discord OAuth2 exchange failed."
-                 [:pre (util/pprint-str body)]]
-       :session {:identity nil}}
-      (let [{:keys [access_token refresh_token expires_in]} body
-            {:keys [id global_name email username]}         (fetch-user-info access_token)
-            user-uuid                                       (:user/uuid (d/entity (db/db) [:user/email email]) (random-uuid))
-            tx-data
-            [{:user/uuid             user-uuid
-              :user/email            email
-              :user/name             global_name
-              :user/handle           username
-              :discord/id            id
-              :discord/access-token  access_token
-              :discord/refresh-token refresh_token
-              :discord/expires-at (expires-in->instant expires_in)}]
-            {:keys [status]} (join-server access_token)]
-        @(db/transact tx-data)
-        {:status  302
-         :headers {"Location" "/"}
-         :flash   [:p "You are signed in!"
-                   (when-not (= status 200)
-                     [:br "Unfortunately, adding you to our Discord server didn't work."])]
-         :session {:identity user-uuid}}))))
-
-(defn routes []
-  [""
-   ["/oauth2"
-    ["/discord"
-     ["/callback"
-      {:get {:handler #'GET-callback}}]]]
-   ["/logout"
-    {:get {:handler (fn [req]
-                      (assoc
-                       (response/redirect "/")
-                       :flash "You were signed out"
-                       :session {}))}}]])
+  (let [{:keys [id username]} (fetch-user-info token)
+        response
+        (hato/put
+         (str discord-api-endpoint "/guilds/" (config/value :discord/server-id) "/members/" id)
+         {:as :auto
+          :content-type :json
+          :form-params {:access_token token}
+          :headers (bot-auth-headers)})]
+    (log/trace :discord/user-add username :discord/add-guild-member-response response)))
