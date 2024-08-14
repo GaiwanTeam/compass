@@ -1,15 +1,18 @@
 (ns co.gaiwan.compass.html.layout
   (:require
-   [ring.middleware.anti-forgery :as anti-forgery]
    [charred.api :as charred]
+   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.html.navigation :as nav]
-   [lambdaisland.ornament :as o]))
+   [lambdaisland.ornament :as o]
+   [ring.middleware.anti-forgery :as anti-forgery]))
 
 (o/defrules layout
   [:body
    {:max-width "100vw"}
    [:#app {:max-width "80rem" :margin "0 auto"}
     [:>main :p-2]]])
+
+(def start-time (System/currentTimeMillis))
 
 (defn base-layout [{:keys [head body flash user request] :as opts}]
   [:html
@@ -20,10 +23,11 @@
     [:link {:rel "stylesheet" :href "/css/open-props.min.css"}]
     [:link {:rel "stylesheet" :href "/css/open-props-normalize.min.css"}]
     [:link {:rel "stylesheet" :href "/css/buttons.css"}]
-    [:link {:rel "stylesheet" :href "/css/styles.css"}]
+    [:link {:rel "stylesheet" :href (str "/css/styles.css?t=" start-time)}]
     [:script {:src "/js/htmx-1.9.12.js"}]
     [:script {:src "/js/cx.js"}]
-    [:script {:src "/js/live.js#css"}]
+    (when (config/value :live.js?)
+      [:script {:src "/js/live.js#css"}])
     [:script {:src "/js/html-duration-picker.min.js"}]
     head]
    [:body {;; Have HTMX handle normal links
