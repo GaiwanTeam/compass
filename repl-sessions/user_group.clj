@@ -28,3 +28,14 @@
    :where
    [?e :user-group/users]]
  (db/db))
+
+(def user-entity
+  (db/entity
+   (find-user-eid "humorless@gmail.com")))
+
+(type user-entity)
+
+(->
+ (:user-group/_users user-entity)
+ first
+ :user-group/orga)
