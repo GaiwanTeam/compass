@@ -66,12 +66,14 @@
    :--_border "none"
    :--_text t/--text-2}
   ([session user]
-   [:<> (if user
-          {:hx-post (str "/sessions/" (:db/id session) "/participate")
-           :hx-indicator (str ".c" (:db/id session))
-           :hx-swap "none"}
-          {:hx-target "#modal"
-           :hx-get "/login"})
+   [:<> (merge
+         {:class "prevent-default stop-propagate"}
+         (if user
+           {:hx-post (str "/sessions/" (:db/id session) "/participate")
+            :hx-indicator (str ".c" (:db/id session))
+            :hx-swap "none"}
+           {:hx-target "#modal"
+            :hx-get "/login"}))
     (if (session/participating? session user)
       "Leave"
       "Join")]))
@@ -81,7 +83,7 @@
   :mt-2
   ([session user]
    [:<>
-    [participate-btn session user]
+    [participate-btn]
     [:a.btn {:href (str "/sessions/" (:db/id session))}
      "Details"]]))
 
@@ -145,25 +147,25 @@
      ;; :cx-toggle "expanded"
      ;; :cx-target (str "." session-card)
      :hx-disinherit "hx-target hx-select"}
-    [:div.type (:session.type/name type)]
+    [:a {:href (str "/sessions/" (:db/id session))}
+     [:div.type (:session.type/name type)]
 
-    [:div.left
-     [session-image+guage session user]
-     [participate-btn session user]]
+     [:div.left
+      [session-image+guage session user]
+      [participate-btn session user]]
 
-    [:div.details
-     {:class ["session-card-pulse" (str "c" (:db/id session))]}
+     [:div.details
+      {:class ["session-card-pulse" (str "c" (:db/id session))]}
 
-     [:h2.title
-      [:a {:href (str "/sessions/" (:db/id session))}
+      [:h2.title
        [:span.datetime
         (str (time/truncate-to (time/local-time time) :minutes)) " · "]
-       title]]
-     [:h3.subtitle subtitle]
-     #_[:div.expansion
-        [session-card-actions session user]]
-     [:div.loc (fmt-dur duration) " @ " (:location/name location)]
-     #_[:p.host "Organized by " organized]]]))
+       title]
+      [:h3.subtitle subtitle]
+      #_ [:div.expansion
+          [session-card-actions session user]]
+      [:div.loc (fmt-dur duration) " @ " (:location/name location)]
+      #_[:p.host "Organized by " organized]]]]))
 
 (o/defstyled attendee :li
   ([participant]
