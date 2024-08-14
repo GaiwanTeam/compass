@@ -59,12 +59,16 @@
          [:p "Welcome, " name]
          [:a {:href "/logout"} "Sign out"]]
         [:a {:href (oauth/flow-init-url)} "Sign-in with Discord"])]
-     [:li [:a {:href "/"} "Sessions & Activities"]]
-     [:li [a-auth {:href "/attendees"} "Attendees"]]
+     [:li [:a {:href "/"
+               :on-click "document.body.classList.toggle('menu-open')"} "Sessions & Activities"]]
+     [:li [a-auth {:href "/attendees"
+                   :on-click "document.body.classList.toggle('menu-open')"} "Attendees"]]
      [:li [a-auth {:href (str "/profiles")
-                   :user user} "Profile & Settings"]]
+                   :user user
+                   :on-click "document.body.classList.toggle('menu-open')"} "Profile & Settings"]]
      [:li [a-auth {:href "/sessions/new"
-                   :user user}
+                   :user user
+                   :on-click "document.body.classList.toggle('menu-open')"}
            "Create Activity"]]]]))
 
 (o/defrules toggle-menu-button)

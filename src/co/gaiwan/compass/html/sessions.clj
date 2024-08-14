@@ -212,12 +212,14 @@
         [:div "Participants:"]
         [:ol (map attendee participants)]])
      (when (:session/ticket-required? session)
-       [:p "Required Ticket"])
+       [:p "Ticket Required"])
      [:div.actions
       [participate-btn session user]
       (when (session/organizing? organized user)
         ;; Only allow the event organizer to edit this event
-        [:button "Edit"])]
+        [:<>
+         [:button {:hx-get (str "/sessions/" (:db/id session) "/edit")} "Edit"]
+         [:button {:hx-delete (str "/sessions/" (:db/id session))}"Delete"]])]
      #_[:p.host "Organized by " organized]
      #_[:ol (map attendee participants)]
      #_[:p (pr-str user)]
@@ -279,19 +281,17 @@
 
      [:label {:for "start-time"} "Day and Start Time"]
      [:div.date-time
-      [:select {:id "start-date" :name "start-date"}
-       ;; FIXME!
-       (let [day-before 3
-             day-after 3]
-         (for [day (range (- 15 day-before) (+ 15 day-after))]
-           [:option {:value (format "2024-08-%02d" day)} (format "2024-08-%02d" day)]))]
+      [:input {:id "start-date" :name "start-date" :type "date"
+               :value (str (java.time.LocalDate/now))}]
       [:input {:id "start-time" :name "start-time" :type "time"
                :min "06:00" :max "23:00" :required true
-               :step (* 5 60)}]]
+               :step 60}]]
 
-     [:label {:for "duration-time"} "Duration"]
-     [:input.html-duration-picker
-      {:id "duration-time" :name "duration-time" :data-hide-seconds true}]
+     [:label {:for "duration-time"} "Duration in minutes"]
+     [:input
+      {:id "duration-time" :name "duration-time"
+       :type "number"
+       :value 45}]
 
      [:label {:for "type"} "Type"]
      [:select {:id "type" :name "type"}
@@ -314,8 +314,7 @@
               :min 2 :value 5 :required true}]
 
      [:label {:for "description"} "Description"]
-     [:textarea {:id "description" :name "description"
-                 :required true}]
+     [:textarea {:id "description" :name "description"}]
 
      [:label {:for "ticket"}
       [:input {:id "ticket" :name "ticket-required?" :type "checkbox"}]

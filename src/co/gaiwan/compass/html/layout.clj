@@ -28,7 +28,6 @@
     [:script {:src "/js/cx.js"}]
     (when (config/value :live.js?)
       [:script {:src "/js/live.js#css"}])
-    [:script {:src "/js/html-duration-picker.min.js"}]
     head]
    [:body {;; Have HTMX handle normal links
            :hx-boost true

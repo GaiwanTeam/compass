@@ -38,30 +38,24 @@
                                :session.type [*]}] session-eid)
                  (:identity req)]}))
 
-(defn duration-string-to-iso8601
-  "Convert \"03:00\" to iso8601 format \"PT3H\" "
-  [duration-str]
-  (let [[hours minutes] (map #(Integer/parseInt %) (str/split duration-str #":"))
-        hours-str (if (pos? hours) (str "PT" hours "H") "")
-        minutes-str (if (pos? minutes) (str minutes "M") "")]
-    (str hours-str minutes-str)))
-
 (defn params->session-data
   "convert the Http Post Params to data ready for DB transaction"
   [{:keys [title subtitle start-date start-time duration-time description
            type location
            capacity
            ticket-required? published?]
-    :or {type "activity"}}]
+    :or {type "activity"}}
+   identity]
   (let [local-date (time/local-date start-date)
         local-time (time/local-time start-time)
         local-date-time (time/local-date-time local-date local-time)
         start    (time/zoned-date-time local-date-time db/event-time-zone)
         ;; end      (time/zoned-date-time end-time db/event-time-zone)
-        duration (duration-string-to-iso8601 duration-time)
+        duration (str "PT" duration-time "M")
         _ (prn :debug-duration duration)]
     (cond-> {:db/id "session"
              :session/title title
+             :session/organized (:db/id identity)
              :session/subtitle subtitle
              :session/time start
              :session/duration duration
@@ -76,7 +70,7 @@
       (assoc :session/published? true))))
 
 (defn POST-save-session
-  "Save session to Datomic
+  "Create new session, save to Datomic
 
   The typical params is:
   {:name \"dsafa\",
@@ -86,8 +80,8 @@
    :capacity \"34\",
    :ticket-required? \"on\"
    :published? \"on\"}"
-  [{:keys [params]}]
-  (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
+  [{:keys [params identity]}]
+  (let [{:keys [tempids]} @(db/transact [(params->session-data params identity)])]
     (when (:image params)
       (let [{:keys [filename tempfile]} (:image params)
             session-eid (get tempids "session")
@@ -97,6 +91,13 @@
                         :session/image (str "/" file-path)}])))
     (util/redirect ["/sessions" (get tempids "session")]
                    {:flash "Successfully created!"})))
+
+(defn DELETE-session [{:keys [path-params identity]}]
+  (let [session-eid (parse-long (:id path-params))]
+    ;; FIXME: orga should also be able to delete
+    (when (= (:db/id identity) (-> session-eid db/entity :session/organized :db/id))
+      @(db/transact [[:db.fn/retractEntity session-eid]])
+      (util/redirect "/"))))
 
 (defn session-updated-response [session-eid]
   {:status 200
@@ -159,7 +160,8 @@
     ["/new"
      {:get {:handler GET-session-new}}]
     ["/:id"
-     {:get {:handler GET-session}}]
+     {:get {:handler GET-session}
+      :delete {:handler DELETE-session}}]
     ["/:id/participate"
      {:post {:handler POST-participate}}]
     ["/:id/card"
