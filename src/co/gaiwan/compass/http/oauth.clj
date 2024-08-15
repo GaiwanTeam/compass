@@ -15,7 +15,7 @@
 
 (def discord-oauth-endpoint "https://discord.com/oauth2/authorize")
 
-(def default-scopes  ["email" "identify" "guilds.join" "role_connections.write"])
+(def default-scopes  ["email" "identify" "guilds.join"])
 
 (defn flow-init-url
   ([]
