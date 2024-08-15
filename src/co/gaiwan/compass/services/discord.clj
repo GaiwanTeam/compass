@@ -70,15 +70,16 @@
     :oauth-token token
     :content-type :json
     :form-params
-    {:metadata
+    {:platform_name "Compass"
+     :metadata
      ;; Find if release slug is among the "special" role slugs declared in the config
      (let [slug-idx (->> (config/value :discord/ticket-roles)
                          (map-indexed vector)
                          (some (fn [[i v]] (when (= v slug) i))))]
         ;; Ticket holder property is "true" if  user _has_ ticket
-       (cond-> {"tito_ticket_holder" (if (some? ticket) "1" "0")}
+       (cond-> {"tito_ticket_holder" (if (some? ticket) 1 0)}
          ;; slug idx is set if user has ticket with special release type
-         slug-idx (assoc "tito_release_slug_idx" (str slug-idx))))}}))
+         slug-idx (assoc "tito_release_slug_idx" slug-idx)))}}))
 
 (comment
   ;; Register role connection metadata
