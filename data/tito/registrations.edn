@@ -1,40 +1,50 @@
-({:email "elisabeth.rau@rauandsons.net",
-  :id 3694535,
-  :name "Elisabeth Rau",
-  :reference "UAA3"}
- {:email "ellsworth81@doyle-doyle.info",
-  :id 5870786,
-  :name "Ellsworth Doyle",
-  :reference "AZCE"}
- {:email "willie97@schowalterschow.name",
-  :id 7495219,
-  :name "Willie Schowalter",
-  :reference "U1L3"}
- {:email "augustus@rogahnrogahnand.net",
-  :id 928267,
-  :name "Augustus Rogahn",
-  :reference "7N7G"}
- {:email "preston.rice@ricericeandrice.biz",
-  :id 1295322,
-  :name "Preston Rice",
-  :reference "722H"}
- {:email "myrtis85@gorczanyinc.com",
-  :id 7430047,
-  :name "Myrtis Gorczany",
-  :reference "ZDAO"}
- {:email "glynda82@nikolausnikolau.com",
-  :id 8078654,
-  :name "Glynda Nikolaus",
-  :reference "TFYW"}
- {:email "aurelia@damoredamoreand.com",
-  :id 9037751,
-  :name "Aurelia D'Amore",
-  :reference "W2WB"}
- {:email "janay@predovicpredovi.io",
-  :id 2405625,
-  :name "Janay Predovic",
-  :reference "B01E"}
- {:email "juana@powlowskipowlow.co",
-  :id 8833862,
-  :name "Juana Powlowski",
-  :reference "78W6"})
+({:email "damon82@purdypurdyandpu.biz",
+  :id 3943464,
+  :name "Amb. Damon Purdy",
+  :reference "QUTU",
+  :state "complete"}
+ {:email "calvin@howellhowelland.name",
+  :id 7425449,
+  :name "Pres. Calvin Howell",
+  :reference "8A3F",
+  :state "complete"}
+ {:email "brendonrogahn@rogahn-rogahn.org",
+  :id 8328992,
+  :name "Brendon Rogahn",
+  :reference "M0Q4",
+  :state "complete"}
+ {:email "reanna68@kingkingandking.info",
+  :id 4421735,
+  :name "Reanna King",
+  :reference "7TL1",
+  :state "complete"}
+ {:email "thomashodkiewicz@hodkiewiczandso.biz",
+  :id 2195685,
+  :name "Thomas Hodkiewicz",
+  :reference "22G5",
+  :state "complete"}
+ {:email "adelina@kreigerllc.info",
+  :id 662414,
+  :name "Rep. Adelina Kreiger",
+  :reference "9891",
+  :state "complete"}
+ {:email "nichelle5@langworthinc.biz",
+  :id 7191893,
+  :name "Ms. Nichelle Langworth",
+  :reference "T7Y3",
+  :state "complete"}
+ {:email "guillermina.sawayn@sawaynsawaynand.co",
+  :id 6741258,
+  :name "Msgr. Guillermina Sawayn",
+  :reference "41L3",
+  :state "complete"}
+ {:email "zachariah@mrazmrazandmraz.co",
+  :id 5894895,
+  :name "Zachariah Mraz",
+  :reference "P3C3",
+  :state "complete"}
+ {:email "mitchell@donnellydonnell.info",
+  :id 1123123,
+  :name "Mitchell Donnelly CPA",
+  :reference "M80Q",
+  :state "complete"})

@@ -105,10 +105,27 @@
      :tito.release/slug slug}))
 
 (defn sync! []
-  (db/transact
-   (concat (releases-tx)
-           (registrations-tx)))
-  (db/transact (tickets-tx)))
+  @(db/transact
+    (concat (releases-tx)
+            (registrations-tx)))
+  @(db/transact (tickets-tx)))
+
+(defn find-assigned-ticket
+  "Look up a ticket from a registration reference and an email address.
+
+  Returns nil if not found or a ticket map (including release information) if found."
+  [reference email]
+  (db/q
+   '[:find
+     (pull ?ticket [* {:tito.ticket/release [*]}]) .
+     :in $ ?ref ?email
+     :where
+     [?reg :tito.registration/reference ?ref]
+     (or [?reg :tito.registration/state "complete"]
+         [?reg :tito.registration/state "incomplete"])
+     [?ticket :tito.ticket/registration ?reg]
+     [?ticket :tito.ticket/email ?email]]
+   (db/db) reference email))
 
 (comment
   (sync!)
@@ -128,7 +145,8 @@
           (faker/fake {:id (partial rand-int 9999999)
                        :reference #"[A-Z0-9]{4}"
                        :email [:internet :email]
-                       :name [:name :name]}))
+                       :name [:name :name]
+                       :state "complete"}))
         tickets
         (for [{:keys [reference id]} registrations
               i (map inc (range (rand-nth [1 1 1 2 3])))]
