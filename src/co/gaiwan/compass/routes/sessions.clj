@@ -44,8 +44,7 @@
            type location
            capacity organizer-id
            ticket-required? published?]
-    :or {type "activity"}}
-   identity]
+    :or {type "activity"}}]
   (let [local-date (time/local-date start-date)
         local-time (time/local-time start-time)
         local-date-time (time/local-date-time local-date local-time)
@@ -55,7 +54,6 @@
         _ (prn :debug-duration duration)]
     (cond-> {:db/id "session"
              :session/title title
-             :session/organized (:db/id identity)
              :session/subtitle subtitle
              :session/time start
              :session/duration duration
@@ -82,8 +80,8 @@
    :capacity \"34\",
    :ticket-required? \"on\"
    :published? \"on\"}"
-  [{:keys [params identity]}]
-  (let [{:keys [tempids]} @(db/transact [(params->session-data params identity)])]
+  [{:keys [params]}]
+  (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
     (when (:image params)
       (let [{:keys [filename tempfile]} (:image params)
             session-eid (get tempids "session")
