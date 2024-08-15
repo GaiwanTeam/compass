@@ -17,6 +17,10 @@
    [:discord/refresh-token :string "Discord OAuth2 refresh-token"]
    [:discord/avatar-url :string "Discord Avatar URL"]
 
+   [:user-group/orga :boolean "If this group is orga group or not"]
+   [:user-group/user-count :long "Number of people in this group"]
+   [:user-group/users :ref "Reference points to the user" :many]
+
    [:session/code :string "Corresponding Pretalx code, to prevent the import from creating duplicates" :identity]
    [:session/title :string "Title of the talk/workshop/activity"]
    [:session/subtitle :string "Subtitle of the session, for talks/workshops = speaker names"]

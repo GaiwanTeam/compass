@@ -59,9 +59,9 @@
     (handler
      (if-let [uuid (get-in req [:session :identity])]
        (assoc req :identity
-              (db/q '[:find (pull ?u [*]) .
-                      :in $ ?uid
-                      :where [?u :user/uuid ?uid]]
-                    (db/db)
-                    uuid))
+              (db/entity (db/q '[:find ?u .
+                                 :in $ ?uid
+                                 :where [?u :user/uuid ?uid]]
+                               (db/db)
+                               uuid)))
        req))))

@@ -103,8 +103,7 @@
         m (.toMinutesPart d)]
     (str
      (when (< 0 h)
-       (str h " hrs ")
-       )
+       (str h " hrs "))
      (when (< 0 m)
        (str m " min")))))
 
@@ -206,7 +205,7 @@
      [:div.capacity
       [:div "Spots available:"]
       [:div (- (or capacity 0) (or signup-count 0))]]
-     (when (session/organizing? organized user)
+     (when (session/organizing? session user)
        ;; Only show the participants' list to organizer.
        [:div.participants
         [:div "Participants:"]
@@ -215,11 +214,11 @@
        [:p "Ticket Required"])
      [:div.actions
       [participate-btn session user]
-      (when (session/organizing? organized user)
+      (when (session/organizing? session user)
         ;; Only allow the event organizer to edit this event
         [:<>
          [:button {:hx-get (str "/sessions/" (:db/id session) "/edit")} "Edit"]
-         [:button {:hx-delete (str "/sessions/" (:db/id session))}"Delete"]])]
+         [:button {:hx-delete (str "/sessions/" (:db/id session))} "Delete"]])]
      #_[:p.host "Organized by " organized]
      #_[:ol (map attendee participants)]
      #_[:p (pr-str user)]
@@ -266,11 +265,12 @@
     :flex
     :gap-3]]
   [:div.date-time :flex :gap-2]
-  ([params]
+  ([user]
    [:<>
     [:h2 "Create Activity"]
     [:form {:method "POST" :action "/sessions"
             :enctype "multipart/form-data"}
+     [:input {:type "hidden" :name "organizer-id" :value (:db/id user)}]
      [:label {:for "title"} "Name of Your Activity"]
      [:input {:id "title" :name "title" :type "text"
               :required true :min-length 2}]
