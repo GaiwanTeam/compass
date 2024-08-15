@@ -105,10 +105,10 @@
      :tito.release/slug slug}))
 
 (defn sync! []
-  (db/transact
-   (concat (releases-tx)
-           (registrations-tx)))
-  (db/transact (tickets-tx)))
+  @(db/transact
+    (concat (releases-tx)
+            (registrations-tx)))
+  @(db/transact (tickets-tx)))
 
 (defn find-assigned-ticket
   "Look up a ticket from a registration reference and an email address.
@@ -145,7 +145,8 @@
           (faker/fake {:id (partial rand-int 9999999)
                        :reference #"[A-Z0-9]{4}"
                        :email [:internet :email]
-                       :name [:name :name]}))
+                       :name [:name :name]
+                       :state "complete"}))
         tickets
         (for [{:keys [reference id]} registrations
               i (map inc (range (rand-nth [1 1 1 2 3])))]
