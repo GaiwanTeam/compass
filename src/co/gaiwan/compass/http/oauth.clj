@@ -1,4 +1,8 @@
 (ns co.gaiwan.compass.http.oauth
+  "Namespace for generic OAuth2 handling (authorization code flow).
+
+  For now, this contains Discord-specific scopes and URLs, like the routes/oauth namespace as well.
+  This can eventually be changed."
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.config :as config]
@@ -6,16 +10,12 @@
    [co.gaiwan.compass.util :as util]
    [hato.client :as hato]
    [lambdaisland.uri :as uri]
-   [io.pedestal.log :as log]))
+   [io.pedestal.log :as log])
+  (:import (java.time Instant)))
 
 (def discord-oauth-endpoint "https://discord.com/oauth2/authorize")
-(def discord-api-endpoint "https://discord.com/api/v10")
-
 
 (def default-scopes  ["email" "identify" "guilds.join" "role_connections.write"])
-
-(defn bot-auth-headers []
-  {"Authorization" (str "Bot " (config/value :discord/bot-token))})
 
 (defn flow-init-url
   ([]
@@ -40,7 +40,7 @@
 
 (defn request-token [params]
   (hato/post
-   (str discord-api-endpoint "/oauth2/token")
+   "https://discord.com/api/oauth2/token"
    {:as :auto
     :form-params params
     :basic-auth
@@ -85,21 +85,3 @@
                          :discord/expires-at (util/expires-in->instant (:discord/expires_in body))}])
           (:access_token body)))
       (:discord/access-token oauth-data))))
-
-
-(defn fetch-user-info [token]
-  (:body
-   (hato/get (str discord-api-endpoint "/users/@me")
-             {:as :auto
-              :oauth-token token})))
-
-(defn join-server [token]
-  (let [{:keys [id username]} (fetch-user-info token)
-        response
-        (hato/put
-         (str discord-api-endpoint "/guilds/" (config/value :discord/server-id) "/members/" id)
-         {:as :auto
-          :content-type :json
-          :form-params {:access_token token}
-          :headers (bot-auth-headers)})]
-    (log/trace :discord/user-add username :discord/add-guild-member-response response)))

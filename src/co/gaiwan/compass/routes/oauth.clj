@@ -4,6 +4,7 @@
    [co.gaiwan.compass.html.auth :as auth-html]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.util :as util]
+   [co.gaiwan.compass.services.discord :as discord]
    [datomic.api :as d]
    [ring.util.response :as response]))
 
@@ -18,7 +19,7 @@
                  [:pre (util/pprint-str body)]]
        :session {:identity nil}}
       (let [{:keys [access_token refresh_token expires_in]} body
-            {:keys [id global_name email username]}         (oauth/fetch-user-info access_token)
+            {:keys [id global_name email username]}         (discord/fetch-user-info access_token)
             user-uuid                                       (:user/uuid (d/entity (db/db) [:user/email email]) (random-uuid))
             tx-data
             [{:user/uuid             user-uuid
@@ -29,7 +30,7 @@
               :discord/access-token  access_token
               :discord/refresh-token refresh_token
               :discord/expires-at (util/expires-in->instant expires_in)}]
-            {:keys [status]} (oauth/join-server access_token)]
+            {:keys [status]} (discord/join-server access_token)]
         @(db/transact tx-data)
         {:status  302
          :headers {"Location" "/"}
