@@ -1,4 +1,5 @@
 {:compass/origin               "http://localhost:8099"
  :datomic/url                  "datomic:mem://compass"
  :http/show-exception-details? true
- :live.js? true}
+ :live.js?                     true
+ :tito/fake-api-stubs?         true}

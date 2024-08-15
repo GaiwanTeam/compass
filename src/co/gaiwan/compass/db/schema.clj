@@ -38,7 +38,25 @@
 
    [:location/name :string "Name of the location" :identity]
    [:oauth/state-id :uuid "State parameter passed along with the oauth flow" :identity]
-   [:oauth/redirect-url :string "Location to redirect to after login"]])
+   [:oauth/redirect-url :string "Location to redirect to after login"]
+
+   [:tito.registration/id :long "Ti.to registration (order) unique id" :identity]
+   [:tito.registration/reference :string "Ti.to registration reference code, 4 characters alphanumeric" :identity]
+   [:tito.registration/email :string "Email address associated with the ti.to order"]
+   [:tito.registration/name :string "Name on the ti.to order"]
+   [:tito.registration/state :string "State the order is in, one of complete, incomplete"]
+
+   [:tito.ticket/id :long "Ti.to ticket unique id" :identity]
+   [:tito.ticket/reference :string "Ti.to ticket referecen code, same as registration ref code + sequential number, e.g. A4FB-2" :identity]
+   [:tito.ticket/name :string "Name assigned to the ticket"]
+   [:tito.ticket/email :string "Email assigned to the ticket"]
+   [:tito.ticket/registration :ref "The registration (order) this ticket is part of"]
+   [:tito.ticket/release :ref "The release (ticket type) this ticket has"]
+   [:tito.ticket/state :string "The state this ticket is in, `new`/`reminder` means it's unassigned, and name/email will be blank/nil."]
+
+   [:tito.release/id :long "Unique id of the registration (ticket type)" :identity]
+   [:tito.release/title :string "Human readable name of the ticket type, e.g. `Early Bird`"]
+   [:tito.release/slug :string "URL slug for the ticket type"]])
 
 (defn inflate-schema [s]
   (for [[ident type doc & flags] s]

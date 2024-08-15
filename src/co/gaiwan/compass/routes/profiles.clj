@@ -1,14 +1,13 @@
 (ns co.gaiwan.compass.routes.profiles
   "We need a page/route for user's profile"
   (:require
-   [clojure.string :as str]
    [clojure.java.io :as io]
+   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.profiles :as h]
-   [ring.util.response :as response]
    [co.gaiwan.compass.util :as util]
    [io.pedestal.log :as log]
-   [java-time.api :as time]))
+   [ring.util.response :as response]))
 
 (defn wrap-authentication [handler]
   (fn [req]
@@ -36,7 +35,7 @@
 
 (defn POST-save-profile
   "Save profile to DB
-  
+
   The typical params is like:
   {:name \"Arne\"
    :tityle \"CEO of Gaiwan\"
@@ -44,7 +43,7 @@
   [{:keys [params identity] :as req}]
   (let [{:keys [filename tempfile] :as image}  (:image params)
         file-id (str (:db/id identity))
-        filepath (str util/upload-dir "/" file-id "_" filename)
+        filepath (str (config/value :uploads/dir) "/" file-id "_" filename)
         {:keys [tempids]} @(db/transact [(merge
                                           {:user/image-path (str "/" filepath)}
                                           (params->profile-data params))])]
@@ -55,7 +54,7 @@
                    {:flash "Successfully Saved!"})))
 
 (defn file-handler [req]
-  (let [file (io/file util/upload-dir (get-in req [:path-params :filename]))]
+  (let [file (io/file (config/value :uploads/dir) (get-in req [:path-params :filename]))]
     (if (.exists file)
       (response/file-response (.getPath file))
       (response/not-found "File not found"))))

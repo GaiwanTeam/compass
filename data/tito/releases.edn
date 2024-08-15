@@ -1,0 +1,14 @@
+[{:id 1499881, :title "Crew", :slug "crew"}
+ {:id 1503936, :title "Sponsor", :slug "sponsor"}
+ {:id 1507003, :title "Speaker", :slug "speaker"}
+ {:id 1509582, :title "Diversity Ticket", :slug "diversity-ticket"}
+ {:id 1492465, :title "Early Bird", :slug "early-bird"}
+ {:id 1492844, :title "Regular", :slug "regular-conference"}
+ {:id 1492845, :title "Late Bird / Supporter", :slug "late-conference"}
+ {:id 1492846,
+  :title "Conference Door Price",
+  :slug "conference-door-price"}
+ {:id 1494678, :title "Student", :slug "student"}
+ {:id 1494672,
+  :title "Opportunity Grant contribution",
+  :slug "zjzghxx797m"}]
