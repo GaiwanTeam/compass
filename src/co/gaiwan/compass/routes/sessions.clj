@@ -7,8 +7,8 @@
   organized by participants.
   "
   (:require
-   [clojure.string :as str]
    [clojure.java.io :as io]
+   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.sessions :as session-html]
@@ -85,7 +85,7 @@
     (when (:image params)
       (let [{:keys [filename tempfile]} (:image params)
             session-eid (get tempids "session")
-            file-path  (str util/upload-dir "/" session-eid "_" filename)]
+            file-path  (str (config/value :uploads/dir) "/" session-eid "_" filename)]
         (io/copy tempfile (io/file file-path))
         @(db/transact [{:db/id (get tempids "session")
                         :session/image (str "/" file-path)}])))

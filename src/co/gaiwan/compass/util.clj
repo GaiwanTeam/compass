@@ -1,4 +1,12 @@
 (ns co.gaiwan.compass.util
+  "Assorted helper functions, aka the junk drawer.
+
+  Things put here should generally be
+  - small, pure functions
+  - have little to no dependencies
+  - be unopinionated (mechanisms)
+  - be usable in multiple contexts
+  "
   (:require
    [clojure.core.protocols :as p]
    [clojure.datafy :as d]
@@ -7,8 +15,6 @@
    [ring.util.response :as response])
   (:import
    (java.time Instant ZonedDateTime ZoneId)))
-
-(def upload-dir "uploads")
 
 (defn datafy-instant
   "Output:
@@ -58,3 +64,35 @@
               :body    ""}
        flash
        (assoc :flash flash)))))
+
+(defn to-s [s]
+  (if (instance? clojure.lang.Named s)
+    (name s)
+    (str s)))
+
+(defn dasherize [s]
+  (str/replace (to-s s) "_" "-"))
+
+(defn underscorize [s]
+  (str/replace (to-s s) "-" "_"))
+
+(defn dasherize-keys [m]
+  (when m
+    (update-keys m (comp keyword dasherize))))
+
+(defn underscorize-keys [m]
+  (when m
+    (update-keys m (comp keyword underscorize))))
+
+(defn deep-dasherize-keys [res]
+  (cond
+    (vector? res) (mapv deep-dasherize-keys res)
+    (seq? res)    (map deep-dasherize-keys res)
+    (map? res)    (update-vals (dasherize-keys res) deep-dasherize-keys)
+    :else         res))
+
+(defn deep-underscorize-keys [res]
+  (cond
+    (vector? res) (mapv deep-underscorize-keys res)
+    (map? res)    (update-vals (underscorize-keys res) deep-underscorize-keys)
+    :else         res))
