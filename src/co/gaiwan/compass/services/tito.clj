@@ -110,6 +110,23 @@
            (registrations-tx)))
   (db/transact (tickets-tx)))
 
+(defn find-assigned-ticket
+  "Look up a ticket from a registration reference and an email address.
+
+  Returns nil if not found or a ticket map (including release information) if found."
+  [reference email]
+  (db/q
+   '[:find
+     (pull ?ticket [* {:tito.ticket/release [*]}]) .
+     :in $ ?ref ?email
+     :where
+     [?reg :tito.registration/reference ?ref]
+     (or [?reg :tito.registration/state "complete"]
+         [?reg :tito.registration/state "incomplete"])
+     [?ticket :tito.ticket/registration ?reg]
+     [?ticket :tito.ticket/email ?email]]
+   (db/db) reference email))
+
 (comment
   (sync!)
 
