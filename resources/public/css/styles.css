@@ -56,7 +56,7 @@ body #app {
 }
 
 body #app >main {
-  padding: var(--size-2);
+  padding: 0.5rem;
 }
 
 ul, ol {
