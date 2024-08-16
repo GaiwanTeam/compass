@@ -4,6 +4,7 @@
    [co.gaiwan.compass.html.auth :as auth-html]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.util :as util]
+   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.services.discord :as discord]
    [datomic.api :as d]
    [ring.util.response :as response]))
@@ -35,8 +36,12 @@
         {:status  302
          :headers {"Location" "/"}
          :flash   [:p "You are signed in!"
-                   (when-not (= 2 (quot status 100))
-                     [:br "Unfortunately, adding you to our Discord server didn't work."])]
+                   (cond
+                     (= status 204) nil
+                     (= status 201) [:br "You've also been added to "
+                                     [:a {:href (str "https://discord.com/channels/" (config/value :discord/server-id))}
+                                      "our Discord server"] "!"]
+                     :else [:br "Unfortunately, adding you to our Discord server didn't work."])]
          :session {:identity user-uuid}}))))
 
 (defn GET-login [req]

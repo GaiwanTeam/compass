@@ -39,7 +39,11 @@ To get started you need to set up a discord bot, and then create a
 {:discord/client-secret "..."
  :discord/bot-token     "..."
  :discord/client-id     "..."
- :discord/public-key    "..."}
+ :discord/public-key    "..."
+ :discord/server-id "..."
+ :discord/ticket-holder-role "role-id"
+ :discord/ticket-roles
+ {"release-slug" "role-id"}}
 ```
 
 ## Roadmap

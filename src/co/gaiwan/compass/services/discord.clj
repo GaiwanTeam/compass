@@ -1,11 +1,9 @@
 (ns co.gaiwan.compass.services.discord
   (:require
-   [co.gaiwan.compass.config :as config]
-   [co.gaiwan.compass.services.tito :as tito]
-   [hato.client :as hato]
-   [io.pedestal.log :as log]
    [clojure.string :as str]
-   [clojure.set :refer [map-invert]]))
+   [co.gaiwan.compass.config :as config]
+   [hato.client :as hato]
+   [io.pedestal.log :as log]))
 
 (def discord-api-endpoint "https://discord.com/api/v10")
 
@@ -36,12 +34,19 @@
          :put
          (str "/guilds/" (config/value :discord/server-id) "/members/" id)
          {:access_token token})]
-    (log/trace :discord/user-add username :discord/add-guild-member-response response)
+    (log/trace :discord/user-add username :discord/add-guild-member-response (dissoc response :request))
     response))
 
 (defn get-application
   []
   (:body (discord-bot-request :get "/applications/@me")))
+
+(defn assign-ticket-role
+  [user-id {{:keys [tito.release/slug]} :tito.ticket/release :as _ticket}]
+  (let [role-endpoint (str "/guilds/" (config/value :discord/server-id) "/members/" user-id "/roles/")]
+    (discord-bot-request :put (str role-endpoint (config/value :discord/ticket-holder-role)))
+    (when-let [special-role (get (config/value :discord/ticket-roles) slug)]
+      (discord-bot-request :put (str role-endpoint special-role)))))
 
 ;; NOTE: we originally wanted to use the linked roles Discord feature, but the UX of that turned out to be crap.
 ;; So now we don't use it anymore and assign configured roles directly
@@ -83,13 +88,6 @@
          (cond-> {"tito_ticket_holder" (if (some? ticket) 1 0)}
            ;; slug idx is set if user has ticket with special release type
            slug-idx (assoc "tito_release_slug_idx" slug-idx)))}})))
-
-(defn assign-ticket-role
-  [user-id {{:keys [tito.release/slug]} :tito.ticket/release :as _ticket}]
-  (let [role-endpoint (str "/guilds/" (config/value :discord/server-id) "/members/" user-id "/roles/")]
-    (discord-bot-request :put (str role-endpoint (config/value :discord/ticket-holder-role)))
-    (when-let [special-role (get (config/value :discord/ticket-roles) slug)]
-      (discord-bot-request :put (str role-endpoint special-role)))))
 
 (comment
   ;; Register role connection metadata
