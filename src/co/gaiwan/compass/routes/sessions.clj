@@ -18,9 +18,20 @@
    [java-time.api :as time]))
 
 (defn GET-session-new [req]
-  {:html/head [:title "Create new session"]
-   :html/body [session-html/session-form (:identity req)]})
+  (if-not (:identity req)
+    {:status 200
+     :headers {"HX-Trigger" "login-required"}} #_(util/redirect)
+    {:html/head [:title "Create new session"]
+     :html/body [session-html/session-form (:identity req)
+                 nil]}))
 
+(defn GET-session-edit [req]
+  (let [session-eid (parse-long (get-in req [:path-params :id]))]
+    {:html/body [session-html/session-form
+                 (:identity req)
+                 (db/pull '[* {:session/type [*]
+                               :session/location [*]
+                               :session.type [*]}] session-eid)]}))
 (defn GET-session [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
     {:html/body [session-html/session-detail
@@ -160,6 +171,8 @@
       :get {:handler GET-session}
       :delete {:middleware [[response/wrap-requires-auth]]
                :handler DELETE-session}}]
+    ["/:id/edit"
+     {:get {:handler GET-session-edit}}]
     ["/:id/participate"
      {:name :session/participate
       :post {:middleware [[response/wrap-requires-auth]]

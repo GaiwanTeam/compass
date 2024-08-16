@@ -230,7 +230,8 @@
       (when (session/organizing? session user)
         ;; Only allow the event organizer to edit this event
         [:<>
-         [:button {:hx-get (str "/sessions/" (:db/id session) "/edit")} "Edit"]
+         [:a {:href (str "/sessions/" (:db/id session) "/edit")}
+          [:button  "Edit"]]
          [:button {:hx-delete (str "/sessions/" (:db/id session))} "Delete"]])]
      #_[:p.host "Organized by " organized]
      #_[:ol (map attendee participants)]
@@ -279,7 +280,7 @@
     :flex
     :gap-3]]
   [:div.date-time :flex :gap-2]
-  ([user]
+  ([user session]
    [:<>
     [:h2 "Create Activity"]
     [:form {:method "POST" :action (url-for :session/save)
