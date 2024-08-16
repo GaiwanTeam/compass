@@ -110,7 +110,7 @@
             (registrations-tx)))
   @(db/transact (tickets-tx)))
 
-(defn find-assigned-ticket
+(defn find-unassigned-ticket
   "Look up a ticket from a registration reference and an email address.
 
   Returns nil if not found or a ticket map (including release information) if found."
@@ -124,7 +124,8 @@
      (or [?reg :tito.registration/state "complete"]
          [?reg :tito.registration/state "incomplete"])
      [?ticket :tito.ticket/registration ?reg]
-     [?ticket :tito.ticket/email ?email]]
+     [?ticket :tito.ticket/email ?email]
+     (not [?ticket :tito.ticket/assigned-to _])]
    (db/db) reference email))
 
 (comment

@@ -57,6 +57,7 @@
    [:tito.ticket/registration :ref "The registration (order) this ticket is part of"]
    [:tito.ticket/release :ref "The release (ticket type) this ticket has"]
    [:tito.ticket/state :string "The state this ticket is in, `new`/`reminder` means it's unassigned, and name/email will be blank/nil."]
+   [:tito.ticket/assigned-to :ref "User this ticket is assigned to"]
 
    [:tito.release/id :long "Unique id of the registration (ticket type)" :identity]
    [:tito.release/title :string "Human readable name of the ticket type, e.g. `Early Bird`"]
