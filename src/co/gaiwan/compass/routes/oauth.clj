@@ -36,12 +36,12 @@
         {:status  302
          :headers {"Location" "/"}
          :flash   [:p "You are signed in!"
-                   (cond
-                     (= status 204) nil
-                     (= status 201) [:br "You've also been added to "
+                   (case status
+                     204 nil
+                     201 [:br "You've also been added to "
                                      [:a {:href (str "https://discord.com/channels/" (config/value :discord/server-id))}
                                       "our Discord server"] "!"]
-                     :else [:br "Unfortunately, adding you to our Discord server didn't work."])]
+                     [:br "Unfortunately, adding you to our Discord server didn't work."])]
          :session {:identity user-uuid}}))))
 
 (defn GET-login [req]

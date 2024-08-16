@@ -5,7 +5,8 @@
    [co.gaiwan.compass.routes.filters :as filters]
    [co.gaiwan.compass.routes.meta :as meta]
    [co.gaiwan.compass.routes.profiles :as profiles]
-   [co.gaiwan.compass.routes.sessions :as sessions]))
+   [co.gaiwan.compass.routes.sessions :as sessions]
+   [co.gaiwan.compass.routes.ticket :as ticket]))
 
 (defn routing-table []
   [(meta/routes)
@@ -13,6 +14,7 @@
    (profiles/routes)
    (oauth/routes)
    (filters/routes)
+   (ticket/routes)
 
    ["/fail" {:get {:handler (fn [_] (throw (ex-info "fail" {:fail 1})))}}]])
 
