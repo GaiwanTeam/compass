@@ -4,8 +4,8 @@
    [co.gaiwan.compass.css.tokens :as t]
    [lambdaisland.ornament :as o]))
 
-(o/defprop --toggle-radius-left "0.5rem")
-(o/defprop --toggle-radius-right "0.5rem")
+(o/defprop --toggle-radius-left t/--radius-2)
+(o/defprop --toggle-radius-right t/--radius-2)
 
 (o/defstyled toggle-button :label
   "Toggle implemented as a checkbox (can also be used as a radio button)."

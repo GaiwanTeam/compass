@@ -1,4 +1,5 @@
 (ns co.gaiwan.compass.services.discord
+  "Discord API access"
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.config :as config]

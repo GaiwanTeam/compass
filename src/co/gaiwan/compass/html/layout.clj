@@ -2,6 +2,7 @@
   (:require
    [charred.api :as charred]
    [co.gaiwan.compass.config :as config]
+   [co.gaiwan.compass.css.tokens :as t]
    [co.gaiwan.compass.html.navigation :as nav]
    [lambdaisland.ornament :as o]
    [ring.middleware.anti-forgery :as anti-forgery]))
@@ -13,6 +14,24 @@
     [:>main :p-2]]])
 
 (def start-time (System/currentTimeMillis))
+
+(o/defstyled flash-box :div
+  :my-3
+  :px-3 :py-2
+  {:background-color t/--green-1
+   :color t/--blue-12
+   :border-radius t/--radius-2
+   :border-color t/--green-2
+   :border-width "1px"
+   :font-weight "600"
+   :opacity 0.5
+   :animation "fade-to-pale linear 0.5s forwards"
+   })
+
+(o/defrules fade-flash-box
+  (garden.stylesheet/at-keyframes
+   :fade-to-pale
+   [:to {:opacity 1}]))
 
 (defn base-layout [{:keys [head body flash user request] :as opts}]
   [:html
@@ -42,8 +61,8 @@
     [:div#app
      [nav/menu-panel user]
      [:main
-      (when flash
-        [:p.flash flash])
       [nav/nav-bar user]
+      (when flash
+        [flash-box flash])
       body
       #_[:pre (with-out-str (clojure.pprint/pprint request))]]]]])

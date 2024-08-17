@@ -1,4 +1,5 @@
-(ns co.gaiwan.compass.db.schema)
+(ns co.gaiwan.compass.db.schema
+  "Datomic schema, using shorthand vectors")
 
 ;; bigdec | bigint | boolean | bytes | double | float | instant |
 ;; keyword | long | ref | string | symbol | tuple | uuid | uri

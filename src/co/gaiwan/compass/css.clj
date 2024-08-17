@@ -1,15 +1,14 @@
 (ns co.gaiwan.compass.css
+  "Ornament/CSS compiling, watching, and configuration"
   (:require
    [clojure.java.io :as io]
    [clojure.string :as str]
-   [co.gaiwan.compass.css.colors :as colors]
    [co.gaiwan.compass.css.components :as components]
    [co.gaiwan.compass.css.tokens :as tokens]
    [garden.compiler :as gc]
    [lambdaisland.ornament :as o]))
 
-(require 'co.gaiwan.compass.css.styles
-         )
+(require 'co.gaiwan.compass.css.styles)
 
 (o/set-tokens!
  {:components (with-meta components/girouette-components {:replace true})

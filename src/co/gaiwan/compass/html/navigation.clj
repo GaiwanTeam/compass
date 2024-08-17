@@ -43,7 +43,7 @@
   [:li :font-size-3
    :line-height-5 ;; FIXME
    :border :border-solid :border-surface-4
-   {:font-size     t/--font-size-3}]
+   {:font-size t/--font-size-3}]
   ([user]
    [:<>
     [:div.bar
@@ -52,24 +52,21 @@
       [graphics/cross]]]
     #_[:pre (pr-str user)]
     [:ul
-
      [:li
       (if-let [name (:user/name user)]
         [:<>
          [:p "Welcome, " name]
          [:a {:href "/logout"} "Sign out"]]
-        [:a {:href (oauth/flow-init-url)} "Sign-in with Discord"])]
-     [:li [:a {:href "/"
-               :on-click "document.body.classList.toggle('menu-open')"} "Sessions & Activities"]]
-     [:li [a-auth {:href "/attendees"
-                   :on-click "document.body.classList.toggle('menu-open')"} "Attendees"]]
-     [:li [a-auth {:href (str "/profiles")
-                   :user user
-                   :on-click "document.body.classList.toggle('menu-open')"} "Profile & Settings"]]
-     [:li [a-auth {:href "/sessions/new"
-                   :user user
-                   :on-click "document.body.classList.toggle('menu-open')"}
-           "Create Activity"]]]]))
+        [:a {:hx-boost "false"
+             :href "/oauth2/discord/redirect"}
+         "Sign-in with Discord"])]
+     (for [[href caption] {"/"             "Sessions & Activities"
+                           "/attendees"    "Attendees"
+                           "/profile"      "Profile & Settings"
+                           "/sessions/new" "Create Activity"}]
+       [:li [:a {:href href
+                 :on-click "document.body.classList.toggle('menu-open')"}
+             caption]])]]))
 
 (o/defrules toggle-menu-button)
 

@@ -66,12 +66,9 @@
    :--_border "none"
    :--_text t/--text-2}
   ([session user]
-   [:<> (if user
-          {:hx-post (str "/sessions/" (:db/id session) "/participate")
-           :hx-indicator (str ".c" (:db/id session))
-           :hx-swap "none"}
-          {:hx-target "#modal"
-           :hx-get "/login"})
+   [:<> {:hx-post (str "/sessions/" (:db/id session) "/participate")
+         :hx-indicator (str ".c" (:db/id session))
+         :hx-swap "none"}
     (if (session/participating? session user)
       "Leave"
       "Join")]))

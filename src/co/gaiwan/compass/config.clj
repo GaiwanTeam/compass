@@ -1,4 +1,22 @@
 (ns co.gaiwan.compass.config
+  "Configuration API
+
+  Gives us just enough flexiblity to comfortably have separate prod/edn
+  config+secrets, maximally checking in anything that isn't a secret into the
+  repo, and allowing for convenient local overrides.
+
+  Main public API: `config/value`, the rest is plumbing.
+
+  Merge in order (where applicable)
+
+  - `resources/co/gaiwan/compass/config.edn` - Base config file, shared values
+  - `resources/co/gaiwan/compass/prod.edn`   - Prod specific values
+  - `resources/co/gaiwan/compass/dev.edn`    - Dev specific values
+  - `config.local.edn`                       - Local overrides, does not get checked in
+  - environment variables                    - After munging, e.g. :f-oo/bar -> F_OO__BAR
+
+  When running with launchpad config files are watched for changes.
+  "
   (:require
    [aero.core :as aero]
    [clojure.java.io :as io]

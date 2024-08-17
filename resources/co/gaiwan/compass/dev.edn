@@ -2,4 +2,18 @@
  :datomic/url                  "datomic:mem://compass"
  :http/show-exception-details? true
  :live.js?                     true
- :tito/fake-api-stubs?         true}
+ :tito/fake-api-stubs?         true
+
+ ;; Compass Test Server (https://discord.gg/WD72GE3VAj)
+ ;; compass-dev bot (https://discord.com/developers/applications/983315200398733362)
+ :discord/client-id          "983315200398733362"
+ :discord/public-key         "fca03a0789343028329c53ea68af6f6ed32858283329615dd89ce0dd3908c8d3"
+ :discord/server-id          "1263107498823385098"
+ :discord/ticket-holder-role "1273578623210881037"
+ :discord/ticket-roles       {"crew"    "1274001163754143886"
+                              "sponsor" "1274001246390587514"
+                              "speaker" "1274001093080383548"}
+ ;; confgure locally
+ ;; :discord/client-secret ""
+ ;; :discord/bot-token ""
+ }

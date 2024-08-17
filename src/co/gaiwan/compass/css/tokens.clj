@@ -1,4 +1,5 @@
 (ns co.gaiwan.compass.css.tokens
+  "Design tokens, partly imported from Open Props, partly defined here"
   {:ornament/prefix ""}
   (:require
    [charred.api :as charred]

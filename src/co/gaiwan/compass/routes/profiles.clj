@@ -5,18 +5,8 @@
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.html.profiles :as h]
-   [co.gaiwan.compass.util :as util]
-   [io.pedestal.log :as log]
-   [ring.util.response :as response]))
-
-(defn wrap-authentication [handler]
-  (fn [req]
-    (log/trace ::login-check (:identity req))
-    (if-let [user (:identity req)]
-      (handler req)
-      {:status 401
-       :headers {"Content-Type" "text/plain"}
-       :body "Unauthorized"})))
+   [co.gaiwan.compass.http.response :as response]
+   [ring.util.response :as ring-response]))
 
 (defn GET-profile [req]
   {:html/body [h/profile-detail
@@ -50,24 +40,31 @@
     ;; (tap> req)
     ;; Copy the image file content to the uploads directory
     (io/copy tempfile (io/file filepath))
-    (util/redirect ["/profiles"]
-                   {:flash "Successfully Saved!"})))
+    (response/redirect "/profile"
+                       {:flash "Successfully Saved!"})))
 
 (defn file-handler [req]
   (let [file (io/file (config/value :uploads/dir) (get-in req [:path-params :filename]))]
     (if (.exists file)
-      (response/file-response (.getPath file))
-      (response/not-found "File not found"))))
+      (ring-response/file-response (.getPath file))
+      (ring-response/not-found "File not found"))))
+
+(defn GET-attendees [req]
+  )
 
 (defn routes []
-  [["/profiles"
+  [["/profile"
     [""
-     {:middleware [wrap-authentication]
-      :get {:handler GET-profile}}]
+     {:middleware [[response/wrap-requires-auth]]
+      :get        {:handler GET-profile}}]
     ["/edit"
      {:get {:handler GET-profile-form}}]
     ["/save"
-     {:middleware [wrap-authentication]
-      :post {:handler POST-save-profile}}]]
+     {:middleware [[response/wrap-requires-auth]]
+      :post       {:handler POST-save-profile}}]]
    ["/uploads/:filename"
-    {:get {:handler file-handler}}]])
+    {:middleware [[response/wrap-requires-auth]]
+     :get        {:handler file-handler}}]
+   ["/attendees"
+    {:middleware [[response/wrap-requires-auth]]
+     :get        {:handler GET-attendees}}]])

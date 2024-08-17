@@ -1,5 +1,3 @@
 {:port               8099
- :discord/client-id  "1228962758796775444"
- :discord/public-key "f58a0fd30eaecaa690e8065717f61988d6fbdb5ee11658469d86ad016380656e"
  :tito/event-slug    "heart-of-clojure/2024"
  :uploads/dir        "uploads"}

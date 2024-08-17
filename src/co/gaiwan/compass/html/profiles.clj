@@ -26,7 +26,7 @@
 (o/defstyled edit-profile-btn :button
   ([user]
    [:<>
-    {:hx-get "/profiles/edit"
+    {:hx-get "/profile/edit"
      :hx-select "#form > *"
      :hx-target "#detail"}
     "Edit Profile"]))
@@ -52,7 +52,7 @@
   ([user]
    [:<>
     [:h2 "Edit Profile"]
-    [:form {:method "POST" :action "/profiles/save" :enctype "multipart/form-data"}
+    [:form {:method "POST" :action "/profile/save" :enctype "multipart/form-data"}
      [:input {:type "hidden" :name "user-id" :value (:db/id user)}]
      [:div
       [:label {:for "name"} "Display Name"]

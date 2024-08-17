@@ -1,6 +1,6 @@
 :where(html) {
   --size-0: 0;
-  --co-gaiwan-compass-html-components--toggle-radius-left: 0.5rem;
+  --co-gaiwan-compass-html-components--toggle-radius-left: var(--radius-2);
   --sessions-arc-color: var(--lime-5);
   --hoc-pink: #e25f7d;
   --hoc-pink-3: var(--hoc-pink);
@@ -11,7 +11,7 @@
   --hoc-pink-1: #e7879d;
   --hoc-pink-2: #cd4e6a;
   --hoc-pink-4: #c0415b;
-  --co-gaiwan-compass-html-components--toggle-radius-right: 0.5rem;
+  --co-gaiwan-compass-html-components--toggle-radius-right: var(--radius-2);
 }
 
 :where(html) {
@@ -75,7 +75,7 @@ h5, h4, h2, h1, h3 {
 }
 
 button, .btn {
-  border-radius: 0.4rem;
+  border-radius: var(--radius-2);
 }
 
 dialog {
@@ -84,6 +84,14 @@ dialog {
 
 body {
   font-family: Open Sans, sans-serif;
+}
+
+@keyframes fade-to-pale {
+
+  to {
+    opacity: 1;
+  }
+
 }
 
 .graphics-compass_logo path {
@@ -185,6 +193,7 @@ body {
 
 .co_gaiwan_compass_html_auth__popup p {
   margin: var(--size-4);
+  margin-top: var(--size-2);
 }
 
 .co_gaiwan_compass_html_auth__popup .discord-login {
@@ -194,7 +203,7 @@ body {
   padding-left: var(--size-4);
   padding-right: var(--size-4);
   background-color: #7289da;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-2);
   color: var(--gray-0);
   text-align: center;
 }
@@ -207,6 +216,7 @@ body {
   width: 3rem;
   height: 2.25rem;
   padding: 0.4rem;
+  --_icon-color: var(--text-1);
 }
 
 .co_gaiwan_compass_html_auth__popup .graphics-discord {
@@ -516,4 +526,21 @@ body {
   display: grid;
   grid-template-columns: 10rem 1fr;
   gap: var(--size-2);
+}
+
+.co_gaiwan_compass_html_layout__flash_box {
+  border-width: 1px;
+  padding-bottom: var(--size-2);
+  border-color: var(--green-2);
+  animation: fade-to-pale linear 0.5s forwards;
+  margin-top: var(--size-3);
+  margin-bottom: var(--size-3);
+  font-weight: 600;
+  background-color: var(--green-1);
+  padding-right: var(--size-3);
+  border-radius: var(--radius-2);
+  color: var(--blue-12);
+  padding-left: var(--size-3);
+  padding-top: var(--size-2);
+  opacity: 0.5;
 }

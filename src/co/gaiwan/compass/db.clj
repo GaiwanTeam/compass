@@ -78,7 +78,8 @@
   (walk/postwalk munge-from-db (apply d/q args)))
 
 (defn entity [lookup]
-  (->munged-entity (d/entity (db) lookup)))
+  (when-let [e (d/entity (db) lookup)]
+    (->munged-entity e)))
 
 (comment
   ;; reload schema and data

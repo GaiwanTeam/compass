@@ -1,4 +1,5 @@
 (ns co.gaiwan.compass.css.components
+  "Override Girouette components, mainly to make use of Open Props tokens"
   (:require
    [girouette.tw.accessibility :as accessibility]
    [girouette.tw.animation :as animation]

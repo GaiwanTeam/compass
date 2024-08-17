@@ -1,4 +1,5 @@
 (ns co.gaiwan.compass.db.data
+  "Static data that gets imported at boot"
   (:require [clojure.java.io :as io]
             [clojure.pprint :as pprint]))
 
