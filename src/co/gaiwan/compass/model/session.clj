@@ -37,9 +37,8 @@
 (defn duration
   "Input is like `PT45M`"
   [duration-str]
-  (let [matcher (re-matcher #"\d+" duration-str)
-        minutes (re-find matcher)]
-    (parse-long minutes)))
+  (let [d (time/duration duration-str)]
+    (.toMinutes d)))
 
 (defmulti apply-filter (fn [_ _ k _] k))
 
