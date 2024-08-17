@@ -12,7 +12,7 @@
   [:body
    {:max-width "100vw"}
    [:#app {:max-width "80rem" :margin "0 auto"}
-    [:>main :p-2]]])
+    [:>main :px-2 :py-3]]])
 
 (def start-time (System/currentTimeMillis))
 

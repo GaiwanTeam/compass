@@ -8,7 +8,8 @@
 (o/defstyled nav-bar :nav
   :flex :items-center
   :bg-surface-1
-  [:h1 :font-size-5 :mr-auto :ml-2]
+  :mb-5
+  [:h1 :font-size-7 :mr-auto :ml-2]
   [:svg :grow-0 :shrink-0
    {:width  t/--font-size-5
     :height t/--font-size-5}]

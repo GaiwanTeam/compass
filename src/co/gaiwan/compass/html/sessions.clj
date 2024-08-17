@@ -244,8 +244,9 @@
    [:at-media {:min-width "40rem"} {:grid-template-columns "repeat(1, 1fr)"}]
    [:at-media {:min-width "60rem"} {:grid-template-columns "repeat(2, 1fr)"}]
    #_[:at-media {:min-width "80rem"} {:grid-template-columns "repeat(3, 1fr)"}]]
-  [:>h2 :mb-4 :mt-8
+  [:>h2 :mb-4 :mt-7
    {:font-size t/--font-size-3}
+   ["&:first-child" :mt-0]
    [:at-media {:min-width "24rem"} {:font-size t/--font-size-4}]
    [:at-media {:min-width "40rem"} {:font-size t/--font-size-5}]]
   ([{:keys [user sessions]}]

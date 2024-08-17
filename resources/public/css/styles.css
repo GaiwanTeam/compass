@@ -56,7 +56,10 @@ body #app {
 }
 
 body #app >main {
-  padding: var(--size-2);
+  padding-left: var(--size-2);
+  padding-right: var(--size-2);
+  padding-top: var(--size-3);
+  padding-bottom: var(--size-3);
 }
 
 @keyframes fade-to-pale {
@@ -142,10 +145,11 @@ body {
   display: flex;
   align-items: center;
   background-color: var(--surface-1);
+  margin-bottom: var(--size-5);
 }
 
 .co_gaiwan_compass_html_navigation__nav_bar h1 {
-  font-size: var(--size-5);
+  font-size: var(--size-7);
   margin-right: auto;
   margin-left: var(--size-2);
 }
@@ -488,8 +492,12 @@ body {
 
 .sessions-session_list >h2 {
   margin-bottom: var(--size-4);
-  margin-top: var(--size-8);
+  margin-top: var(--size-7);
   font-size: var(--font-size-3);
+}
+
+.sessions-session_list >h2:first-child {
+  margin-top: var(--size-0);
 }
 
 @media (min-width: 24rem) {
