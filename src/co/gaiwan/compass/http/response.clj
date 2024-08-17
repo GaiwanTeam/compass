@@ -31,13 +31,14 @@
              "HX-Reselect" (str "." auth-html/popup)}})
 
 (defn wrap-requires-auth
-  "Middleware that shows the login dialog for non-GET requests if the user is not
-  logged in"
+  "Middleware that shows the login dialog if the user is not logged in"
   [handler]
   (fn [req]
-    (tap> req)
     (if (not (:identity req))
       (if (get-in req [:headers "hx-request"])
-        (requires-auth (:uri req))
-        (redirect (str "/?login")))
+        (requires-auth (if (= :get (:request-method req))
+                         (:uri req)
+                         "/"))
+        ;; TODO: this query-param should make the dialog pop-up immediately
+        (redirect (str "/?show-login-dialog=true")))
       (handler req))))

@@ -82,6 +82,7 @@
       (let [{:keys [filename tempfile]} (:image params)
             session-eid (get tempids "session")
             file-path  (str (config/value :uploads/dir) "/" session-eid "_" filename)]
+        (io/make-parents file-path)
         (io/copy tempfile (io/file file-path))
         @(db/transact [{:db/id (get tempids "session")
                         :session/image (str "/" file-path)}])))
@@ -96,14 +97,12 @@
       (response/redirect "/"))))
 
 (defn session-updated-response [session-eid]
-  {:status 200
-   :headers {"HX-Trigger" (str "session-" session-eid "-updated")}
-   :body ""})
+  {:location :sessions/index
+   :hx/trigger (str "session-" session-eid "-updated")})
 
 (defn session-unchanged-response [session-eid]
-  {:status 200
-   :headers {"HX-Trigger" (str "session-" session-eid "-unchanged")}
-   :body ""})
+  {:location :sessions/index
+   :hx/trigger (str "session-" session-eid "-unchanged")})
 
 (defn POST-participate
   "Add the user as a participant to an activity"
@@ -144,22 +143,27 @@
 
 (defn routes []
   [[""
-    ["/" {:get {:handler GET-sessions}}]]
+    ["/" {:name :sessions/index
+          :get {:handler GET-sessions}}]]
    ["/sessions"
     {}
     [""
-     {:get {:handler GET-sessions}
+     {:name :session/save
       :post {:middleware [[response/wrap-requires-auth]]
              :handler POST-save-session}}]
     ["/new"
-     {:get {:middleware [[response/wrap-requires-auth]]
+     {:name :session/new
+      :get {:middleware [[response/wrap-requires-auth]]
             :handler GET-session-new}}]
     ["/:id"
-     {:get {:handler GET-session}
+     {:name :session/get
+      :get {:handler GET-session}
       :delete {:middleware [[response/wrap-requires-auth]]
                :handler DELETE-session}}]
     ["/:id/participate"
-     {:post {:middleware [[response/wrap-requires-auth]]
+     {:name :session/participate
+      :post {:middleware [[response/wrap-requires-auth]]
              :handler POST-participate}}]
     ["/:id/card"
-     {:get {:handler GET-session-card}}]]])
+     {:name :session/card
+      :get {:handler GET-session-card}}]]])

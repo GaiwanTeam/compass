@@ -14,14 +14,16 @@
 (defn PUT-filters [{:keys [params session identity] :as req}]
   (if (and (:my-activities params) (not identity))
     (redirect/requires-auth "/")
-    {:status 200
+    {:hx/trigger  "filters-updated"
+     :location "/"
      :session (assoc session
                      :session-filters
                      (merge defaults
-                            (update-vals params keyword)))
-     :headers {"HX-Trigger" "filters-updated"}}))
+                            (update-vals params keyword)))}))
 
 (defn routes []
-  ["/filters" {:put {:handler #'PUT-filters}
-               :get {:handler #'GET-filters}}])
+  ["/filters"
+   {:name :filters
+    :put {:handler PUT-filters}
+    :get {:handler GET-filters}}])
 

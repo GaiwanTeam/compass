@@ -2,7 +2,8 @@
   "Generic components"
   (:require
    [co.gaiwan.compass.css.tokens :as t]
-   [lambdaisland.ornament :as o]))
+   [lambdaisland.ornament :as o]
+   [ring.middleware.anti-forgery :as anti-forgery]))
 
 (o/defprop --toggle-radius-left t/--radius-2)
 (o/defprop --toggle-radius-right t/--radius-2)
@@ -47,3 +48,14 @@
                            :id (name k)
                            :type "radio"
                            :checked? (= (:value props) k)) v])))
+
+(o/defstyled form
+  :form
+  ([props & children]
+   (into
+    [:<>
+     props
+     [:input {:type "hidden"
+              :name  "__anti-forgery-token"
+              :value anti-forgery/*anti-forgery-token*}]]
+    children)))

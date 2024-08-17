@@ -1,2 +1,5 @@
-{:compass/http {:port #config :port}
- :compass/db   {:url #config :datomic/url}}
+{:compass/http   {:port #config :port
+                  :router #ig/ref :compass/router
+                  :dynamic? #config :dynamic-routes?}
+ :compass/router {:dynamic? #config :dynamic-routes?}
+ :compass/db     {:url #config :datomic/url}}

@@ -3,6 +3,7 @@
    [charred.api :as charred]
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.css.tokens :as t]
+   [co.gaiwan.compass.html.auth :as auth]
    [co.gaiwan.compass.html.navigation :as nav]
    [lambdaisland.ornament :as o]
    [ring.middleware.anti-forgery :as anti-forgery]))
@@ -57,7 +58,11 @@
            :hx-disinherit "hx-target hx-select"
            ;; CSRF
            :hx-headers (charred/write-json-str {"x-csrf-token" anti-forgery/*anti-forgery-token*})}
-    [:dialog#modal {} "keepme"]
+    (if (get-in request [:query-params "show-login-dialog"])
+      [:dialog {:open true :style {:z-index 1}}
+       [auth/popup "/"]]
+      [:dialog#modal {}
+       "keepme"])
     [:div#app
      [nav/menu-panel user]
      [:main

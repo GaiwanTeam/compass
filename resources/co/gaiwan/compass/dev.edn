@@ -13,6 +13,7 @@
  :discord/ticket-roles       {"crew"    "1274001163754143886"
                               "sponsor" "1274001246390587514"
                               "speaker" "1274001093080383548"}
+ :dynamic-routes?            true
  ;; confgure locally
  ;; :discord/client-secret ""
  ;; :discord/bot-token ""

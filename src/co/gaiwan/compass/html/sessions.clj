@@ -4,8 +4,10 @@
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
+   [co.gaiwan.compass.html.components :as c]
    [co.gaiwan.compass.html.filters :as filters]
    [co.gaiwan.compass.html.graphics :as graphics]
+   [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.session :as session]
    [java-time.api :as time]
    [lambdaisland.ornament :as o]
@@ -61,17 +63,23 @@
 
 (declare session-card)
 
-(o/defstyled participate-btn :button
-  {:--_bg t/--surface-3
-   :--_border "none"
-   :--_text t/--text-2}
+(o/defstyled participate-btn c/form
+  [:input {:color t/--text-2
+           :background-color t/--surface-3
+           :border-radius t/--radius-2}]
   ([session user]
-   [:<> {:hx-post (str "/sessions/" (:db/id session) "/participate")
-         :hx-indicator (str ".c" (:db/id session))
-         :hx-swap "none"}
-    (if (session/participating? session user)
-      "Leave"
-      "Join")]))
+   ;; Progressive enhancement, without htmx the form submission will kick in
+   [:<>
+    {:method "POST"
+     :action (str "/sessions/" (:db/id session) "/participate")}
+    [:input {:type "submit"
+             :hx-post (str "/sessions/" (:db/id session) "/participate")
+             :hx-indicator (str "closest ." session-card)
+             :hx-swap "none"
+             :value
+             (if (session/participating? session user)
+               "Leave"
+               "Join")}]]))
 
 (o/defstyled session-card-actions :nav
   :flex :justify-end :w-full
@@ -128,6 +136,10 @@
   [session-card-actions :text-right]
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
+  [:&.htmx-request
+   [#{:.left :.details}
+    {:opacity "0.5"
+     :animation "session-card-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite"}]]
   ([{:session/keys [type title subtitle organized time
                     location image participants duration
                     capacity signup-count] :as session}
@@ -148,8 +160,6 @@
      [participate-btn session user]]
 
     [:div.details
-     {:class ["session-card-pulse" (str "c" (:db/id session))]}
-
      [:h2.title
       [:a {:href (str "/sessions/" (:db/id session))}
        [:span.datetime
@@ -160,6 +170,12 @@
         [session-card-actions session user]]
      [:div.loc (fmt-dur duration) " @ " (:location/name location)]
      #_[:p.host "Organized by " organized]]]))
+
+(o/defrules session-card-pulse
+  (garden.stylesheet/at-keyframes
+   :session-card-pulse
+   ["0%, 100%" {:opacity 1}]
+   ["50%" {:opacity 0.5}]))
 
 (o/defstyled attendee :li
   ([participant]
@@ -234,7 +250,7 @@
    [:at-media {:min-width "40rem"} {:font-size t/--font-size-5}]]
   ([{:keys [user sessions]}]
    [:<>
-    {:hx-get     "/sessions"
+    {:hx-get     (url-for :sessions/index)
      :hx-trigger "filters-updated from:body"
      :hx-swap    "outerHTML"
      :hx-select  "#sessions"
@@ -265,7 +281,7 @@
   ([user]
    [:<>
     [:h2 "Create Activity"]
-    [:form {:method "POST" :action "/sessions"
+    [:form {:method "POST" :action (url-for :session/save)
             :enctype "multipart/form-data"}
      [:input {:type "hidden" :name "organizer-id" :value (:db/id user)}]
      [:label {:for "title"} "Name of Your Activity"]
@@ -310,7 +326,7 @@
      [:input {:id "capacity" :name "capacity" :type "number"
               :min 2 :value 5 :required true}]
 
-     [:label {:for "description"} "Description"]
+     [:label {:for "description"} "Description (supports Markdown)"]
      [:textarea {:id "description" :name "description"}]
 
      [:label {:for "ticket"}

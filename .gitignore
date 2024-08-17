@@ -13,3 +13,5 @@ resources/public/ui
 out
 .#*
 *.local.*
+uploads
+

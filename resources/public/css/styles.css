@@ -59,6 +59,14 @@ body #app >main {
   padding: var(--size-2);
 }
 
+@keyframes fade-to-pale {
+
+  to {
+    opacity: 1;
+  }
+
+}
+
 ul, ol {
   list-style-type: none;
   margin: var(--size-0);
@@ -86,10 +94,14 @@ body {
   font-family: Open Sans, sans-serif;
 }
 
-@keyframes fade-to-pale {
+@keyframes session-card-pulse {
 
-  to {
+0%, 100% {
     opacity: 1;
+  }
+  
+50% {
+    opacity: 0.5;
   }
 
 }
@@ -176,6 +188,23 @@ body {
   border-style: solid;
   border-color: var(--surface-4);
   font-size: var(--font-size-3);
+}
+
+.co_gaiwan_compass_html_layout__flash_box {
+  border-width: 1px;
+  padding-bottom: var(--size-2);
+  border-color: var(--green-2);
+  animation: fade-to-pale linear 0.5s forwards;
+  margin-top: var(--size-3);
+  margin-bottom: var(--size-3);
+  font-weight: 600;
+  background-color: var(--green-1);
+  padding-right: var(--size-3);
+  border-radius: var(--radius-2);
+  color: var(--blue-12);
+  padding-left: var(--size-3);
+  padding-top: var(--size-2);
+  opacity: 0.5;
 }
 
 .co_gaiwan_compass_html_auth__popup {
@@ -334,10 +363,10 @@ body {
   --icon-color: var(--hoc-green);
 }
 
-.sessions-participate_btn {
-  --_bg: var(--surface-3);
-  --_border: none;
-  --_text: var(--text-2);
+.sessions-participate_btn input {
+  color: var(--text-2);
+  background-color: var(--surface-3);
+  border-radius: var(--radius-2);
 }
 
 .sessions-session_card_actions {
@@ -424,6 +453,11 @@ body {
 
 .sessions-session_card.expanded .expansion {
   display: block;
+}
+
+.sessions-session_card.htmx-request .left, .sessions-session_card.htmx-request .details {
+  opacity: 0.5;
+  animation: session-card-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .sessions-session_detail .sessions-capacity_gauge {
@@ -526,21 +560,4 @@ body {
   display: grid;
   grid-template-columns: 10rem 1fr;
   gap: var(--size-2);
-}
-
-.co_gaiwan_compass_html_layout__flash_box {
-  border-width: 1px;
-  padding-bottom: var(--size-2);
-  border-color: var(--green-2);
-  animation: fade-to-pale linear 0.5s forwards;
-  margin-top: var(--size-3);
-  margin-bottom: var(--size-3);
-  font-weight: 600;
-  background-color: var(--green-1);
-  padding-right: var(--size-3);
-  border-radius: var(--radius-2);
-  color: var(--blue-12);
-  padding-left: var(--size-3);
-  padding-top: var(--size-2);
-  opacity: 0.5;
 }

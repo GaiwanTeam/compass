@@ -12,5 +12,5 @@
  ;; confgure locally
  ;; :discord/client-secret ""
  ;; :discord/bot-token ""
-
+ :uploads/dir "/home/compass/uploads"
  }

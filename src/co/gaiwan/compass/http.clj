@@ -96,7 +96,7 @@
    {:data {:middleware [ex-mw]}
     :conflicts nil}))
 
-(defn handler []
+(defn handler [router]
   (ring/ring-handler
    (router)
    (default-handler {})
@@ -107,14 +107,24 @@
                  [ring-defaults/wrap-defaults ring-default-config]
                  middleware/wrap-identity
                  middleware/wrap-render
+                 middleware/wrap-hx-responses
                  #_handler
                  ;; ^^^^^^^  Response goes up
                  ]}))
 
-(defmethod ig/init-key :compass/http [_ {:keys [port]}]
+(defmethod ig/init-key :compass/router [_ {:keys [dynamic?]}]
+  (if dynamic?
+    router
+    (constantly (router))))
+
+(defmethod ig/init-key :compass/http [_ {:keys [port router dynamic?]}]
   (log/info :http/starting {:port port})
-  (jetty/run-jetty #((handler) %) {:port port
-                                   :join? false}))
+  (jetty/run-jetty
+   (if dynamic?
+     #((handler router) %)
+     (handler router))
+   {:port port
+    :join? false}))
 
 (defmethod ig/halt-key! :compass/http [_ http]
   (.stop http))
