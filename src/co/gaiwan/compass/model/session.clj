@@ -34,6 +34,13 @@
 ;;     :my-activities :my-activities,
 ;;     :include-past :include-past}
 
+(defn duration
+  "Input is like `PT45M`"
+  [duration-str]
+  (let [matcher (re-matcher #"\d+" duration-str)
+        minutes (re-find matcher)]
+    (parse-long minutes)))
+
 (defmulti apply-filter (fn [_ _ k _] k))
 
 (defmethod apply-filter :default [sessions _ _ _]
@@ -95,8 +102,6 @@
   (filter (fn [{:session/keys [capacity participants]}]
             (< (count participants) capacity))
           sessions))
-
-
 
 (defn apply-filters [sessions user filters]
   (def sessions sessions)
