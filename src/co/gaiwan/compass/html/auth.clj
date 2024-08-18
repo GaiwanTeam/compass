@@ -9,7 +9,7 @@
   :flex-col :items-center
   :gap-4
   [:.top :flex :self-end :p-2]
-  [:p :m-4 :mt-2]
+  [:p :m-4 :mt-0]
   [:.discord-login :mb-4 :py-3 :px-4
    {:background-color "#7289da"
     :border-radius t/--radius-2

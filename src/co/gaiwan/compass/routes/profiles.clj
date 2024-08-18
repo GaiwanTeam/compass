@@ -18,7 +18,6 @@
 
 (defn params->profile-data
   [{:keys [name title user-id] :as params}]
-  ;; (prn :params params)
   {:db/id (parse-long user-id)
    :user/name name
    :user/title title})

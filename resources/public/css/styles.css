@@ -70,6 +70,18 @@ body #app >main {
 
 }
 
+@keyframes session-card-pulse {
+
+0%, 100% {
+    opacity: 1;
+  }
+  
+50% {
+    opacity: 0.5;
+  }
+
+}
+
 ul, ol {
   list-style-type: none;
   margin: var(--size-0);
@@ -95,18 +107,6 @@ dialog {
 
 body {
   font-family: Open Sans, sans-serif;
-}
-
-@keyframes session-card-pulse {
-
-0%, 100% {
-    opacity: 1;
-  }
-  
-50% {
-    opacity: 0.5;
-  }
-
 }
 
 .graphics-compass_logo path {
@@ -139,6 +139,53 @@ body {
   stroke-dasharray: 10;
   stroke-dashoffset: 10;
   animation: dash 1s linear forwards;
+}
+
+.co_gaiwan_compass_html_auth__popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-4);
+}
+
+.co_gaiwan_compass_html_auth__popup .top {
+  display: flex;
+  align-self: flex-end;
+  padding: var(--size-2);
+}
+
+.co_gaiwan_compass_html_auth__popup p {
+  margin: var(--size-4);
+  margin-top: var(--size-0);
+}
+
+.co_gaiwan_compass_html_auth__popup .discord-login {
+  margin-bottom: var(--size-4);
+  padding-top: var(--size-3);
+  padding-bottom: var(--size-3);
+  padding-left: var(--size-4);
+  padding-right: var(--size-4);
+  background-color: #7289da;
+  border-radius: var(--radius-2);
+  color: var(--gray-0);
+  text-align: center;
+}
+
+.co_gaiwan_compass_html_auth__popup .discord-login:hover {
+  text-decoration: none;
+}
+
+.co_gaiwan_compass_html_auth__popup .graphics-cross {
+  width: 3rem;
+  height: 2.25rem;
+  padding: 0.4rem;
+  --_icon-color: var(--text-1);
+}
+
+.co_gaiwan_compass_html_auth__popup .graphics-discord {
+  height: 2rem;
+  width: 2rem;
+  --_logo-color: var(--gray-0);
 }
 
 .co_gaiwan_compass_html_navigation__nav_bar {
@@ -209,53 +256,6 @@ body {
   padding-left: var(--size-3);
   padding-top: var(--size-2);
   opacity: 0.5;
-}
-
-.co_gaiwan_compass_html_auth__popup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--size-4);
-}
-
-.co_gaiwan_compass_html_auth__popup .top {
-  display: flex;
-  align-self: flex-end;
-  padding: var(--size-2);
-}
-
-.co_gaiwan_compass_html_auth__popup p {
-  margin: var(--size-4);
-  margin-top: var(--size-2);
-}
-
-.co_gaiwan_compass_html_auth__popup .discord-login {
-  margin-bottom: var(--size-4);
-  padding-top: var(--size-3);
-  padding-bottom: var(--size-3);
-  padding-left: var(--size-4);
-  padding-right: var(--size-4);
-  background-color: #7289da;
-  border-radius: var(--radius-2);
-  color: var(--gray-0);
-  text-align: center;
-}
-
-.co_gaiwan_compass_html_auth__popup .discord-login:hover {
-  text-decoration: none;
-}
-
-.co_gaiwan_compass_html_auth__popup .graphics-cross {
-  width: 3rem;
-  height: 2.25rem;
-  padding: 0.4rem;
-  --_icon-color: var(--text-1);
-}
-
-.co_gaiwan_compass_html_auth__popup .graphics-discord {
-  height: 2rem;
-  width: 2rem;
-  --_logo-color: var(--gray-0);
 }
 
 .co_gaiwan_compass_html_components__toggle_button {

@@ -13,3 +13,6 @@
               :where
               [?e :session/title]]
             (db/db))))
+
+(defn all-users []
+  )
