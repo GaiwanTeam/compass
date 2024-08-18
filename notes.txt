@@ -1,66 +1,78 @@
 
-- Login/Sign-up
-- List Session
- - Filter / Sort
-    - Starred
-    - Participating
-    - By type
-    - Has spots available
-    - Location
-  - Session
-    - More details (description)
-    - Star/bookmark
-    - Join (participate)
-    - Cancel
-    - Sign up for waiting list
-    - See participants (if public)
-- Edit sessions
-  - Add/edit activity/session
-    - Name
-    - Type
-    - Location
-      - Het Depot - main stage
-      - Het Depot - Bar
-      - Hal 5 - zone A
-      - Hal 5 - zone B
-      - Hal 5 - HoC Café
-      - Hal 5 - Foodcourt
-      - Hal 5 - park
-      - Hal 5 - outside seating
-      - Hal 5 - long table
-    - Capacity
-    - Description
-    - Image
-    - Requires ticket?
-    - Visible/published?
-  - Organizer tools
-    - Message participants (discord)
-      - Or create private channel
-    - Split into groups
-      - e.g. Mystery dinner - Split into groups of 5-8 people
-      - e.g. #PairWithMe - Split into groups of 2
-    - Manage waiting list
-- People
+- [X] Login/Sign-up
+- [-] List Session
+  - [X] Filter / Sort
+    - [X] Participating
+    - [X] By type
+    - [X] Has spots available
+    - [X] Mine
+  - [-] Session
+    - [X] More details (description)
+    - [X] Join (participate)
+    - [X] Cancel/delete
+    - [ ] Sign up for waiting list
+    - [ ] See participants (if public)
+- [-] Edit sessions
+  - [X] Add/edit activity/session
+    - [X] Name
+    - [X] Type
+    - [X] Location
+    - [X] Capacity
+    - [X] Description
+    - [X] Image
+    - [X] Requires ticket?
+    - [X] Visible/published?
+  - [ ] Organizer tools
+    - [ ] Message participants (discord)
+      - [ ] Or create private channel
+    - [ ] Split into groups
+      - [ ] e.g. Mystery dinner - Split into groups of 5-8 people
+      - [ ] e.g. #PairWithMe - Split into groups of 2
+    - [ ] Manage waiting list
+- [ ] People
   
-- Profile
-  - Publicly visible name (can be alias)
-  - Name
-  - Email
-  - Social media / contact
-  - Privacy controls
-    - Fine grained
-    - Unlisted / Listed / Connected
-  - Link ticket (or via discord bot?)
-  - Send connection request
-    - QR code?
-    - Discord - do you want to connect with this person?
+- [ ] Profile
+  - [ ] Publicly visible name (can be alias)
+  - [ ] Name
+  - [ ] Email
+  - [ ] Social media / contact
+  - [ ] Privacy controls
+    - [ ] Fine grained
+    - [ ] Unlisted / Listed / Connected
+  - [ ] Link ticket (or via discord bot?)
+  - [ ] Send connection request
+    - [ ] QR code?
+    - [ ] Discord - do you want to connect with this person?
 
-- Discord bot
-  - Add to HoC server
-  - Give them a role for the activities app
-  - Ask for their Ti.to booking code
-  - Give them a role for ticket holder
-  - reminder for upcoming activities
+- [ ] Discord bot
+  - [ ] Add to HoC server
+  - [ ] Give them a role for the activities app
+  - [ ] Ask for their Ti.to booking code
+  - [ ] Give them a role for ticket holder
+  - [ ] reminder for upcoming activities
 
 https://discord.com/developers/applications/1228962758796775444/bot
 https://discord.com/developers/docs
+
+
+Profile
+
+- Link ti.to ticket
+
+- Public profile
+  - Publicly visible name (can be alias)
+  - Profile picture
+  - Social media / personal website
+  - Hide session participation
+  - (Make profile invisible)
+
+- Private profile
+  - Name
+  - Profile picture
+  - Email
+  - Phone
+  - Social media / personal website
+  
+
+Wizard
+- Profile type
