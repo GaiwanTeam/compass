@@ -5,10 +5,9 @@
 ;; keyword | long | ref | string | symbol | tuple | uuid | uri
 
 (def schema
-  [[:user/uuid :uuid "Unique user identifier" :identity]
-   [:user/public-profile :ref "User's public profile"]
-   [:user/private-profile :ref "User's public profile"]
-   [:user/confidantes :ref "People you connected with / accepted a connection
+  [;; Start user entity
+   [:user/uuid :uuid "Unique user identifier" :identity]
+   [:user/contacts :ref "People you connected with / accepted a connection
    request from. A :u/c B means that user A agrees to show their public profile
    to user B. When two people connect we create connections in both directions,
    each person can subsequently revoke their side of the connection (I no longer
@@ -27,6 +26,7 @@
    [:private-profile/name :string "User name visible to contacts"]
    [:private-profile/links :ref "Links that are only visible to contacts" :many]
    [:private-profile/bio :string "Free-form Markdown field"]
+   ;; End user entity
 
    [:profile-link/user :ref "User this link belongs too"]
    [:profile-link/type :string "`mastodon`, `linkedin`, `personal-site`, etc."]
