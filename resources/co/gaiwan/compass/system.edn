@@ -1,5 +1,6 @@
-{:compass/http   {:port #config :port
-                  :router #ig/ref :compass/router
+{:compass/http   {:port     #config :port
+                  :router   #ig/ref :compass/router
                   :dynamic? #config :dynamic-routes?}
  :compass/router {:dynamic? #config :dynamic-routes?}
- :compass/db     {:url #config :datomic/url}}
+ :compass/db     {:url #config :datomic/url}
+ :tito/sync      {:interval-seconds #config :tito/sync-interval-seconds}}

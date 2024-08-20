@@ -5,14 +5,40 @@
 ;; keyword | long | ref | string | symbol | tuple | uuid | uri
 
 (def schema
-  [[:user/uuid :uuid "Unique user identifier" :identity]
-   [:user/email :string "User email" :identity]
-   [:user/name :string "User name, e.g. 'Arne'"]
-   [:user/handle :string "User handle, e.g. 'sunnyplexus'"]
-   [:user/title :string "User's job title or any description, e.g. 'CEO of Gaiwan'"]
-   [:user/image-path :string "User image path in the compass web server"]
+  [;; Start user entity
+   [:user/uuid :uuid "Unique user identifier" :identity]
+   [:user/contacts :ref "People you connected with / accepted a connection
+   request from. A :u/c B means that user A agrees to show their public profile
+   to user B. When two people connect we create connections in both directions,
+   each person can subsequently revoke their side of the connection (I no longer
+   want to share my details with that person). Similarly if person B does not
+   accept the connection, we only add it on one side, so person A can only see
+   B's public profile, B sees A's private profile. It should not be visible to B
+   that A did not accept. (they don't know if what they are seeing is public or
+   private.)" :many]
 
-   [:discord/id :string "Unique user id on discord, a 'snowflake', i.e. uint64 encoded as string"]
+   [:public-profile/name :string "Publicly visible user name, e.g. 'Arne'"]
+   [:public-profile/avatar-url :string "Relative or absolute URL of the user's avatar"]
+   [:public-profile/bio :string "Free-form Markdown field"]
+   [:public-profile/hidden? :boolean "Hide this profile from listings or attendance lists"]
+   [:public-profile/links :ref "Links that are publicly visible" :many]
+
+   [:private-profile/name :string "User name visible to contacts"]
+   [:private-profile/links :ref "Links that are only visible to contacts" :many]
+   [:private-profile/bio :string "Free-form Markdown field"]
+   ;; End user entity
+
+   [:profile-link/user :ref "User this link belongs too"]
+   [:profile-link/type :string "`mastodon`, `linkedin`, `personal-site`, etc."]
+   [:profile-link/href :string "http/mailto URL"]
+
+   ;; [:user/email :string "User email" :identity]
+   ;; [:user/name :string "User name, e.g. 'Arne'"]
+   ;; [:user/handle :string "User handle, e.g. 'sunnyplexus'"]
+   ;; [:user/title :string "User's job title or any description, e.g. 'CEO of Gaiwan'"]
+   ;; [:user/image-path :string "User image path in the compass web server"]
+
+   [:discord/id :string "Unique user id on discord, a 'snowflake', i.e. uint64 encoded as string" :identity]
    [:discord/access-token :string "Discord OAuth2 access-token"]
    [:discord/expires-at :instant "Expiration timestamp for the OAuth2 token"]
    [:discord/refresh-token :string "Discord OAuth2 refresh-token"]

@@ -54,7 +54,7 @@
     #_[:pre (pr-str user)]
     [:ul
      [:li
-      (if-let [name (:user/name user)]
+      (if-let [name (:public-profile/name user)]
         [:<>
          [:p "Welcome, " name]
          [:a {:href "/logout"} "Sign out"]]

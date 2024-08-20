@@ -4,6 +4,7 @@
    [clojure.java.io :as io]
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
+   [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.profiles :as h]
    [co.gaiwan.compass.http.response :as response]
    [ring.util.response :as ring-response]))
@@ -17,10 +18,9 @@
                (:identity req)]})
 
 (defn params->profile-data
-  [{:keys [name title user-id] :as params}]
+  [{:keys [name user-id] :as params}]
   {:db/id (parse-long user-id)
-   :user/name name
-   :user/title title})
+   :public-profile/name name})
 
 (defn POST-save-profile
   "Save profile to DB
@@ -34,7 +34,7 @@
         file-id (str (:db/id identity))
         filepath (str (config/value :uploads/dir) "/" file-id "_" filename)
         {:keys [tempids]} @(db/transact [(merge
-                                          {:user/image-path (str "/" filepath)}
+                                          {:public-profile/avatar-url (str "/" filepath)}
                                           (params->profile-data params))])]
     ;; (tap> req)
     ;; Copy the image file content to the uploads directory
@@ -49,7 +49,8 @@
       (ring-response/not-found "File not found"))))
 
 (defn GET-attendees [req]
-  )
+  (let [attendees (q/all-users)]
+    {:html/body [:p "TODO"] #_[attendees/user-list attendees]}))
 
 (defn routes []
   [["/profile"

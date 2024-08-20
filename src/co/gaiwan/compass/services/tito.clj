@@ -14,7 +14,9 @@
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.util :as util]
-   [hato.client :as hato]))
+   [hato.client :as hato]
+   [integrant.core :as ig]
+   [io.pedestal.log :as log]))
 
 (def API_ENDPOINT (str "https://api.tito.io/v3/" (config/value :tito/event-slug) "/"))
 
@@ -127,6 +129,21 @@
      [?ticket :tito.ticket/email ?email]
      (not [?ticket :tito.ticket/assigned-to _])]
    (db/db) reference email))
+
+(defmethod ig/init-key :tito/sync [_ {:keys [interval-seconds]}]
+  (log/info :tito/starting-sync-loop {:interval-seconds interval-seconds})
+  (let [stop? (volatile! false)]
+    (future
+      (while (not @stop?)
+        (try
+          (sync!)
+          (catch Exception e
+            (log/error :tito/sync-failed {} :exception e)))
+        (Thread/sleep (* 1000 interval-seconds))))
+    stop?))
+
+(defmethod ig/halt-key! :tito/sync [_ stop?]
+  (vreset! stop? true))
 
 (comment
   (sync!)
