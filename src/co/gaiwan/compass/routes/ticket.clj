@@ -10,16 +10,22 @@
 
 (defn GET-connect-ticket-form
   [{:keys [identity] :as req}]
-  {:html/body
-   [:div
-    [:h2 "Ticket Connection"]
-    [:p "Connect your tito ticket to your compass account here by entering the reference code and your email address!"]
-    [:form {:method "post"}
-     [:label {:for "reference"} "The ticket reference code:"] [:br]
-     [:input {:type "text" :required true :name "reference" :maxlength 4 :placeholder "QUTU"}] [:br]
-     [:label {:for "email"} "The email address assigned to the ticket:"] [:br]
-     [:input {:type "email" :required true :name "email" :value (:discord/email identity)}] [:br]
-     [:input {:type "submit" :value "Connect"}]]]})
+  (if-let [ticket (first  (:tito.ticket/_assigned-to identity))]
+    {:html/body
+     [:div
+      [:h2 "Ticket Connection"]
+      [:p "Your ti.to ticket is already connected! You're all set!"]
+      [:p "Your ticket reference is " [:strong (:tito.ticket/reference ticket)] "."]]}
+    {:html/body
+     [:div
+      [:h2 "Ticket Connection"]
+      [:p "Connect your tito ticket to your compass account here by entering the reference code and your email address!"]
+      [:form {:method "post"}
+       [:label {:for "reference"} "The ticket reference code:"] [:br]
+       [:input {:type "text" :required true :name "reference" :maxlength 4 :placeholder "QUTU"}] [:br]
+       [:label {:for "email"} "The email address assigned to the ticket:"] [:br]
+       [:input {:type "email" :required true :name "email" :value (:discord/email identity)}] [:br]
+       [:input {:type "submit" :value "Connect"}]]]}))
 
 (defn POST-connect-ticket-form
   [{:keys [identity]
