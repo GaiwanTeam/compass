@@ -45,13 +45,12 @@
 
       :else
       (let [{:keys [access_token refresh_token expires_in]} body
-            {:keys [id global_name email username]}         (discord/fetch-user-info access_token)
-            user-uuid                                       (:user/uuid (d/entity (db/db) [:user/email email]) (random-uuid))
+            {:keys [id global_name email username] :as fetch}   (discord/fetch-user-info access_token)
+            _ (tap> {:fetch fetch})
+            user-uuid                                       (:user/uuid (d/entity (db/db) [:discord/id id]) (random-uuid))
             tx-data
             [{:user/uuid             user-uuid
-              :user/email            email
-              :user/name             global_name
-              :user/handle           username
+              :public-profile/name   global_name
               :discord/id            id
               :discord/access-token  access_token
               :discord/refresh-token refresh_token
@@ -87,6 +86,6 @@
    ["/logout"
     {:get {:handler (fn [req]
                       (assoc
-                        (response/redirect "/")
-                        :flash "You were signed out"
-                        :session {}))}}]])
+                       (response/redirect "/")
+                       :flash "You were signed out"
+                       :session {}))}}]])
