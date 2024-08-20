@@ -59,10 +59,6 @@
       [:input {:id "name" :name "name" :type "text"
                :required true :min-length 2}]]
      [:div
-      [:label {:for "title"} "title"]
-      [:input {:id "title" :name "title" :type "text"
-               :min-length 2}]]
-     [:div
       [:label {:for "image"} "Profile Image"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
      [:input {:type "submit" :value "Save"}]]]))

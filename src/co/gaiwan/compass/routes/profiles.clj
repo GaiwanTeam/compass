@@ -17,10 +17,9 @@
                (:identity req)]})
 
 (defn params->profile-data
-  [{:keys [name title user-id] :as params}]
+  [{:keys [name user-id] :as params}]
   {:db/id (parse-long user-id)
-   :user/name name
-   :user/title title})
+   :public-profile/name name})
 
 (defn POST-save-profile
   "Save profile to DB
