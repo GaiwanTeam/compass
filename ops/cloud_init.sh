@@ -211,7 +211,7 @@ After=txor.service
 Restart=always
 RestartSec=1
 WorkingDirectory=/home/compass/app/current
-ExecStart=/usr/local/bin/clojure -J-Dclojure.main.report=stderr -A:prod -M -m co.gaiwan.compass run --env prod --config /home/compass/config.edn
+ExecStart=/usr/local/bin/clojure -J-Dclojure.main.report=stderr -Dclojure.server.repl='{:port 5555 :accept clojure.core.server/repl}' -A:prod -M -m co.gaiwan.compass run --env prod --config /home/compass/config.edn
 User=compass
 
 [Install]
