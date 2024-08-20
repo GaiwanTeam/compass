@@ -34,7 +34,7 @@
         file-id (str (:db/id identity))
         filepath (str (config/value :uploads/dir) "/" file-id "_" filename)
         {:keys [tempids]} @(db/transact [(merge
-                                          {:user/image-path (str "/" filepath)}
+                                          {:public-profile/avatar-url (str "/" filepath)}
                                           (params->profile-data params))])]
     ;; (tap> req)
     ;; Copy the image file content to the uploads directory
@@ -48,8 +48,7 @@
       (ring-response/file-response (.getPath file))
       (ring-response/not-found "File not found"))))
 
-(defn GET-attendees [req]
-  )
+(defn GET-attendees [req])
 
 (defn routes []
   [["/profile"

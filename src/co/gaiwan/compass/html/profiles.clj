@@ -34,10 +34,10 @@
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px]
   ([{:discord/keys [access-token id refresh-token expires-at avatar-url]
-     :user/keys [email handle name uuid title image-path] :as user}]
+     :user/keys [email handle name uuid title] :as user}]
    [:<>
     [image-frame {:profile/image
-                  (if-let [image (or image-path avatar-url)]
+                  (if-let [image (or (:public-profile/avatar-url user) avatar-url)]
                     (str "url(" image ")")
                     (str "var(--gradient-" (inc (rand-int 7)) ")"))} user]
     [:div.details
