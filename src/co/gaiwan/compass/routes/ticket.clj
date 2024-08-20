@@ -29,7 +29,7 @@
     (if-let [ticket (tito/find-unassigned-ticket (str/upper-case ref) email)]
       (do
         @(db/transact
-          [:db/add (:db/id ticket) :tito.ticket/assigned-to [:user/uuid (:user/uuid identity)]])
+          [[:db/add (:db/id ticket) :tito.ticket/assigned-to [:user/uuid (:user/uuid identity)]]])
         (discord/assign-ticket-role (:discord/id identity) ticket)
         (response/redirect "/" {:flash [:p "Ticket connection successful! You should now have the appropriate roles in our Discord server."]}))
       (response/redirect "/connect-ticket" {:status :found

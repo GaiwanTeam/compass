@@ -5,14 +5,22 @@
 
 (defn all-sessions
   []
-  (sort-by :session/time
-           (db/q
-            '[:find
-              [(pull ?e [* {:session/type [*]
-                            :session/location [*]}]) ...]
-              :where
-              [?e :session/title]]
-            (db/db))))
+  (sort-by
+   :session/time
+   (db/q
+    '[:find
+      [(pull ?e [* {:session/type [*]
+                    :session/location [*]}]) ...]
+      :where
+      [?e :session/title]]
+    (db/db))))
 
 (defn all-users []
-  )
+  (sort-by
+   :public-profile/name
+   (db/q
+    '[:find
+      [(pull ?e [*]) ...]
+      :where
+      [?e :public-profile/name]]
+    (db/db))))

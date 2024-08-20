@@ -2,10 +2,8 @@
   "Filtering behavior"
   (:require
    [co.gaiwan.compass.html.filters :as filters]
-   [co.gaiwan.compass.http.response :as redirect]))
-
-(def defaults
-  {:include-past false})
+   [co.gaiwan.compass.http.response :as redirect]
+   [co.gaiwan.compass.model.session :as session]))
 
 (defn GET-filters [req]
   {:html/layout false
@@ -18,7 +16,7 @@
      :location "/"
      :session (assoc session
                      :session-filters
-                     (merge defaults
+                     (merge session/default-filters
                             (update-vals params keyword)))}))
 
 (defn routes []

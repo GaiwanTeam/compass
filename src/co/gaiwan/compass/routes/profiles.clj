@@ -4,6 +4,7 @@
    [clojure.java.io :as io]
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
+   [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.profiles :as h]
    [co.gaiwan.compass.http.response :as response]
    [ring.util.response :as ring-response]))
@@ -47,7 +48,9 @@
       (ring-response/file-response (.getPath file))
       (ring-response/not-found "File not found"))))
 
-(defn GET-attendees [req])
+(defn GET-attendees [req]
+  (let [attendees (q/all-users)]
+    {:html/body [:p "TODO"] #_[attendees/user-list attendees]}))
 
 (defn routes []
   [["/profile"
