@@ -58,7 +58,8 @@
   (let [error-id (random-uuid)]
     (log/error :http/error {:message "HTTP handler threw"
                             :error-id error-id
-                            :request request}
+                            :request request
+                            :ex-data (ex-data error)}
                :exception error)
     {:status 500
      :html/body
