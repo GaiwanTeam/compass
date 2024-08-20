@@ -13,4 +13,6 @@
   <logger name="datomic.kv-cluster" level="WARN" />
   <logger name="datomic.peer" level="WARN" />
   <logger name="datomic.log" level="WARN" />
+  <logger name="co.gaiwan.compass.db" level="DEBUG" />
+ 
 </configuration>

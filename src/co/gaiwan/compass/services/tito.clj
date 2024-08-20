@@ -128,7 +128,9 @@
      [?ticket :tito.ticket/registration ?reg]
      [?ticket :tito.ticket/email ?email]
      (not [?ticket :tito.ticket/assigned-to _])]
-   (db/db) reference email))
+   (db/db)
+   reference
+   email))
 
 (defmethod ig/init-key :tito/sync [_ {:keys [interval-seconds]}]
   (log/info :tito/starting-sync-loop {:interval-seconds interval-seconds})
