@@ -14,10 +14,8 @@
 (defn GET-discord-redirect
   "Kick off the Discord OAuth flow, by saving the necessary OAuth state on our
   side, and then redirecting to Discord."
-  [{:keys [query-params session]}]
+  [{:keys [query-params]}]
   (let [state (random-uuid)]
-    @(db/transact [{:oauth/state-id     state
-                    :oauth/redirect-url (get query-params "redirect_url" "/")}])
     (-> (uri/uri oauth/discord-oauth-endpoint)
         (uri/assoc-query*
          {:client_id     (config/value :discord/client-id)
@@ -27,7 +25,7 @@
           :state         state})
         str
         response/redirect
-        (assoc :session (assoc session :oauth/state-id state)))))
+        (update :session assoc :oauth/state-id state :oauth/redirect-url (get query-params "redirect_url" "/")))))
 
 (defn GET-discord-callback [{:keys [query-params session]}]
   (let [{:strs [code state]}  query-params
@@ -45,7 +43,7 @@
 
       :else
       (let [{:keys [access_token refresh_token expires_in]} body
-            {:keys [id global_name email username] :as fetch}   (discord/fetch-user-info access_token)
+            {:keys [id global_name] :as fetch}   (discord/fetch-user-info access_token)
             _ (tap> {:fetch fetch})
             user-uuid                                       (:user/uuid (d/entity (db/db) [:discord/id id]) (random-uuid))
             tx-data
@@ -58,7 +56,7 @@
             {:keys [status]}                                (discord/join-server access_token)]
         @(db/transact tx-data)
         {:status  302
-         :headers {"Location" (:oauth/redirect-url (db/entity [:oauth/state-id (parse-uuid state)]) "/")}
+         :headers {"Location" (:oauth/redirect-url session "/")}
          :flash   [:p "You are signed in!"
                    (case status
                      204 nil
