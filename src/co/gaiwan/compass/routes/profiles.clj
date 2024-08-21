@@ -19,9 +19,17 @@
                (:identity req)]})
 
 (defn params->profile-data
-  [{:keys [name user-id] :as params}]
-  {:db/id (parse-long user-id)
-   :public-profile/name name})
+  [{:keys [user-id hidden?
+           bio_public name_public
+           bio_private name_private] :as params}]
+  (cond-> {:db/id (parse-long user-id)
+           :public-profile/name name_public
+           :public-profile/bio bio_public
+           :private-profile/bio bio_public}
+    hidden?
+    (assoc :public-profile/hidden? true)
+    name_private
+    (assoc :private-profile/name name_private)))
 
 (defn POST-save-profile
   "Save profile to DB
