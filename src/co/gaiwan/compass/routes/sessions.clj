@@ -75,7 +75,22 @@
       (= published? "on")
       (assoc :session/published? true))))
 
-(defn POST-save-session
+;; FIXME images not working in frontend (issue with paths)
+
+(defn session-image-file
+  (^java.io.File
+   [session-eid filename]
+   (io/file (config/value :uploads/dir) (str session-eid "_" filename))))
+
+(defn save-uploaded-image
+  [session-eid {:keys [filename tempfile]}]
+  (let [image-file (session-image-file session-eid filename)]
+    (io/make-parents image-file)
+    (io/copy tempfile image-file)
+    {:db/id session-eid
+     :session/image (.getName image-file)}))
+
+(defn POST-create-session
   "Create new session, save to Datomic
 
   The typical params is:
@@ -87,18 +102,38 @@
    :capacity \"34\",
    :ticket-required? \"on\"
    :published? \"on\"}"
-  [{:keys [params]}]
+  [{:keys [params] {:keys [image]} :params}]
   (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
-    (when (:image params)
-      (let [{:keys [filename tempfile]} (:image params)
-            session-eid (get tempids "session")
-            file-path  (str (config/value :uploads/dir) "/" session-eid "_" filename)]
-        (io/make-parents file-path)
-        (io/copy tempfile (io/file file-path))
-        @(db/transact [{:db/id (get tempids "session")
-                        :session/image (str "/" file-path)}])))
+    (when image
+      @(db/transact [(save-uploaded-image session-image-file image)]))
     (response/redirect ["/sessions" (get tempids "session")]
                        {:flash "Successfully created!"})))
+
+;; TODO: wrap-authorize middleware
+(defn PATCH-edit-session
+  "Same as [[POST-create-session]], but edits an existing session."
+  [{{:keys [id]} :path-params {:keys [image]} :params :keys [params identity]}]
+  (let [id (parse-long id)
+        {prev-image :session/image {organizer-id :db/id} :session/organized :as session} (db/pull '[*] id)]
+    (if session
+      (if (= (:db/id identity) organizer-id)
+        (do
+          (when (and prev-image image)
+            ;; Delete old image if exists
+            (io/delete-file (io/file (config/value :uploads/dir) prev-image)))
+          @(db/transact
+            [(-> params
+                 params->session-data
+                 (assoc :db/id id)
+                 (into (if image
+                         (save-uploaded-image id image)
+                         [])))])
+          {:location [:session/get {:id id}]
+           :flash "Successfully edited!"})
+        {:status 403
+         :html/body [:p "You're not the organizer of this session."]})
+      {:status 404
+       :html/body [:p "Not found."]})))
 
 (defn DELETE-session [{:keys [path-params identity]}]
   (let [session-eid (parse-long (:id path-params))]
@@ -161,7 +196,7 @@
     [""
      {:name :session/save
       :post {:middleware [[response/wrap-requires-auth]]
-             :handler POST-save-session}}]
+             :handler POST-create-session}}]
     ["/new"
      {:name :session/new
       :get {:middleware [[response/wrap-requires-auth]]
@@ -170,7 +205,9 @@
      {:name :session/get
       :get {:handler GET-session}
       :delete {:middleware [[response/wrap-requires-auth]]
-               :handler DELETE-session}}]
+               :handler DELETE-session}
+      :patch {:middleware [[response/wrap-requires-auth]]
+              :handler PATCH-edit-session}}]
     ["/:id/edit"
      {:get {:handler GET-session-edit}}]
     ["/:id/participate"

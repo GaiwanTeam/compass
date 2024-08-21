@@ -89,16 +89,17 @@
           (and hx-request? (:hx/trigger resp))
           (-> resp
               (assoc
-                :status (:status resp 200)
-                :body (:body resp ""))
+               :status (:status resp 200)
+               :body (:body resp ""))
               (assoc-in [:headers "hx-trigger"] (:hx/trigger resp)))
 
           (:location resp)
           (-> resp
               (assoc
-                :status (:status resp 302)
-                :body (:body resp ""))
-              (assoc-in [:headers (if hx-request? "hx-redirect" "location")] (routing/url-for (:location resp))))
+               :status (:status resp 302)
+               :body (:body resp ""))
+              (assoc-in [:headers (if hx-request? "hx-redirect" "location")]
+                        (routing/url-for (:location resp))))
 
           :else
           resp)))))

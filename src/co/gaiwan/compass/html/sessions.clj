@@ -287,8 +287,11 @@
     (if session
       [:h2 "Edit Activity"]
       [:h2 "Create Activity"])
-    [:form {:method "POST" :action (url-for :session/save)
-            :enctype "multipart/form-data"}
+    [:form
+     (-> (if session
+           {:hx-patch (url-for :session/get {:id (:db/id session)})}
+           {:method "POST" :action (url-for :session/save)})
+         (assoc :enctype "multipart/form-data"))
      [:input {:type "hidden" :name "organizer-id" :value (:db/id user)}]
      [:label {:for "title"} "Name of Your Activity"]
      [:input (cond-> {:id "title" :name "title" :type "text"
