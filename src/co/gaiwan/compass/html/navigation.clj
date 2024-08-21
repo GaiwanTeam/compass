@@ -61,6 +61,10 @@
         [:a {:hx-boost "false"
              :href "/oauth2/discord/redirect"}
          "Sign-in with Discord"])]
+     (when (and user (not (:tito.ticket/_assigned-to user)))
+       [:li [:a {:href "/connect-ticket"
+                 :on-click "document.body.classList.toggle('menu-open')"}
+             [:strong "Connect your tito ticket to your account"]]])
      (for [[href caption] {"/"             "Sessions & Activities"
                            "/attendees"    "Attendees"
                            "/profile"      "Profile & Settings"
