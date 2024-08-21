@@ -69,11 +69,33 @@
     [:h2 "Edit Profile"]
     [:form {:method "POST" :action "/profile/save" :enctype "multipart/form-data"}
      [:input {:type "hidden" :name "user-id" :value (:db/id user)}]
+     [:label {:for "hidding"}
+      [:input {:id "hidding" :name "hidden?" :type "checkbox"
+               :checked (:public-profile/hidden? user)}]
+      "Hide profile from public listings?"]
      [:div
-      [:label {:for "name"} "Display Name"]
-      [:input {:id "name" :name "name" :type "text"
+      [:label {:for "name"} "Name (public)"]
+      [:input {:id "name" :name "name_public" :type "text"
                :required true :min-length 2}]]
+     [:label {:for "show-another-name"}
+      [:input {:id "show-another-name" :name "private_name_switch" :type "checkbox"
+               :checked (:private-profile/name user)}]
+      "Show different name to confidantes?"]
+
      [:div
-      [:label {:for "image"} "Profile Image"]
+      [:label {:for "image"} "Avatar"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
+
+     [:div
+      [:label {:for "bio_public"}
+       "Bio (public, markdown)"
+       [:input {:id "bio_public" :name "bio_public" :type "text"
+                :value (:public-profile/bio user)}]]]
+
+     [:div
+      [:label {:for "bio_private"}
+       "Bio (confidential, markdown)"
+       [:input {:id "bio_private" :name "bio_private" :type "text"
+                :value (:private-profile/bio user)}]]]
+
      [:input {:type "submit" :value "Save"}]]]))
