@@ -15,12 +15,16 @@
   ([method endpoint]
    (discord-bot-request method endpoint nil))
   ([method endpoint body]
-   (hato/request
-    (cond-> {:method method
-             :url (str discord-api-endpoint endpoint)
-             :as :auto
-             :headers (bot-auth-headers)}
-      body (assoc :content-type :json :form-params body)))))
+   (let [response
+         (hato/request
+          (cond-> {:method method
+                   :url (str discord-api-endpoint endpoint)
+                   :throw-exceptions? false
+                   :as :auto
+                   :headers (bot-auth-headers)}
+            body (assoc :content-type :json :form-params body)))]
+     (log/trace :discord/request (:request response) :discord/response (dissoc response :request))
+     response)))
 
 (defn fetch-user-info [token]
   (:body
@@ -29,25 +33,27 @@
               :oauth-token token})))
 
 (defn join-server [token]
-  (let [{:keys [id username]} (fetch-user-info token)
-        response
-        (discord-bot-request
-         :put
-         (str "/guilds/" (config/value :discord/server-id) "/members/" id)
-         {:access_token token})]
-    (log/trace :discord/user-add username :discord/add-guild-member-response (dissoc response :request))
-    response))
+  (let [{:keys [id username]} (fetch-user-info token)]
+    (discord-bot-request
+     :put
+     (str "/guilds/" (config/value :discord/server-id) "/members/" id)
+     {:access_token token})))
 
 (defn get-application
   []
   (:body (discord-bot-request :get "/applications/@me")))
 
-(defn assign-ticket-role
+(defn assign-ticket-roles
+  "Takes a Discord user id and a tito ticket map and assigns the appropriate roles to the user in the server.
+
+  Returns true if it succeeded, false if not."
   [user-id {{:keys [tito.release/slug]} :tito.ticket/release :as _ticket}]
   (let [role-endpoint (str "/guilds/" (config/value :discord/server-id) "/members/" user-id "/roles/")]
-    (discord-bot-request :put (str role-endpoint (config/value :discord/ticket-holder-role)))
-    (when-let [special-role (get (config/value :discord/ticket-roles) slug)]
-      (discord-bot-request :put (str role-endpoint special-role)))))
+    (->> [(discord-bot-request :put (str role-endpoint (config/value :discord/ticket-holder-role)))
+          (when-let [special-role (get (config/value :discord/ticket-roles) slug)]
+            (discord-bot-request :put (str role-endpoint special-role)))]
+         (map #(get % :status 200))
+         (every? #(= (quot % 100) 2)))))
 
 ;; NOTE: we originally wanted to use the linked roles Discord feature, but the UX of that turned out to be crap.
 ;; So now we don't use it anymore and assign configured roles directly

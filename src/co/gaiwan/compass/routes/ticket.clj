@@ -56,20 +56,20 @@
                                (filter (comp #{email} :tito.ticket/email))
                                first)
           error-response (fn [status & msg]
-                           {;; TODO: styling, use alternative flash style (error)
-                            :html/body (connect-ticket-form msg ref email)})]
+                           {:html/body (connect-ticket-form msg ref email)})]
       (cond
         (:tito.ticket/_assigned-to identity)
         (error-response 409 "A ticket is already assigned to your account!")
 
         assigned-ticket
-        (do
-          (discord/assign-ticket-role (:discord/id identity) assigned-ticket)
-          @(db/transact
-            [[:db/add (:db/id assigned-ticket) :tito.ticket/assigned-to [:user/uuid (:user/uuid identity)]]])
-          (response/redirect
-           "/"
-           {:flash [:p "Ticket connection successful! You should now have the appropriate roles in our Discord server."]}))
+        (if (discord/assign-ticket-roles (:discord/id identity) assigned-ticket)
+          (do
+            @(db/transact
+              [[:db/add (:db/id assigned-ticket) :tito.ticket/assigned-to [:user/uuid (:user/uuid identity)]]])
+            (response/redirect
+             "/"
+             {:flash [:p "Ticket connection successful! You should now have the appropriate roles in our Discord server."]}))
+          (error-response 500 "Your data is correct, but the ticket roles could not be assigned to you. This is a bug; please contact the administrators."))
 
         (empty? tickets)
         (error-response 404 "Registration reference " [:code ref] " not found.")
