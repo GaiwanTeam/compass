@@ -112,25 +112,20 @@
             (registrations-tx)))
   @(db/transact (tickets-tx)))
 
-(defn find-unassigned-ticket
-  "Look up a ticket from a registration reference and an email address.
+(defn find-tickets
+  "Look up tickets by registration reference (4 character code).
 
-  Returns nil if not found or a ticket map (including release information) if found."
-  [reference email]
+  Returns a vector of found ticket maps (including release information)."
+  [reference]
   (db/q
    '[:find
-     (pull ?ticket [* {:tito.ticket/release [*]}]) .
-     :in $ ?ref ?email
+     [(pull ?ticket [* {:tito.ticket/release [*]}]) ...]
+     :in $ ?ref
      :where
      [?reg :tito.registration/reference ?ref]
-     (or [?reg :tito.registration/state "complete"]
-         [?reg :tito.registration/state "incomplete"])
-     [?ticket :tito.ticket/registration ?reg]
-     [?ticket :tito.ticket/email ?email]
-     (not [?ticket :tito.ticket/assigned-to _])]
+     [?ticket :tito.ticket/registration ?reg]]
    (db/db)
-   reference
-   email))
+   reference))
 
 (defmethod ig/init-key :tito/sync [_ {:keys [interval-seconds]}]
   (log/info :tito/starting-sync-loop {:interval-seconds interval-seconds})
