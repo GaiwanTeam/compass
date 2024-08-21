@@ -4,6 +4,7 @@
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
+   [co.gaiwan.compass.http.routing :refer [url-for]]
    [java-time.api :as time]
    [co.gaiwan.compass.html.sessions :as s]
    [lambdaisland.ornament :as o]
@@ -62,6 +63,17 @@
      (when bio
        [:textarea (m/md->hiccup bio)])]]))
 
+(o/defstyled private-name :div
+  ([user {:keys [private-name-switch] :as params}]
+   (tap> {:params params})
+   (if (= "on" private-name-switch)
+     [:div#private-name-block
+      [:label {:for "private-name"} "Confidential Name"]
+      [:input {:id "private-name" :name "name_private" :type "text"
+               :required true :min-length 2
+               :value (:private-profile/name user)}]]
+     [:div#private-name-block])))
+
 (o/defstyled profile-form :div#form
   [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
   ([user]
@@ -76,12 +88,18 @@
      [:div
       [:label {:for "name"} "Name (public)"]
       [:input {:id "name" :name "name_public" :type "text"
-               :required true :min-length 2}]]
-     [:label {:for "show-another-name"}
-      [:input {:id "show-another-name" :name "private_name_switch" :type "checkbox"
-               :checked (:private-profile/name user)}]
-      "Show different name to confidantes?"]
-
+               :required true :min-length 2
+               :value (:public-profile/name user)}]]
+     [:div
+      [:label {:for "show-another-name"}
+       [:input {:id "show-another-name" :name "private-name-switch" :type "checkbox"
+                :hx-get (url-for :profile/private-name)
+                :hx-target "#private-name-block"
+                :hx-select "#private-name-block"
+                :hx-trigger "change"
+                :hx-swap "outerHTML"}]
+       "Show different name to confidantes?"]
+      [:div {:id "private-name-block"}]]
      [:div
       [:label {:for "image"} "Avatar"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
