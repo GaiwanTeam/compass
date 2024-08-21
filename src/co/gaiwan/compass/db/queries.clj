@@ -20,7 +20,8 @@
    :public-profile/name
    (db/q
     '[:find
-      [(pull ?e [*]) ...]
+      [(pull ?e [*
+                 {:tito.ticket/_assigned-to [*]}]) ...]
       :where
       [?e :public-profile/name]]
     (db/db))))

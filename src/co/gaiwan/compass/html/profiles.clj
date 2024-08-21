@@ -6,7 +6,8 @@
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [java-time.api :as time]
    [co.gaiwan.compass.html.sessions :as s]
-   [lambdaisland.ornament :as o]))
+   [lambdaisland.ornament :as o]
+   [markdown-to-hiccup.core :as m]))
 
 (o/defprop --arc-thickness "30px")
 
@@ -33,19 +34,33 @@
 
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px]
-  ([{:discord/keys [access-token id refresh-token expires-at avatar-url]
-     :user/keys [email handle name uuid title] :as user}]
+  ([{:public-profile/keys [name avatar-url]
+     :user/keys [uuid] :as user}]
    [:<>
     [image-frame {:profile/image
                   (if-let [image (or (:public-profile/avatar-url user) avatar-url)]
                     (str "url(" image ")")
                     (str "var(--gradient-" (inc (rand-int 7)) ")"))} user]
     [:div.details
-     [:h3.title name]
-     [:h3.subtitle title]]
+     [:h3.title name]]
     #_[:div (pr-str user)]
     [:div.actions
      [edit-profile-btn user]]]))
+
+(o/defstyled attendee-card :div
+  [image-frame :w-100px]
+  ([{:discord/keys [avatar-url]
+     :public-profile/keys [name bio]
+     :user/keys [uuid] :as user}]
+   [:<>
+    [image-frame {:profile/image
+                  (if-let [image (or (:public-profile/avatar-url user) avatar-url)]
+                    (str "url(" image ")")
+                    (str "var(--gradient-" (inc (rand-int 7)) ")"))} user]
+    [:div.details
+     [:h3 name]
+     (when bio
+       [:textarea (m/md->hiccup bio)])]]))
 
 (o/defstyled profile-form :div#form
   [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]

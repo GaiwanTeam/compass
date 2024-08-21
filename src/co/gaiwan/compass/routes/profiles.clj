@@ -5,6 +5,7 @@
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
+   [co.gaiwan.compass.model.attendees :as attendees]
    [co.gaiwan.compass.html.profiles :as h]
    [co.gaiwan.compass.http.response :as response]
    [ring.util.response :as ring-response]))
@@ -50,7 +51,11 @@
 
 (defn GET-attendees [req]
   (let [attendees (q/all-users)]
-    {:html/body [:p "TODO"] #_[attendees/user-list attendees]}))
+    {:html/body
+     [:<>
+      [:p "The Attendees List"]
+      (for [atd (attendees/user-list attendees)]
+        (h/attendee-card atd))]}))
 
 (defn routes []
   [["/profile"
