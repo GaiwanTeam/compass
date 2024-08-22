@@ -74,18 +74,22 @@
      [:div#private-name-block])))
 
 (o/defstyled link :div
-  ([user params]
+  ([user {:keys [rows-count] :as params}]
    [:table
-    [:tr#link-row
+    [:tr.link-row
      [:td
-      [:input {:name "aa" :type "text" :required true
-               :min-length 2}]
-      [:input {:name "cc" :type "text" :required true
+      [:select {:name (str "link-type-" rows-count)}
+       [:option {:value "email"} "Email"]
+       [:option {:value "twitter"} "Twitter"]
+       [:option {:value "mastodon"} "Mastodon"]
+       [:option {:value "linkedin"} "LinkedIn"]
+       [:option {:value "other"} "Other"]]
+      [:input {:name (str "link-ref-" rows-count) :type "text" :required true
                :min-length 2}]]
      [:td
-      [:input {:name "hidden?" :type "checkbox"}]]
+      [:input {:name (str "public-" rows-count) :type "checkbox"}]]
      [:td
-      [:input {:name "hidden?" :type "checkbox"}]]]]))
+      [:input {:name  (str "private-" rows-count) :type "checkbox"}]]]]))
 
 (o/defstyled profile-form :div#form
   [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
@@ -137,11 +141,19 @@
          [:th "public"]
          [:th "confidential"]]]
        [:tbody#links-block]]
-      [:input {:type "button" :value "Add Links"
-               :hx-get (url-for :profile/add-link)
-               :hx-target "#links-block"
-               :hx-select "#link-row"
-               :hx-trigger "click"
-               :hx-swap "beforeend"}]]
+      [:input#add-link {:type "button" :value "Add Links"
+                        :hx-get (url-for :profile/add-link)
+                        :hx-target "#links-block"
+                        :hx-select ".link-row"
+                        :hx-trigger "click"
+                        :hx-swap "beforeend"}]]
 
-     [:input {:type "submit" :value "Save"}]]]))
+     [:input {:type "submit" :value "Save"}]]
+    [:script
+     "document.getElementById('add-link').addEventListener('htmx:configRequest', function(evt) {
+      const url = new URL(evt.detail.path, window.location.origin);
+      var elements = document.querySelectorAll('tr.link-row');
+      url.searchParams.set('rows-count', elements.length);
+      // update URL
+      evt.detail.path = url.toString();
+     });"]]))
