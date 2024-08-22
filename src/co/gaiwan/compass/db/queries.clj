@@ -20,7 +20,20 @@
    :public-profile/name
    (db/q
     '[:find
-      [(pull ?e [*]) ...]
+      [(pull ?e [*
+                 {:tito.ticket/_assigned-to [*]}]) ...]
       :where
       [?e :public-profile/name]]
     (db/db))))
+
+(defn all-links [user-eid]
+  (sort-by
+   :db/id
+   (db/q
+    '[:find [(pull ?l [*
+                       {:public-profile/_links [:db/id]}
+                       {:private-profile/_links [:db/id]}]) ...]
+      :in $ ?u
+      :where
+      [?l :profile-link/user ?u]]
+    (db/db) user-eid)))

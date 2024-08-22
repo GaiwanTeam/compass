@@ -19,7 +19,7 @@
    '[:find
      [(pull ?e [*]) ...]
      :where
-     [?e :user/email]]
+     [?e :user/uuid]]
    (db/db)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27,12 +27,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; write participants into the database
-(db/transact [{:user/email "laurence@gaiwan.co"
-               :user/handle "laurence.chen"
-               :user/name "Laurence"}
-              {:user/email "arne@gaiwan.co"
-               :user/handle "sunnyplexus"
-               :user/name "Arne"}])
+(db/transact [{:db/id "xxx"
+               :user/uuid (random-uuid)
+               :public-profile/name "Laurence"}
+              {:db/id "yyy"
+               :user/uuid (random-uuid)
+               :public-profile/name "Arne"
+               :public-profile/hidden? true}
+              {:tito.ticket/id 1234
+               :tito.ticket/assigned-to "xxx"}
+              {:tito.ticket/id 5678
+               :tito.ticket/assigned-to "yyy"}])
 
 ;; get the session eid
 (def session-eid (:db/id (first (query-session))))
@@ -53,7 +58,7 @@
 (-> session-entity
     :session/participants
     first
-    :user/name)
+    :public-profile/name)
 
 ;; Demonstrate the behaviors of Datomic Entity
 
