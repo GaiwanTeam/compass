@@ -83,6 +83,7 @@
        [:option {:value "twitter"} "Twitter"]
        [:option {:value "mastodon"} "Mastodon"]
        [:option {:value "linkedin"} "LinkedIn"]
+       [:option {:value "personal-site"} "Personal Site"]
        [:option {:value "other"} "Other"]]
       [:input {:name (str "link-ref-" rows-count) :type "text" :required true
                :min-length 2}]]
