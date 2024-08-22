@@ -74,23 +74,23 @@
      [:div#private-name-block])))
 
 (o/defstyled link :div
-  ([user {:keys [rows-count] :as params}]
+  ([user {:keys [row-index] :as params}]
    [:table
     [:tr.link-row
      [:td
-      [:select {:name (str "link-type-" rows-count)}
+      [:select {:name (str "link-type-" row-index)}
        [:option {:value "email"} "Email"]
        [:option {:value "twitter"} "Twitter"]
        [:option {:value "mastodon"} "Mastodon"]
        [:option {:value "linkedin"} "LinkedIn"]
        [:option {:value "personal-site"} "Personal Site"]
        [:option {:value "other"} "Other"]]
-      [:input {:name (str "link-ref-" rows-count) :type "text" :required true
+      [:input {:name (str "link-ref-" row-index) :type "text" :required true
                :min-length 2}]]
      [:td
-      [:input {:name (str "public-" rows-count) :type "checkbox"}]]
+      [:input {:name (str "public-" row-index) :type "checkbox"}]]
      [:td
-      [:input {:name  (str "private-" rows-count) :type "checkbox"}]]]]))
+      [:input {:name  (str "private-" row-index) :type "checkbox"}]]]]))
 
 (o/defstyled profile-form :div#form
   [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
@@ -142,6 +142,7 @@
          [:th "public"]
          [:th "confidential"]]]
        [:tbody#links-block]]
+      [:input#rows-count {:type "hidden" :name "rows-count" :value 0}]
       [:input#add-link {:type "button" :value "Add Links"
                         :hx-get (url-for :profile/add-link)
                         :hx-target "#links-block"
@@ -154,7 +155,9 @@
      "document.getElementById('add-link').addEventListener('htmx:configRequest', function(evt) {
       const url = new URL(evt.detail.path, window.location.origin);
       var elements = document.querySelectorAll('tr.link-row');
-      url.searchParams.set('rows-count', elements.length);
+      url.searchParams.set('row-index', elements.length);
+      // update hidden field
+      document.getElementById('rows-count').setAttribute('value', elements.length+1); 
       // update URL
       evt.detail.path = url.toString();
      });"]]))

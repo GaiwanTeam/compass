@@ -28,18 +28,56 @@
                (:identity req)
                params]})
 
+(defn index->link-data
+  [{:keys [user-id] :as params} idx]
+  (let [user-id (parse-long user-id)
+        href-key (keyword (str "link-ref-" idx))
+        type-key (keyword (str "link-type-" idx))
+        private-link-key (keyword (str "private-" idx))
+        public-link-key (keyword (str "public-" idx))
+        href-val (href-key params)
+        type-val (type-key params)
+        private-link-val (private-link-key params)
+        public-link-val (public-link-key params)
+        profile-data {:db/id (str "temp-" idx)
+                      :profile-link/user user-id
+                      :profile-link/type type-val
+                      :profile-link/href href-val}]
+    (cond-> [profile-data]
+      private-link-val
+      (conj [:db/add user-id :private-profile/links (str "temp-" idx)])
+      public-link-val
+      (conj [:db/add user-id :public-profile/links (str "temp-" idx)]))))
+
 (defn params->profile-data
   [{:keys [user-id hidden?
+           private-name-switch
            bio_public name_public
-           bio_private name_private] :as params}]
-  (cond-> {:db/id (parse-long user-id)
-           :public-profile/name name_public
-           :public-profile/bio bio_public
-           :private-profile/bio bio_public}
-    hidden?
-    (assoc :public-profile/hidden? true)
-    name_private
-    (assoc :private-profile/name name_private)))
+           bio_private name_private
+           rows-count] :as params}]
+  (tap> params)
+  (let [user-id (parse-long user-id)
+        out (cond-> {:db/id user-id
+                     :public-profile/bio bio_public
+                     :private-profile/bio bio_private
+                     :public-profile/name name_public}
+              hidden?
+              (assoc :public-profile/hidden? true))
+        ;; handle the links data
+        links  (vec (mapcat #(index->link-data params %)
+                            (range (parse-long rows-count))))
+        txes (conj links out)
+        ;; handle the user private name
+        txes (cond
+               (and name_private
+                    (= "on" private-name-switch))
+               (conj txes [:db/add user-id :private-profile/name name_private])
+               (and name_private
+                    (nil? private-name-switch))
+               (conj txes [:db/retract user-id :private-profile/name  name_private])
+               :else
+               txes)]
+    txes))
 
 (defn POST-save-profile
   "Save profile to DB
@@ -52,9 +90,13 @@
   (let [{:keys [filename tempfile] :as image}  (:image params)
         file-id (str (:db/id identity))
         filepath (str (config/value :uploads/dir) "/" file-id "_" filename)
-        {:keys [tempids]} @(db/transact [(merge
-                                          {:public-profile/avatar-url (str "/" filepath)}
-                                          (params->profile-data params))])]
+        ;; creating the transaction
+        txes (conj
+              (params->profile-data params)
+              {:db/id (parse-long (:user-id params))
+               :public-profile/avatar-url (str "/" filepath)})
+        _ (tap> {:txes txes})
+        {:keys [tempids]} @(db/transact txes)]
     ;; (tap> req)
     ;; Copy the image file content to the uploads directory
     (io/copy tempfile (io/file filepath))
