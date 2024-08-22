@@ -65,7 +65,6 @@
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
-   (tap> {:params params})
    (if (= "on" private-name-switch)
      [:div#private-name-block
       [:label {:for "private-name"} "Confidential Name"]
@@ -73,6 +72,20 @@
                :required true :min-length 2
                :value (:private-profile/name user)}]]
      [:div#private-name-block])))
+
+(o/defstyled link :div
+  ([user params]
+   [:table
+    [:tr#link-row
+     [:td
+      [:input {:name "aa" :type "text" :required true
+               :min-length 2}]
+      [:input {:name "cc" :type "text" :required true
+               :min-length 2}]]
+     [:td
+      [:input {:name "hidden?" :type "checkbox"}]]
+     [:td
+      [:input {:name "hidden?" :type "checkbox"}]]]]))
 
 (o/defstyled profile-form :div#form
   [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
@@ -115,5 +128,20 @@
        "Bio (confidential, markdown)"
        [:input {:id "bio_private" :name "bio_private" :type "text"
                 :value (:private-profile/bio user)}]]]
+
+     [:div
+      [:table
+       [:thead
+        [:tr
+         [:th "Links"]
+         [:th "public"]
+         [:th "confidential"]]]
+       [:tbody#links-block]]
+      [:input {:type "button" :value "Add Links"
+               :hx-get (url-for :profile/add-link)
+               :hx-target "#links-block"
+               :hx-select "#link-row"
+               :hx-trigger "click"
+               :hx-swap "beforeend"}]]
 
      [:input {:type "submit" :value "Save"}]]]))

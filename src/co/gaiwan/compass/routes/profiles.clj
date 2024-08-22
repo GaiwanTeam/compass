@@ -23,6 +23,11 @@
                (:identity req)
                params]})
 
+(defn GET-link [{:keys [params] :as req}]
+  {:html/body [h/link
+               (:identity req)
+               params]})
+
 (defn params->profile-data
   [{:keys [user-id hidden?
            bio_public name_public
@@ -80,6 +85,9 @@
     ["/edit/private-name"
      {:name :profile/private-name
       :get {:handler GET-private-name}}]
+    ["/edit/link"
+     {:name :profile/add-link
+      :get {:handler GET-link}}]
     ["/save"
      {:middleware [[response/wrap-requires-auth]]
       :post       {:handler POST-save-profile}}]]
