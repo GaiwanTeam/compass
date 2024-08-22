@@ -82,16 +82,20 @@
            rows-count] :as params}]
   (tap> params)
   (let [user-id (parse-long user-id)
-        out (cond-> {:db/id user-id
-                     :public-profile/bio bio_public
-                     :private-profile/bio bio_private
-                     :public-profile/name name_public}
-              hidden?
-              (assoc :public-profile/hidden? true))
+        out {:db/id user-id
+             :public-profile/bio bio_public
+             :private-profile/bio bio_private
+             :public-profile/name name_public}
         ;; handle the links data
-        links  (vec (mapcat #(index->link-data params %)
-                            (range (parse-long rows-count))))
+        links (vec (mapcat #(index->link-data params %)
+                           (range (parse-long rows-count))))
         txes (conj links out)
+        ;; handle the hidden?
+        txes (cond
+               (= "on" hidden?)
+               (conj txes [:db/add user-id :public-profile/hidden? true])
+               (nil? hidden?)
+               (conj txes [:db/retract user-id :public-profile/hidden? true]))
         ;; handle the user private name
         txes (cond
                (and name_private

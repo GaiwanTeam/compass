@@ -6,6 +6,7 @@
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [java-time.api :as time]
+   [co.gaiwan.compass.db.queries :as queries]
    [co.gaiwan.compass.html.sessions :as s]
    [lambdaisland.ornament :as o]
    [markdown-to-hiccup.core :as m]))
@@ -154,10 +155,13 @@
          [:th "public"]
          [:th "confidential"]]]
        [:tbody#links-block
-        (let [links (concat (map #(merge {:db/id (:db/id %)
-                                          :public-link true} %) (:public-profile/links user))
-                            (map #(merge {:db/id (:db/id %)
-                                          :private-link true} %) (:private-profile/links user)))]
+        (let [links (map (fn [link]
+                           (cond-> link
+                             (:public-profile/_links link)
+                             (assoc :public-link true)
+                             (:private-profile/_links link)
+                             (assoc :private-link true)))
+                         (queries/all-links (:db/id user)))]
           (map-indexed
            (fn [idx itm]
              [row itm {:row-index idx}]) links))]]
