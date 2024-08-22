@@ -101,9 +101,8 @@
                (and name_private
                     (= "on" private-name-switch))
                (conj txes [:db/add user-id :private-profile/name name_private])
-               (and name_private
-                    (nil? private-name-switch))
-               (conj txes [:db/retract user-id :private-profile/name  name_private])
+               (nil? private-name-switch)
+               (conj txes [:db/retract user-id :private-profile/name])
                :else
                txes)]
     txes))
