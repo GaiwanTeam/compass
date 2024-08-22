@@ -24,8 +24,8 @@
                params]})
 
 (defn GET-link [{:keys [params] :as req}]
-  {:html/body [h/link
-               (:identity req)
+  {:html/body [h/links-table
+               {}
                params]})
 
 (defn index->link-data

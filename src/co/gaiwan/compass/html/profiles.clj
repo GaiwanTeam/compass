@@ -73,24 +73,36 @@
                :value (:private-profile/name user)}]]
      [:div#private-name-block])))
 
-(o/defstyled link :div
-  ([user {:keys [row-index] :as params}]
+(o/defstyled row :tr.link-row
+  ([link {:keys [row-index] :as params}]
+   [:<>
+    [:td
+     ;; (pr-str link)
+     (when (:db/id link)
+       [:input {:type "hidden" :name (str "link-id-" row-index) :value (:db/id link)}])
+     (let [link-type (:profile-link/type link)]
+       [:select {:name (str "link-type-" row-index)}
+        [:option {:value "email" :selected (= link-type "email")} "Email"]
+        [:option {:value "twitter" :selected (= link-type "twitter")} "Twitter"]
+        [:option {:value "mastodon" :selected (= link-type "mastodon")} "Mastodon"]
+        [:option {:value "linkedin" :selected (= link-type "linkedin")} "LinkedIn"]
+        [:option {:value "personal-site" :selected (= link-type "personal-site")} "Personal Site"]
+        [:option {:value "other" :selected (= link-type "other")} "Other"]])
+     [:input (cond-> {:name (str "link-ref-" row-index) :type "text" :required true
+                      :min-length 2}
+               (:db/id link)
+               (assoc :value (:profile-link/href link)))]]
+    [:td
+     [:input {:name (str "public-" row-index) :type "checkbox"
+              :checked (:public-link link)}]]
+    [:td
+     [:input {:name (str "private-" row-index) :type "checkbox"
+              :checked (:private-link link)}]]]))
+
+(o/defstyled links-table :div
+  ([link {:keys [row-index] :as params}]
    [:table
-    [:tr.link-row
-     [:td
-      [:select {:name (str "link-type-" row-index)}
-       [:option {:value "email"} "Email"]
-       [:option {:value "twitter"} "Twitter"]
-       [:option {:value "mastodon"} "Mastodon"]
-       [:option {:value "linkedin"} "LinkedIn"]
-       [:option {:value "personal-site"} "Personal Site"]
-       [:option {:value "other"} "Other"]]
-      [:input {:name (str "link-ref-" row-index) :type "text" :required true
-               :min-length 2}]]
-     [:td
-      [:input {:name (str "public-" row-index) :type "checkbox"}]]
-     [:td
-      [:input {:name  (str "private-" row-index) :type "checkbox"}]]]]))
+    [row link params]]))
 
 (o/defstyled profile-form :div#form
   [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
@@ -141,7 +153,14 @@
          [:th "Links"]
          [:th "public"]
          [:th "confidential"]]]
-       [:tbody#links-block]]
+       [:tbody#links-block
+        (let [links (concat (map #(merge {:db/id (:db/id %)
+                                          :public-link true} %) (:public-profile/links user))
+                            (map #(merge {:db/id (:db/id %)
+                                          :private-link true} %) (:private-profile/links user)))]
+          (map-indexed
+           (fn [idx itm]
+             [row itm {:row-index idx}]) links))]]
       [:input#rows-count {:type "hidden" :name "rows-count" :value 0}]
       [:input#add-link {:type "button" :value "Add Links"
                         :hx-get (url-for :profile/add-link)
