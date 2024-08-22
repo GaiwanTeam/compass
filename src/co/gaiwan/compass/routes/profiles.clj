@@ -58,6 +58,10 @@
                       :profile-link/user user-id
                       :profile-link/type type-val
                       :profile-link/href href-val}]
+    (tap> {:cond1 [link-id-val (private-profile-links link-id-val) (nil? private-link-val)]
+           :cond2 [link-id-val (nil? (private-profile-links link-id-val)) private-link-val]
+           :cond3 [link-id-val (public-profile-links link-id-val) (nil? public-link-val)]
+           :cond4 [link-id-val (nil? (public-profile-links link-id-val)) public-link-val]})
     (cond-> [profile-data]
       ;; new profile-link
       (and (nil? link-id-val) private-link-val)

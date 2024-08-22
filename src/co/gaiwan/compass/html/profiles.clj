@@ -165,7 +165,7 @@
           (map-indexed
            (fn [idx itm]
              [row itm {:row-index idx}]) links))]]
-      [:input#rows-count {:type "hidden" :name "rows-count" :value 0}]
+      [:input#rows-count {:type "hidden" :name "rows-count" :value (count (queries/all-links (:db/id user)))}]
       [:input#add-link {:type "button" :value "Add Links"
                         :hx-get (url-for :profile/add-link)
                         :hx-target "#links-block"
