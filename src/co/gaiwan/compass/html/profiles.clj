@@ -108,12 +108,17 @@
 
 (o/defstyled profile-form :div#form
   ;[:form :grid {:grid-template-columns "10rem 1fr"} :gap-4]
+  [:.title :font-size-4 :font-semibold :mt-3 :mb-2]
+  [:.chk-block :mt-2 :mb-2
+   :items-center
+   :grid {:grid-template-columns "auto 1fr"}
+   :gap-1]
   ([user]
    [:<>
-    [:h2 "Edit Profile"]
+    [:h2.title "Edit Profile"]
     [:form {:method "POST" :action "/profile/save" :enctype "multipart/form-data"}
      [:input {:type "hidden" :name "user-id" :value (:db/id user)}]
-     [:div
+     [:div.chk-block
       [:input {:id "hidding" :name "hidden?" :type "checkbox"
                :checked (:public-profile/hidden? user)}]
       [:label {:for "hidding"}
@@ -123,20 +128,19 @@
       [:input {:id "name" :name "name_public" :type "text"
                :required true :min-length 2
                :value (:public-profile/name user)}]]
-     [:div
+     [:div.chk-block
+      [:input {:id "show-another-name" :name "private-name-switch" :type "checkbox"
+               :hx-get (url-for :profile/private-name)
+               :hx-target "#private-name-block"
+               :hx-select "#private-name-block"
+               :hx-trigger "change"
+               :hx-swap "outerHTML"}]
       [:label {:for "show-another-name"}
-       [:input {:id "show-another-name" :name "private-name-switch" :type "checkbox"
-                :hx-get (url-for :profile/private-name)
-                :hx-target "#private-name-block"
-                :hx-select "#private-name-block"
-                :hx-trigger "change"
-                :hx-swap "outerHTML"}]
-       "Show different name to confidantes?"]
-      [:div {:id "private-name-block"}]]
+       "Show different name to confidantes?"]]
+     [:div {:id "private-name-block"}]
      [:div
       [:label {:for "image"} "Avatar"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
-
      [:div
       [:label {:for "bio_public"}
        "Bio (public, markdown)"
