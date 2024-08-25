@@ -30,8 +30,9 @@
   ([user]
    [:<>
     {:hx-get "/profile/edit"
-     :hx-select "#form > *"
-     :hx-target "#detail"}
+     :hx-select "#form"
+     :hx-target "#detail"
+     :hx-swap "outerHTML"}
     "Edit Profile"]))
 
 (o/defstyled profile-detail :div#detail
@@ -106,16 +107,17 @@
     [row link params]]))
 
 (o/defstyled profile-form :div#form
-  [:form :grid {:grid-template-columns "10rem 1fr"} :gap-2]
+  ;[:form :grid {:grid-template-columns "10rem 1fr"} :gap-4]
   ([user]
    [:<>
     [:h2 "Edit Profile"]
     [:form {:method "POST" :action "/profile/save" :enctype "multipart/form-data"}
      [:input {:type "hidden" :name "user-id" :value (:db/id user)}]
-     [:label {:for "hidding"}
+     [:div
       [:input {:id "hidding" :name "hidden?" :type "checkbox"
                :checked (:public-profile/hidden? user)}]
-      "Hide profile from public listings?"]
+      [:label {:for "hidding"}
+       "Hide profile from public listings?"]]
      [:div
       [:label {:for "name"} "Name (public)"]
       [:input {:id "name" :name "name_public" :type "text"
