@@ -89,7 +89,8 @@
         [:option {:value "mastodon" :selected (= link-type "mastodon")} "Mastodon"]
         [:option {:value "linkedin" :selected (= link-type "linkedin")} "LinkedIn"]
         [:option {:value "personal-site" :selected (= link-type "personal-site")} "Personal Site"]
-        [:option {:value "other" :selected (= link-type "other")} "Other"]])
+        [:option {:value "other" :selected (= link-type "other")} "Other"]])]
+    [:td
      [:input (cond-> {:name (str "link-ref-" row-index) :type "text" :required true
                       :min-length 2}
                (:db/id link)
@@ -119,6 +120,7 @@
    ["&:has([type=checkbox])"
     :flex
     :gap-3]]
+  [:table :w-full]
   ([user]
    [:<>
     [:h2 "Edit Profile"]
@@ -161,7 +163,7 @@
       [:table
        [:thead
         [:tr
-         [:th "Links"]
+         [:th {:colspan 2} "Links"]
          [:th "public"]
          [:th "confidential"]]]
        [:tbody#links-block
