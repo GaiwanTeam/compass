@@ -107,52 +107,56 @@
     [row link params]]))
 
 (o/defstyled profile-form :div#form
-  ;[:form :grid {:grid-template-columns "10rem 1fr"} :gap-4]
-  [:.title :font-size-4 :font-semibold :mt-3 :mb-2]
-  [:.chk-block :mt-2 :mb-2
+  [#{:label :input} :block]
+  [:label
+   :mb-1 :mt-2
+   {:font-size t/--font-size-3
+    :font-weight t/--font-weight-6}]
+  [#{:input :textarea :select} ["&:not([type=checkbox])" :w-full :mb-3]]
+  [:label
+   :justify-start
    :items-center
-   :grid {:grid-template-columns "auto 1fr"}
-   :gap-1]
+   ["&:has([type=checkbox])"
+    :flex
+    :gap-3]]
   ([user]
    [:<>
-    [:h2.title "Edit Profile"]
+    [:h2 "Edit Profile"]
     [:form {:method "POST" :action "/profile/save" :enctype "multipart/form-data"}
      [:input {:type "hidden" :name "user-id" :value (:db/id user)}]
-     [:div.chk-block
+     [:label {:for "hidding"}
       [:input {:id "hidding" :name "hidden?" :type "checkbox"
                :checked (:public-profile/hidden? user)}]
-      [:label {:for "hidding"}
-       "Hide profile from public listings?"]]
-     [:div
-      [:label {:for "name"} "Name (public)"]
-      [:input {:id "name" :name "name_public" :type "text"
-               :required true :min-length 2
-               :value (:public-profile/name user)}]]
-     [:div.chk-block
+      "Hide profile from public listings?"]
+     [:label {:for "name"} "Name (public)"]
+     [:input {:id "name" :name "name_public" :type "text"
+              :required true :min-length 2
+              :value (:public-profile/name user)}]
+     [:label {:for "show-another-name"}
       [:input {:id "show-another-name" :name "private-name-switch" :type "checkbox"
                :hx-get (url-for :profile/private-name)
                :hx-target "#private-name-block"
                :hx-select "#private-name-block"
                :hx-trigger "change"
                :hx-swap "outerHTML"}]
-      [:label {:for "show-another-name"}
-       "Show different name to confidantes?"]]
-     [:div {:id "private-name-block"}]
+      "Show different name to confidantes?"]
+     [:div.input-block {:id "private-name-block"}]
      [:div
       [:label {:for "image"} "Avatar"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
      [:div
       [:label {:for "bio_public"}
-       "Bio (public, markdown)"
-       [:input {:id "bio_public" :name "bio_public" :type "text"
-                :value (:public-profile/bio user)}]]]
+       "Bio (public, markdown)"]
+      [:textarea {:id "bio_public" :name "bio_public"}
+       (when (:public-profile/bio user)
+         (:public-profile/bio user))]]
 
      [:div
       [:label {:for "bio_private"}
-       "Bio (confidential, markdown)"
-       [:input {:id "bio_private" :name "bio_private" :type "text"
-                :value (:private-profile/bio user)}]]]
-
+       "Bio (confidential, markdown)"]
+      [:textarea {:id "bio_private" :name "bio_private"}
+       (when (:private-profile/bio user)
+         (:private-profile/bio user))]]
      [:div
       [:table
        [:thead
@@ -178,7 +182,6 @@
                         :hx-select ".link-row"
                         :hx-trigger "click"
                         :hx-swap "beforeend"}]]
-
      [:input {:type "submit" :value "Save"}]]
     [:script
      "document.getElementById('add-link').addEventListener('htmx:configRequest', function(evt) {
