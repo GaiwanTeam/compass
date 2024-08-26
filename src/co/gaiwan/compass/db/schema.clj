@@ -32,17 +32,11 @@
    [:profile-link/type :string "`mastodon`, `linkedin`, `personal-site`, etc."]
    [:profile-link/href :string "http/mailto URL"]
 
-   ;; [:user/email :string "User email" :identity]
-   ;; [:user/name :string "User name, e.g. 'Arne'"]
-   ;; [:user/handle :string "User handle, e.g. 'sunnyplexus'"]
-   ;; [:user/title :string "User's job title or any description, e.g. 'CEO of Gaiwan'"]
-   ;; [:user/image-path :string "User image path in the compass web server"]
-
    [:discord/id :string "Unique user id on discord, a 'snowflake', i.e. uint64 encoded as string" :identity]
    [:discord/access-token :string "Discord OAuth2 access-token"]
    [:discord/expires-at :instant "Expiration timestamp for the OAuth2 token"]
    [:discord/refresh-token :string "Discord OAuth2 refresh-token"]
-   [:discord/avatar-url :string "Discord Avatar URL"]
+   [:discord/email :string "Email address we got from discord, not part of the profile, should rarely be used."]
 
    [:user-group/orga :boolean "If this group is orga group or not"]
    [:user-group/user-count :long "Number of people in this group"]

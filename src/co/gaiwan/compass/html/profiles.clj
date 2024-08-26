@@ -2,12 +2,10 @@
   "Views and components (hiccup/ornament) related to profiles"
   {:ornament/prefix "profiles-"}
   (:require
-   [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
-   [co.gaiwan.compass.http.routing :refer [url-for]]
-   [java-time.api :as time]
    [co.gaiwan.compass.db.queries :as queries]
-   [co.gaiwan.compass.html.sessions :as s]
+   [co.gaiwan.compass.http.routing :refer [url-for]]
+   [co.gaiwan.compass.model.user :as user]
    [lambdaisland.ornament :as o]
    [markdown-to-hiccup.core :as m]))
 
@@ -37,13 +35,10 @@
 
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px]
-  ([{:public-profile/keys [name avatar-url]
+  ([{:public-profile/keys [name]
      :user/keys [uuid] :as user}]
    [:<>
-    [image-frame {:profile/image
-                  (if-let [image (or (:public-profile/avatar-url user) avatar-url)]
-                    (str "url(" image ")")
-                    (str "var(--gradient-" (inc (rand-int 7)) ")"))} user]
+    [image-frame {:profile/image (user/avatar-css-value (:public-profile/avatar-url user))} user]
     [:div.details
      [:h3.title name]]
     #_[:div (pr-str user)]
@@ -52,14 +47,10 @@
 
 (o/defstyled attendee-card :div
   [image-frame :w-100px]
-  ([{:discord/keys [avatar-url]
-     :public-profile/keys [name bio]
+  ([{:public-profile/keys [name bio]
      :user/keys [uuid] :as user}]
    [:<>
-    [image-frame {:profile/image
-                  (if-let [image (or (:public-profile/avatar-url user) avatar-url)]
-                    (str "url(" image ")")
-                    (str "var(--gradient-" (inc (rand-int 7)) ")"))} user]
+    [image-frame {:profile/image (user/avatar-css-value (:public-profile/avatar-url user))} user]
     [:div.details
      [:h3 name]
      (when bio
@@ -191,7 +182,7 @@
       var elements = document.querySelectorAll('tr.link-row');
       url.searchParams.set('row-index', elements.length);
       // update hidden field
-      document.getElementById('rows-count').setAttribute('value', elements.length+1); 
+      document.getElementById('rows-count').setAttribute('value', elements.length+1);
       // update URL
       evt.detail.path = url.toString();
      });"]]))

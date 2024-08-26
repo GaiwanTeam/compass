@@ -6,9 +6,11 @@
    [co.gaiwan.compass.html.auth :as auth-html]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.http.response :as response]
+   [co.gaiwan.compass.model.user :as user]
    [co.gaiwan.compass.services.discord :as discord]
    [co.gaiwan.compass.util :as util]
    [datomic.api :as d]
+   [io.pedestal.log :as log]
    [lambdaisland.uri :as uri]))
 
 (defn GET-discord-redirect
@@ -27,6 +29,26 @@
         response/redirect
         (update :session assoc :oauth/state-id state :oauth/redirect-url (get query-params "redirect_url" "/")))))
 
+(defn user-tx [user-uuid
+               {:keys [access_token refresh_token expires_in] :as body}
+               {:keys [id email global_name] :as user-info}]
+  #_(def user-info user-info)
+  (let [discord-avatar-url (str "https://cdn.discordapp.com/avatars/" id "/" (:avatar user-info) ".png")
+        avatar-url (try
+                     (user/download-avatar discord-avatar-url)
+                     (catch Exception e
+                       (log/warn :discord/avatar-download-failed {:url discord-avatar-url}
+                                 :exception e)
+                       discord-avatar-url))]
+    [{:user/uuid                 user-uuid
+      :public-profile/name       global_name
+      :public-profile/avatar-url avatar-url
+      :discord/id                id
+      :discord/email             email
+      :discord/access-token      access_token
+      :discord/refresh-token     refresh_token
+      :discord/expires-at        (util/expires-in->instant expires_in)}]))
+
 (defn GET-discord-callback [{:keys [query-params session]}]
   (let [{:strs [code state]}  query-params
         {:keys [status body]} (oauth/exchange-code code)]
@@ -42,22 +64,13 @@
           (assoc :session {}))
 
       :else
-      (let [{:keys [access_token refresh_token expires_in]} body
-            {:keys [id global_name] :as fetch}   (discord/fetch-user-info access_token)
-            _ (tap> {:fetch fetch})
-            user-uuid                                       (:user/uuid (d/entity (db/db) [:discord/id id]) (random-uuid))
-            tx-data
-            [{:user/uuid             user-uuid
-              :public-profile/name   global_name
-              :discord/id            id
-              :discord/access-token  access_token
-              :discord/refresh-token refresh_token
-              :discord/expires-at    (util/expires-in->instant expires_in)}]
-            {:keys [status]}                                (discord/join-server access_token)]
-        @(db/transact tx-data)
+      (let [{:keys [id] :as user-info} (discord/fetch-user-info (:access_token body))
+            user-uuid                  (:user/uuid (d/entity (db/db) [:discord/id id]) (random-uuid))
+            {:keys [status]}           (discord/join-server (:access_token body))]
+        @(db/transact (user-tx user-uuid body user-info))
         {:status  302
          :headers {"Location" (:oauth/redirect-url session "/")}
-         :flash   [:p "You are signed in!"
+         :flash   [:p "Welcome to Compass, " (:global_name user-info) "!"
                    (case status
                      204 nil
                      201 [:br "You've also been added to "
@@ -84,6 +97,6 @@
    ["/logout"
     {:get {:handler (fn [req]
                       (assoc
-                       (response/redirect "/")
-                       :flash "You were signed out"
-                       :session {}))}}]])
+                        (response/redirect "/")
+                        :flash "Thank you for using Compass! Please come again."
+                        :session {}))}}]])

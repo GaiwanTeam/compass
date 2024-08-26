@@ -49,21 +49,22 @@
     (when (config/value :live.js?)
       [:script {:src "/js/live.js#css"}])
     head]
-   [:body {;; Have HTMX handle normal links
-           :hx-boost true
-           ;; Only replace what's in <main>, the navbar/menu don't get replaced
-           :hx-select "main"
-           :hx-target "main"
-
-           :hx-disinherit "hx-target hx-select"
-           ;; CSRF
-           :hx-headers (charred/write-json-str {"x-csrf-token" anti-forgery/*anti-forgery-token*})}
+   [:body
     (if (get-in request [:query-params "show-login-dialog"])
       [:dialog {:open true :style {:z-index 1}}
        [auth/popup "/"]]
       [:dialog#modal {}
        "keepme"])
     [:div#app
+     {;; Have HTMX handle normal links
+      :hx-boost true
+      ;; Only replace what's in <main>, the navbar/menu don't get replaced
+      :hx-select "main"
+      :hx-target "main"
+
+      :hx-disinherit "hx-target hx-select"
+      ;; CSRF
+      :hx-headers (charred/write-json-str {"x-csrf-token" anti-forgery/*anti-forgery-token*})}
      [nav/menu-panel user]
      [:main
       [nav/nav-bar user]

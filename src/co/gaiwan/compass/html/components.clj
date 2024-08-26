@@ -59,3 +59,8 @@
               :name  "__anti-forgery-token"
               :value anti-forgery/*anti-forgery-token*}]]
     children)))
+
+(o/defstyled avatar :img
+  :rounded-full
+  ([css-val]
+   [:<> {:src css-val}]))

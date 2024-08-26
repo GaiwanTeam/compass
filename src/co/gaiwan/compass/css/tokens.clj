@@ -12,6 +12,7 @@
 (o/defprop --size-0 0)
 (o/defprop --text-1)
 (o/defprop --text-2)
+(o/defprop --link)
 
 (o/defprop --hoc-pink "#e25f7d")
 (o/defprop --hoc-pink-1 "#e7879d")

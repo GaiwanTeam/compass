@@ -82,6 +82,10 @@ body #app >main {
 
 }
 
+p {
+  max-inline-size: inherit;
+}
+
 ul, ol {
   list-style-type: none;
   margin: var(--size-0);
@@ -107,6 +111,13 @@ dialog {
 
 body {
   font-family: Open Sans, sans-serif;
+}
+
+.notifier-dot {
+  border-radius: 9999px;
+  background-color: var(--red-8);
+  width: 0.6rem;
+  height: 0.6rem;
 }
 
 .graphics-compass_logo path {
@@ -159,33 +170,11 @@ body {
   margin-top: var(--size-0);
 }
 
-.co_gaiwan_compass_html_auth__popup .discord-login {
-  margin-bottom: var(--size-4);
-  padding-top: var(--size-3);
-  padding-bottom: var(--size-3);
-  padding-left: var(--size-4);
-  padding-right: var(--size-4);
-  background-color: #7289da;
-  border-radius: var(--radius-2);
-  color: var(--gray-0);
-  text-align: center;
-}
-
-.co_gaiwan_compass_html_auth__popup .discord-login:hover {
-  text-decoration: none;
-}
-
 .co_gaiwan_compass_html_auth__popup .graphics-cross {
   width: 3rem;
   height: 2.25rem;
   padding: 0.4rem;
   --_icon-color: var(--text-1);
-}
-
-.co_gaiwan_compass_html_auth__popup .graphics-discord {
-  height: 2rem;
-  width: 2rem;
-  --_logo-color: var(--gray-0);
 }
 
 .co_gaiwan_compass_html_navigation__nav_bar {
@@ -206,6 +195,16 @@ body {
   flex-shrink: 0;
   width: var(--font-size-5);
   height: var(--font-size-5);
+}
+
+.co_gaiwan_compass_html_navigation__nav_bar button {
+  position: relative;
+}
+
+.co_gaiwan_compass_html_navigation__nav_bar .notifier-dot {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.2rem;
 }
 
 .co_gaiwan_compass_html_navigation__menu_panel {
@@ -235,10 +234,56 @@ body {
 
 .co_gaiwan_compass_html_navigation__menu_panel li {
   font-size: var(--size-3);
-  border-width: 1px;
+  border-bottom-width: 1px;
   border-style: solid;
   border-color: var(--surface-4);
+  padding-left: var(--size-4);
+  padding-right: var(--size-4);
+  padding-top: var(--size-1);
+  padding-bottom: var(--size-1);
   font-size: var(--font-size-3);
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel li:last-child {
+  border-width: 0;
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel li.discord-button {
+  border-width: 0;
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel .co_gaiwan_compass_html_components__avatar {
+  height: 2rem;
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel .discord-button {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--size-3);
+  padding-bottom: var(--size-3);
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel .discord-button a:visited, .co_gaiwan_compass_html_navigation__menu_panel .discord-button a {
+  color: var(--gray-2);
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel .user {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2);
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel .user a {
+  text-decoration: underline;
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel a:visited {
+  color: var(--link);
+}
+
+.co_gaiwan_compass_html_navigation__menu_panel li:has(.notifier-dot) {
+  display: flex;
+  gap: var(--size-1);
 }
 
 .co_gaiwan_compass_html_layout__flash_box {
@@ -306,6 +351,57 @@ body {
 .filters-filter_section button, .filters-filter_section .co_gaiwan_compass_html_components__toggle_button, .filters-filter_section .btn {
   font-weight: 400;
   flex-grow: 1;
+}
+
+.profiles-image_frame .img {
+  width: 100%;
+  padding: var(--profiles-arc-thickness);
+}
+
+.profiles-image_frame .img >* {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 9999px;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.profiles-profile_detail .profiles-image_frame {
+  width: 100px;
+}
+
+.profiles-attendee_card .profiles-image_frame {
+  width: 100px;
+}
+
+.profiles-profile_form label, .profiles-profile_form input {
+  display: block;
+}
+
+.profiles-profile_form label {
+  margin-bottom: var(--size-1);
+  margin-top: var(--size-2);
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-6);
+}
+
+.profiles-profile_form textarea:not([type=checkbox]), .profiles-profile_form input:not([type=checkbox]), .profiles-profile_form select:not([type=checkbox]) {
+  width: 100%;
+  margin-bottom: var(--size-3);
+}
+
+.profiles-profile_form label {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.profiles-profile_form label:has([type=checkbox]) {
+  display: flex;
+  gap: var(--size-3);
+}
+
+.profiles-profile_form table {
+  width: 100%;
 }
 
 .sessions-arc {
@@ -547,25 +643,29 @@ body {
   gap: var(--size-2);
 }
 
-.profiles-image_frame .img {
-  width: 100%;
-  padding: var(--profiles-arc-thickness);
-}
-
-.profiles-image_frame .img >* {
-  width: 100%;
-  aspect-ratio: 1 / 1;
+.co_gaiwan_compass_html_components__avatar {
   border-radius: 9999px;
-  background-size: cover;
-  background-position: 50% 50%;
 }
 
-.profiles-profile_detail .profiles-image_frame {
-  width: 100px;
+.co_gaiwan_compass_html_auth__discord_button {
+  padding-bottom: var(--size-3);
+  --_ink-shadow: none;
+  text-align: center;
+  margin-bottom: var(--size-4);
+  background-color: #7289da;
+  padding-right: var(--size-4);
+  border-radius: var(--radius-2);
+  color: var(--gray-0);
+  padding-left: var(--size-4);
+  padding-top: var(--size-3);
 }
 
-.profiles-profile_form form {
-  display: grid;
-  grid-template-columns: 10rem 1fr;
-  gap: var(--size-2);
+.co_gaiwan_compass_html_auth__discord_button:hover {
+  text-decoration: none;
+}
+
+.co_gaiwan_compass_html_auth__discord_button .graphics-discord {
+  height: 2rem;
+  width: 2rem;
+  --_logo-color: var(--gray-0);
 }
