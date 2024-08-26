@@ -2,15 +2,16 @@
  :compass/origin "https://compass.heartofclojure.eu"
 
  ;; Heart of Clojure Server
- :discord/client-id          "1228962758796775444"
- :discord/public-key         "f58a0fd30eaecaa690e8065717f61988d6fbdb5ee11658469d86ad016380656e"
- :discord/server-id          "1217429335221342218"
- :discord/ticket-holder-role "1267502146643820564"
- :discord/ticket-roles       {"crew"    "1217465896369524828"
-                              "sponsor" "1258771176134541312"
-                              "speaker" "1256227155143295076"}
+ :discord/client-id    "1228962758796775444"
+ :discord/public-key   "f58a0fd30eaecaa690e8065717f61988d6fbdb5ee11658469d86ad016380656e"
+ :discord/server-id    "1217429335221342218"
+ :discord/ticket-roles {"crew"           "1217465896369524828"
+                        "sponsor"        "1258771176134541312"
+                        "speaker"        "1256227155143295076"
+                        "regular-ticket" "1267502146643820564"
+                        "streaming"      "1276449596171747339"}
  ;; confgure locally
  ;; :discord/client-secret ""
  ;; :discord/bot-token ""
- :uploads/dir "/home/compass/uploads"
+ :uploads/dir          "/home/compass/uploads"
  }

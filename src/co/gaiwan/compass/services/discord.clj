@@ -47,13 +47,31 @@
   "Takes a Discord user id and a tito ticket map and assigns the appropriate roles to the user in the server.
 
   Returns true if it succeeded, false if not."
-  [user-id {{:keys [tito.release/slug]} :tito.ticket/release :as _ticket}]
-  (let [role-endpoint (str "/guilds/" (config/value :discord/server-id) "/members/" user-id "/roles/")]
-    (->> [(discord-bot-request :put (str role-endpoint (config/value :discord/ticket-holder-role)))
-          (when-let [special-role (get (config/value :discord/ticket-roles) slug)]
-            (discord-bot-request :put (str role-endpoint special-role)))]
-         (map #(get % :status 200))
-         (every? #(= (quot % 100) 2)))))
+  [user-id {:tito.ticket/keys [release] :as _ticket}]
+  (let [{:tito.release/keys [slug]} release
+        slug->role-id (config/value :discord/ticket-roles)
+        add-role! (fn add-role! [slug]
+                    (when-let [role-id (slug->role-id slug)]
+                      (discord-bot-request
+                       :put
+                       (str "/guilds/"  (config/value :discord/server-id)
+                            "/members/" user-id
+                            "/roles/"   role-id))))]
+    (doall
+     (every? (fn [slug]
+               (if-let [response (add-role! slug)]
+                 (= 202 (:status response))
+                 true))
+             (cond-> [slug]
+               (#{"crew"
+                  "sponsor"
+                  "speaker"
+                  "diversity-ticket"
+                  "early-bird"
+                  "regular-conference"
+                  "late-conference"
+                  "student"} slug)
+               (conj "regular-ticket"))))))
 
 ;; NOTE: we originally wanted to use the linked roles Discord feature, but the UX of that turned out to be crap.
 ;; So now we don't use it anymore and assign configured roles directly

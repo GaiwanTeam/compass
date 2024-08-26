@@ -11,4 +11,6 @@
  {:id 1494678, :title "Student", :slug "student"}
  {:id 1494672,
   :title "Opportunity Grant contribution",
-  :slug "zjzghxx797m"}]
+  :slug "zjzghxx797m"}
+ {:id 1515391, :title "Live Stream Ticket", :slug "streaming"}
+ ]
