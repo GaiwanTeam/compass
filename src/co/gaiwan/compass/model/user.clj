@@ -30,7 +30,7 @@
   (if-let [url (:public-profile/avatar-url user)]
     (if (str/starts-with? url "http")
       (str "url(" url ")")
-      (str "url(" (config/value :http/asset-prefix) "/" url ")"))
+      (str "url(" (config/value :http/asset-path) "/" url ")"))
     (str "var(--gradient-" (inc (mod (:db/id user) 7)) ")")))
 
 (defn download-avatar [url]
