@@ -96,8 +96,8 @@
                  [:strong "Claim your Ti.to ticket for full access"]]]
           [:div.notifier-dot]]))
      (for [[href caption] {"/"             "Sessions & Activities"
-                           "/attendees"    "Attendees"
-                           "/profile"      "Profile & Settings"
+                           ;; "/attendees"    "Attendees"
+                           ;; "/profile"      "Profile & Settings"
                            "/sessions/new" "Create Activity"}]
        [:li [:a {:href href
                  :on-click "document.body.classList.toggle('menu-open')"}
