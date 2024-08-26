@@ -99,7 +99,7 @@
    [capacity-gauge {:capacity #_(rand) (/ (or signup-count 0) (max capacity 1))
                     :image (if image
                              (str "url(" image ")")
-                             (str "var(--gradient-" (inc (rand-int 7)) ")"))
+                             (str "var(--gradient-" (inc (mod (:db/id session) 7)) ")"))
                     :checked? (session/participating? session user)}]))
 
 (defn fmt-dur [dur-str]
