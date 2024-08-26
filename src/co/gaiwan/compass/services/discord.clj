@@ -57,21 +57,20 @@
                        (str "/guilds/"  (config/value :discord/server-id)
                             "/members/" user-id
                             "/roles/"   role-id))))]
-    (doall
-     (every? (fn [slug]
-               (if-let [response (add-role! slug)]
-                 (= 202 (:status response))
-                 true))
-             (cond-> [slug]
-               (#{"crew"
-                  "sponsor"
-                  "speaker"
-                  "diversity-ticket"
-                  "early-bird"
-                  "regular-conference"
-                  "late-conference"
-                  "student"} slug)
-               (conj "regular-ticket"))))))
+    (every? (fn [slug]
+              (if-let [response (add-role! slug)]
+                (= 202 (:status response))
+                true))
+            (cond-> [slug]
+              (#{"crew"
+                 "sponsor"
+                 "speaker"
+                 "diversity-ticket"
+                 "early-bird"
+                 "regular-conference"
+                 "late-conference"
+                 "student"} slug)
+              (conj "regular-ticket")))))
 
 ;; NOTE: we originally wanted to use the linked roles Discord feature, but the UX of that turned out to be crap.
 ;; So now we don't use it anymore and assign configured roles directly
