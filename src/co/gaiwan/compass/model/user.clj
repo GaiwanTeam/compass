@@ -35,7 +35,7 @@
 (defn download-avatar [url]
   (let [{:keys [^bytes body headers]} (hato/get url {:as :byte-array})
         filename                      (str (sha256-hex body) "." (file-extension (get headers "content-type")))
-        target                        (io/file (config/value :uploads/dir))]
+        target                        (io/file (config/value :uploads/dir) filename)]
     (io/make-parents target)
     (with-open [f (io/output-stream target)]
       (.write f ^bytes body))
