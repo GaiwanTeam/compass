@@ -30,18 +30,17 @@
   (if-let [url (:public-profile/avatar-url user)]
     (if (str/starts-with? url "http")
       (str "url(" url ")")
-      (str "url(" (config/value :http/asset-prefix) url ")"))
+      (str "url(" (config/value :http/asset-prefix) "/" url ")"))
     (str "var(--gradient-" (inc (mod (:db/id user) 7)) ")")))
 
 (defn download-avatar [url]
   (let [{:keys [^bytes body headers]} (hato/get url {:as :byte-array})
-        target (io/file (config/value :uploads/dir) (str (sha256-hex body)
-                                                         "."
-                                                         (file-extension (get headers "content-type"))))]
+        filename                      (str (sha256-hex body) "." (file-extension (get headers "content-type")))
+        target                        (io/file (config/value :uploads/dir))]
     (io/make-parents target)
     (with-open [f (io/output-stream target)]
       (.write f ^bytes body))
-    (str "/" target)))
+    filename))
 
 (defn assigned-ticket [user]
   (first (:tito.ticket/_assigned-to user)))
