@@ -95,11 +95,9 @@
 (o/defstyled session-image+guage :div
   :p-2
   [capacity-gauge :w-100px]
-  ([{:session/keys [signup-count capacity image] :as session} user]
+  ([{:session/keys [signup-count capacity] :as session} user]
    [capacity-gauge {:capacity #_(rand) (/ (or signup-count 0) (max capacity 1))
-                    :image (if image
-                             (str "url(" image ")")
-                             (str "var(--gradient-" (inc (mod (:db/id session) 7)) ")"))
+                    :image (session/session-image-css-value session)
                     :checked? (session/participating? session user)}]))
 
 (defn fmt-dur [dur-str]

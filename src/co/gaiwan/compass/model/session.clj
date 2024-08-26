@@ -3,6 +3,7 @@
 
   Computed properties and helpers functions."
   (:require
+   [co.gaiwan.compass.model.assets :as assets]
    [java-time.api :as time]))
 
 (defn participating?
@@ -111,3 +112,8 @@
      (apply-filter sessions user k v))
    sessions
    (merge default-filters filters)))
+
+(defn session-image-css-value [session]
+  (if-let [url (:session/image session)]
+    (str "url(" (assets/asset-url url) ")")
+    (str "var(--gradient-" (inc (mod (:db/id session) 7)) ")")))

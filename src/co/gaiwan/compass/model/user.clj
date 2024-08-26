@@ -3,6 +3,7 @@
    [clojure.java.io :as io]
    [clojure.string :as str]
    [co.gaiwan.compass.config :as config]
+   [co.gaiwan.compass.model.assets :as assets]
    [hato.client :as hato])
   (:import
    (java.security MessageDigest)
@@ -28,9 +29,7 @@
 
 (defn avatar-css-value [user]
   (if-let [url (:public-profile/avatar-url user)]
-    (if (str/starts-with? url "http")
-      (str "url(" url ")")
-      (str "url(" (config/value :http/asset-path) "/" url ")"))
+    (str "url(" (assets/asset-url url) ")")
     (str "var(--gradient-" (inc (mod (:db/id user) 7)) ")")))
 
 (defn download-avatar [url]
