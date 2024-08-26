@@ -59,7 +59,7 @@
                             "/roles/"   role-id))))]
     (every? (fn [slug]
               (if-let [response (add-role! slug)]
-                (= 202 (:status response))
+                (<= 200 (:status response) 299)
                 true))
             (cond-> [slug]
               (#{"crew"

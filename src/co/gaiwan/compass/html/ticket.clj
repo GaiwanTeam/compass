@@ -9,7 +9,7 @@
     [:p "Claim your conference ticket! This will unlock full access to Compass and Discord."]
     [:form {:method "post"}
      [:label {:for "reference"} "The ticket or order reference code:"] [:br]
-     [:input (cond-> {:type "text" :required true :name "reference" :maxlength 6 :placeholder "QV3F-1"}
+     [:input (cond-> {:type "text" :required true :name "reference" :maxlength 6 :placeholder "ABCD-1"}
                ref (assoc :value ref))]
      [:br]
      [:label {:for "email"} "The email address this ticket is assigned to:"] [:br]
