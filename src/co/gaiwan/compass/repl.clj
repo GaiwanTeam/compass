@@ -16,6 +16,9 @@
          name-or-email
          )))
 
+(defn unassign-ticket [user]
+  @(db/transact [[:db/retract (:db/id (u/assigned-ticket user)) :tito.ticket/assigned-to (:db/id user)]]))
+
 (comment
   (into {}
         (:tito.ticket/release

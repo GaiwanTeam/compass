@@ -33,21 +33,25 @@
                {:keys [access_token refresh_token expires_in] :as body}
                {:keys [id email global_name] :as user-info}]
   #_(def user-info user-info)
-  (let [discord-avatar-url (str "https://cdn.discordapp.com/avatars/" id "/" (:avatar user-info) ".png")
-        avatar-url (try
-                     (user/download-avatar discord-avatar-url)
-                     (catch Exception e
-                       (log/warn :discord/avatar-download-failed {:url discord-avatar-url}
-                                 :exception e)
-                       discord-avatar-url))]
-    [{:user/uuid                 user-uuid
-      :public-profile/name       global_name
-      :public-profile/avatar-url avatar-url
-      :discord/id                id
-      :discord/email             email
-      :discord/access-token      access_token
-      :discord/refresh-token     refresh_token
-      :discord/expires-at        (util/expires-in->instant expires_in)}]))
+  (let [avatar-id (:avatar user-info)
+        discord-avatar-url (when-not (str/blank? avatar-id)
+                             (str "https://cdn.discordapp.com/avatars/" id "/" avatar-id ".png"))
+        avatar-url (when discord-avatar-url
+                     (try
+                       (user/download-avatar discord-avatar-url)
+                       (catch Exception e
+                         (log/warn :discord/avatar-download-failed {:url discord-avatar-url}
+                                   :exception e)
+                         discord-avatar-url)))]
+    [(cond-> {:user/uuid                 user-uuid
+              :public-profile/name       global_name
+              :discord/id                id
+              :discord/email             email
+              :discord/access-token      access_token
+              :discord/refresh-token     refresh_token
+              :discord/expires-at        (util/expires-in->instant expires_in)}
+       avatar-url
+       (assoc :public-profile/avatar-url avatar-url))]))
 
 (defn GET-discord-callback [{:keys [query-params session]}]
   (let [{:strs [code state]}  query-params
