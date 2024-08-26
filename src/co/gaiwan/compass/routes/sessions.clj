@@ -14,7 +14,7 @@
    [co.gaiwan.compass.html.sessions :as session-html]
    [co.gaiwan.compass.http.response :as response]
    [co.gaiwan.compass.model.session :as session]
-   [io.pedestal.log :as log]
+   [co.gaiwan.compass.model.user :as user]
    [java-time.api :as time]))
 
 (defn GET-session-new [req]
@@ -109,14 +109,14 @@
     (response/redirect ["/sessions" (get tempids "session")]
                        {:flash "Successfully created!"})))
 
-;; TODO: wrap-authorize middleware
 (defn PATCH-edit-session
   "Same as [[POST-create-session]], but edits an existing session."
   [{{:keys [id]} :path-params {:keys [image]} :params :keys [params identity]}]
   (let [id (parse-long id)
         {prev-image :session/image {organizer-id :db/id} :session/organized :as session} (db/pull '[*] id)]
     (if session
-      (if (= (:db/id identity) organizer-id)
+      (if (or (user/admin? identity)
+              (= (:db/id identity) organizer-id))
         (do
           (when (and prev-image image)
             ;; Delete old image if exists

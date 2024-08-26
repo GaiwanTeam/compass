@@ -44,6 +44,10 @@
 (defn assigned-ticket [user]
   (first (:tito.ticket/_assigned-to user)))
 
+(defn admin? [user]
+  (when-let [ticket (assigned-ticket user)]
+    (= "crew" (:tito.release/slug (:tito.ticket/release ticket)))))
+
 (comment
   (def r (hato/get "https://cdn.discordapp.com/avatars/758588684177768469/8b32119c1ae262544e2952ea60aaf9a7.png" {:as :byte-array}))
 

@@ -9,6 +9,7 @@
    [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.session :as session]
+   [co.gaiwan.compass.model.user :as user]
    [java-time.api :as time]
    [lambdaisland.ornament :as o]
    [markdown-to-hiccup.core :as m]))
@@ -225,8 +226,8 @@
        [:p "Ticket Required"])
      [:div.actions
       [participate-btn session user]
-      (when (session/organizing? session user)
-        ;; Only allow the event organizer to edit this event
+      (when (or (user/admin? user)
+                (session/organizing? session user))
         [:<>
          [:a {:href (str "/sessions/" (:db/id session) "/edit")}
           [:button  "Edit"]]
