@@ -31,7 +31,7 @@
 
 (defn user-tx [user-uuid
                {:keys [access_token refresh_token expires_in] :as body}
-               {:keys [id email global_name] :as user-info}]
+               {:keys [id email username global_name] :as user-info}]
   #_(def user-info user-info)
   (let [avatar-id (:avatar user-info)
         discord-avatar-url (when-not (str/blank? avatar-id)
@@ -44,14 +44,15 @@
                                    :exception e)
                          discord-avatar-url)))]
     [(cond-> {:user/uuid                 user-uuid
-              :public-profile/name       global_name
+              :public-profile/name       (or global_name username)
               :discord/id                id
-              :discord/email             email
               :discord/access-token      access_token
               :discord/refresh-token     refresh_token
               :discord/expires-at        (util/expires-in->instant expires_in)}
        avatar-url
-       (assoc :public-profile/avatar-url avatar-url))]))
+       (assoc :public-profile/avatar-url avatar-url)
+       email
+       (assoc :discord/email email))]))
 
 (defn GET-discord-callback [{:keys [query-params session]}]
   (let [{:strs [code state]}  query-params
