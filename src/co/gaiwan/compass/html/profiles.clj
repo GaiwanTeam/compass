@@ -38,7 +38,7 @@
   ([{:public-profile/keys [name]
      :user/keys [uuid] :as user}]
    [:<>
-    [image-frame {:profile/image (user/avatar-css-value (:public-profile/avatar-url user))} user]
+    [image-frame {:profile/image (user/avatar-css-value user)} user]
     [:div.details
      [:h3.title name]]
     #_[:div (pr-str user)]
