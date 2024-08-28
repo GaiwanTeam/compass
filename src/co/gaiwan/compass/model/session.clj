@@ -4,6 +4,7 @@
   Computed properties and helpers functions."
   (:require
    [co.gaiwan.compass.model.assets :as assets]
+   [clojure.string :as str]
    [java-time.api :as time]))
 
 (defn participating?
@@ -115,5 +116,9 @@
 
 (defn session-image-css-value [session]
   (if-let [url (:session/image session)]
-    (str "url(" (assets/asset-url url) ")")
+    (let [asset-url (assets/asset-url url)
+          asset-url (if (str/starts-with? asset-url "http")
+                      asset-url
+                      (str "/" asset-url))]
+      (str "url(" asset-url ")"))
     (str "var(--gradient-" (inc (mod (:db/id session) 7)) ")")))
