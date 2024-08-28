@@ -6,6 +6,7 @@
    [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.user :as user]
+   [co.gaiwan.compass.model.assets :as assets]
    [lambdaisland.ornament :as o]))
 
 (o/defrules notifier-dot
@@ -77,11 +78,10 @@
      [:div.user
       (when user
         [:<>
-         [c/avatar (:public-profile/avatar-url user)]
+         [c/avatar (assets/asset-url (:public-profile/avatar-url user))]
          "Signed in as " (:public-profile/name user) "." [:a {:href "/logout"} "Sign out"]])]
      [:button {:cx-toggle "menu-open" :cx-target "body"}
-      [graphics/cross]
-      ]]
+      [graphics/cross]]]
     #_[:pre (pr-str user)]
     [:ul
      [:li.discord-button
