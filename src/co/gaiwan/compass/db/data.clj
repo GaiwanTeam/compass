@@ -11,7 +11,7 @@
   [{:location/name "Het Depot"
     :db/ident      :location.type/depot}
    {:location/name "Hal 5 - Workshop Zone"
-    :db/ident      :location.type/hal5-zone-a}
+    :db/ident      :location.type/hal5}
    {:location/name "Hal 5 - Presentation Zone"
     :db/ident      :location.type/hal5-zone-b}
    {:location/name "Hal 5 - Open Zone"
