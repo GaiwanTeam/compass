@@ -24,6 +24,21 @@
      [:div
       {:style {:background-image image}}]]]))
 
+;; UI of attendee list
+
+(o/defstyled attendee-card :div
+  [image-frame :w-100px]
+  ([{:public-profile/keys [name bio]
+     :user/keys [uuid] :as user}]
+   [:<>
+    [image-frame {:profile/image (user/avatar-css-value (:public-profile/avatar-url user))} user]
+    [:div.details
+     [:h3 name]
+     (when bio
+       [:textarea (m/md->hiccup bio)])]]))
+
+;; UI of profile detail
+
 (o/defstyled edit-profile-btn :button
   ([user]
    [:<>
@@ -45,16 +60,7 @@
     [:div.actions
      [edit-profile-btn user]]]))
 
-(o/defstyled attendee-card :div
-  [image-frame :w-100px]
-  ([{:public-profile/keys [name bio]
-     :user/keys [uuid] :as user}]
-   [:<>
-    [image-frame {:profile/image (user/avatar-css-value (:public-profile/avatar-url user))} user]
-    [:div.details
-     [:h3 name]
-     (when bio
-       [:textarea (m/md->hiccup bio)])]]))
+;; UI of profile form
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
