@@ -42,6 +42,13 @@
 
 }
 
+.notifier-dot {
+  border-radius: 9999px;
+  background-color: var(--red-8);
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
 body.menu-open .co_gaiwan_compass_html_navigation__menu_panel {
   transform: translate(0, 0);
 }
@@ -113,13 +120,6 @@ body {
   font-family: Open Sans, sans-serif;
 }
 
-.notifier-dot {
-  border-radius: 9999px;
-  background-color: var(--red-8);
-  width: 0.6rem;
-  height: 0.6rem;
-}
-
 .graphics-compass_logo path {
   fill: var(--hoc-pink);
 }
@@ -152,6 +152,29 @@ body {
   animation: dash 1s linear forwards;
 }
 
+.co_gaiwan_compass_html_auth__discord_button {
+  padding-bottom: var(--size-3);
+  --_ink-shadow: none;
+  text-align: center;
+  margin-bottom: var(--size-4);
+  background-color: #7289da;
+  padding-right: var(--size-4);
+  border-radius: var(--radius-2);
+  color: var(--gray-0);
+  padding-left: var(--size-4);
+  padding-top: var(--size-3);
+}
+
+.co_gaiwan_compass_html_auth__discord_button:hover {
+  text-decoration: none;
+}
+
+.co_gaiwan_compass_html_auth__discord_button .graphics-discord {
+  height: 2rem;
+  width: 2rem;
+  --_logo-color: var(--gray-0);
+}
+
 .co_gaiwan_compass_html_auth__popup {
   display: flex;
   flex-direction: column;
@@ -175,6 +198,47 @@ body {
   height: 2.25rem;
   padding: 0.4rem;
   --_icon-color: var(--text-1);
+}
+
+.co_gaiwan_compass_html_components__toggle_button {
+  color: var(--text-2);
+}
+
+.co_gaiwan_compass_html_components__toggle_button input {
+  display: none;
+}
+
+.co_gaiwan_compass_html_components__toggle_button >.btn {
+  width: 100%;
+  border-top-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
+  border-bottom-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
+  border-top-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
+  border-bottom-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
+}
+
+.co_gaiwan_compass_html_components__toggle_button input:checked ~ .btn {
+  font-weight: 600;
+  color: var(--text-1);
+  background-color: var(--highlight);
+}
+
+.co_gaiwan_compass_html_components__toggle_group {
+  display: flex;
+  flex-direction: row;
+  --co-gaiwan-compass-html-components--toggle-radius-left: 0;
+  --co-gaiwan-compass-html-components--toggle-radius-right: 0;
+}
+
+.co_gaiwan_compass_html_components__toggle_group :first-child > .btn {
+  --co-gaiwan-compass-html-components--toggle-radius-left: 0.5em;
+}
+
+.co_gaiwan_compass_html_components__toggle_group :last-child > .btn {
+  --co-gaiwan-compass-html-components--toggle-radius-right: 0.5em;
+}
+
+.co_gaiwan_compass_html_components__avatar {
+  border-radius: 9999px;
 }
 
 .co_gaiwan_compass_html_navigation__nav_bar {
@@ -301,43 +365,6 @@ body {
   padding-left: var(--size-3);
   padding-top: var(--size-2);
   opacity: 0.5;
-}
-
-.co_gaiwan_compass_html_components__toggle_button {
-  color: var(--text-2);
-}
-
-.co_gaiwan_compass_html_components__toggle_button input {
-  display: none;
-}
-
-.co_gaiwan_compass_html_components__toggle_button >.btn {
-  width: 100%;
-  border-top-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
-  border-bottom-left-radius: var(--co-gaiwan-compass-html-components--toggle-radius-left);
-  border-top-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
-  border-bottom-right-radius: var(--co-gaiwan-compass-html-components--toggle-radius-right);
-}
-
-.co_gaiwan_compass_html_components__toggle_button input:checked ~ .btn {
-  font-weight: 600;
-  color: var(--text-1);
-  background-color: var(--highlight);
-}
-
-.co_gaiwan_compass_html_components__toggle_group {
-  display: flex;
-  flex-direction: row;
-  --co-gaiwan-compass-html-components--toggle-radius-left: 0;
-  --co-gaiwan-compass-html-components--toggle-radius-right: 0;
-}
-
-.co_gaiwan_compass_html_components__toggle_group :first-child > .btn {
-  --co-gaiwan-compass-html-components--toggle-radius-left: 0.5em;
-}
-
-.co_gaiwan_compass_html_components__toggle_group :last-child > .btn {
-  --co-gaiwan-compass-html-components--toggle-radius-right: 0.5em;
 }
 
 .filters-filter_section {
@@ -641,31 +668,4 @@ body {
 .sessions-session_form div.date-time {
   display: flex;
   gap: var(--size-2);
-}
-
-.co_gaiwan_compass_html_components__avatar {
-  border-radius: 9999px;
-}
-
-.co_gaiwan_compass_html_auth__discord_button {
-  padding-bottom: var(--size-3);
-  --_ink-shadow: none;
-  text-align: center;
-  margin-bottom: var(--size-4);
-  background-color: #7289da;
-  padding-right: var(--size-4);
-  border-radius: var(--radius-2);
-  color: var(--gray-0);
-  padding-left: var(--size-4);
-  padding-top: var(--size-3);
-}
-
-.co_gaiwan_compass_html_auth__discord_button:hover {
-  text-decoration: none;
-}
-
-.co_gaiwan_compass_html_auth__discord_button .graphics-discord {
-  height: 2rem;
-  width: 2rem;
-  --_logo-color: var(--gray-0);
 }

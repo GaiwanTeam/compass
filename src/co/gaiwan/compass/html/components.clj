@@ -60,7 +60,7 @@
               :value anti-forgery/*anti-forgery-token*}]]
     children)))
 
-(o/defstyled avatar :img
+(o/defstyled avatar :div.img
   :rounded-full
-  ([css-val]
-   [:<> {:src css-val}]))
+  ([image]
+   [:<> {:style {:background-image image}}]))

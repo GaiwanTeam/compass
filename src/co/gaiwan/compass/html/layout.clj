@@ -8,6 +8,8 @@
    [lambdaisland.ornament :as o]
    [ring.middleware.anti-forgery :as anti-forgery]))
 
+(require 'co.gaiwan.compass.css.components)
+
 (o/defrules layout
   [:body
    {:max-width "100vw"}

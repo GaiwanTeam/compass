@@ -78,7 +78,7 @@
      [:div.user
       (when user
         [:<>
-         [c/avatar (assets/asset-url (:public-profile/avatar-url user))]
+         [c/avatar (user/avatar-css-value user)]
          "Signed in as " (:public-profile/name user) "." [:a {:href "/logout"} "Sign out"]])]
      [:button {:cx-toggle "menu-open" :cx-target "body"}
       [graphics/cross]]]

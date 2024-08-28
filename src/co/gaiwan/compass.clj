@@ -49,7 +49,8 @@
   ([]
    (set-prep! :default))
   ([profile]
-   (ig-repl/set-prep! #(doto (ig-config profile) ig/load-namespaces))))
+   (ig-repl/set-prep! #(doto (ig-config profile) ig/load-namespaces))
+   (co.gaiwan.compass.css/spit-styles)))
 
 (defn- add-shutdown-hook [f]
   (.addShutdownHook (java.lang.Runtime/getRuntime) (Thread. f)))

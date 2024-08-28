@@ -1,6 +1,8 @@
-{:port            8099
- :tito/event-slug "heart-of-clojure/2024"
- :uploads/dir     "uploads"
- :dynamic-routes? false
+{:port                       8099
+ :tito/event-slug            "heart-of-clojure/2024"
+ :uploads/dir                "uploads"
+ :http/asset-path            "/uploads"
+ :dynamic-routes?            false
  :tito/sync-interval-seconds 900 ;; every 15 minutes
+ :image/fallback             "/hoc-logo-2024-avatar.png"
  }

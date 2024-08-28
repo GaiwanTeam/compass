@@ -29,7 +29,7 @@
 
 (defn avatar-css-value [user]
   (if-let [url (:public-profile/avatar-url user)]
-    (str "url(" (assets/asset-url url) ")")
+    (str "url(" (assets/image-url url) ")")
     (str "var(--gradient-" (inc (mod (:db/id user) 7)) ")")))
 
 (defn download-avatar [url]

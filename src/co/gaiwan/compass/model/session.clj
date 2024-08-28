@@ -115,10 +115,4 @@
    (merge default-filters filters)))
 
 (defn session-image-css-value [session]
-  (if-let [url (:session/image session)]
-    (let [asset-url (assets/asset-url url)
-          asset-url (if (str/starts-with? asset-url "http")
-                      asset-url
-                      (str "/" asset-url))]
-      (str "url(" asset-url ")"))
-    (str "var(--gradient-" (inc (mod (:db/id session) 7)) ")")))
+  (str "url(" (assets/image-url (:session/image session)) ")"))
