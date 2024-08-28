@@ -133,12 +133,15 @@
       {:status 404
        :html/body [:p "Not found."]})))
 
+(defn session-deleted-response [session-eid]
+  {:location :sessions/index
+   :hx/trigger (str "session-" session-eid "-deleted")})
+
 (defn DELETE-session [{:keys [path-params identity]}]
   (let [session-eid (parse-long (:id path-params))]
-    ;; FIXME: orga should also be able to delete
-    (when (= (:db/id identity) (-> session-eid db/entity :session/organized :db/id))
-      @(db/transact [[:db.fn/retractEntity session-eid]])
-      (response/redirect "/"))))
+    (when (session/organizing? (db/entity session-eid) identity)
+      @(db/transact [[:db/retractEntity session-eid]])
+      (session-deleted-response session-eid))))
 
 (defn session-updated-response [session-eid]
   {:location :sessions/index

@@ -200,6 +200,10 @@
     [:div.type (:session.type/name type)]
 
     [:div.details
+     [:a
+      {:href "/"
+       :style {:display "none"}
+       :hx-trigger (str "session-" (:db/id session) "-deleted from:body")}]
      [session-image+guage session user]
      [:h3.title title]
      [:h3.subtitle subtitle]
