@@ -6,6 +6,7 @@
    [co.gaiwan.compass.html.auth :as auth-html]
    [co.gaiwan.compass.http.oauth :as oauth]
    [co.gaiwan.compass.http.response :as response]
+   [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.user :as user]
    [co.gaiwan.compass.services.discord :as discord]
    [co.gaiwan.compass.util :as util]
@@ -38,7 +39,7 @@
                              (str "https://cdn.discordapp.com/avatars/" id "/" avatar-id ".png"))
         avatar-url (when discord-avatar-url
                      (try
-                       (user/download-avatar discord-avatar-url)
+                       (assets/download-image discord-avatar-url)
                        (catch Exception e
                          (log/warn :discord/avatar-download-failed {:url discord-avatar-url}
                                    :exception e)

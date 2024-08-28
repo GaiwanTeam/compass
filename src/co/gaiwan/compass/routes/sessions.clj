@@ -7,12 +7,11 @@
   organized by participants.
   "
   (:require
-   [clojure.java.io :as io]
-   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.sessions :as session-html]
    [co.gaiwan.compass.http.response :as response]
+   [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.session :as session]
    [co.gaiwan.compass.model.user :as user]
    [java-time.api :as time]))
@@ -51,7 +50,8 @@
   [{:keys [title subtitle start-date start-time duration-time description
            type location
            capacity organizer-id
-           ticket-required? published?]
+           ticket-required? published?
+           image]
     :or {type "activity"}}]
   (let [local-date (time/local-date start-date)
         local-time (time/local-time start-time)
@@ -73,20 +73,9 @@
       (= ticket-required? "on")
       (assoc :session/ticket-required? true)
       (= published? "on")
-      (assoc :session/published? true))))
-
-(defn session-image-file
-  (^java.io.File
-   [session-eid filename]
-   (io/file (config/value :uploads/dir) (str session-eid "_" filename))))
-
-(defn save-uploaded-image
-  [session-eid {:keys [filename tempfile]}]
-  (let [image-file (session-image-file session-eid filename)]
-    (io/make-parents image-file)
-    (io/copy tempfile image-file)
-    {:db/id session-eid
-     :session/image (.getName image-file)}))
+      (assoc :session/published? true)
+      image
+      (assoc :session/image (assets/add-to-content-addressed-storage (:content-type image) (:tempfile image))))))
 
 (defn POST-create-session
   "Create new session, save to Datomic
@@ -100,32 +89,25 @@
    :capacity \"34\",
    :ticket-required? \"on\"
    :published? \"on\"}"
-  [{:keys [params] {:keys [image]} :params}]
+  [{:keys [params]}]
   (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
-    (when image
-      @(db/transact [(save-uploaded-image (get tempids "session") image)]))
     (response/redirect ["/sessions" (get tempids "session")]
                        {:flash "Successfully created!"})))
 
 (defn PATCH-edit-session
   "Same as [[POST-create-session]], but edits an existing session."
-  [{{:keys [id]} :path-params {:keys [image]} :params :keys [params identity]}]
-  (let [id (parse-long id)
-        {prev-image :session/image {organizer-id :db/id} :session/organized :as session} (db/pull '[*] id)]
+  [{ :keys [params path-params identity]}]
+  (let [{:keys [id]} path-params
+        id (parse-long id)
+        session (db/pull '[*] id)
+        organizer-id (get-in session [:session/organized :db/id])]
     (if session
       (if (or (user/admin? identity)
               (= (:db/id identity) organizer-id))
         (do
-          (when (and prev-image image)
-            ;; Delete old image if exists
-            (io/delete-file (io/file (config/value :uploads/dir) prev-image)))
           @(db/transact
-            [(-> params
-                 params->session-data
-                 (assoc :db/id id)
-                 (into (if image
-                         (save-uploaded-image id image)
-                         [])))])
+            [(-> (params->session-data params)
+                 (assoc :db/id id))])
           {:location [:session/get {:id id}]
            :flash "Successfully edited!"})
         {:status 403

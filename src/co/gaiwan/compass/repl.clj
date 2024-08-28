@@ -1,6 +1,6 @@
 (ns co.gaiwan.compass.repl
   (:require
-   [co.gaiwan.compass.db :as db]
+   [co.gaiwan.compass.db :as db :refer :all]
    [co.gaiwan.compass.model.user :as u]))
 
 (defn user [name-or-email]
@@ -10,11 +10,15 @@
            :where
            [?e :public-profile/name ?n]
            [?e :discord/email ?m]
-           [(.contains ^String ?n ?n-e)
-            ]]
+           [(.contains ^String ?n ?n-e)]]
          (db/db)
-         name-or-email
-         )))
+         name-or-email)))
+
+(defn sessions []
+  (map db/entity (db/q '[:find [?e ...]
+                         :where
+                         [?e :session/title]]
+                       (db/db))))
 
 (defn unassign-ticket [user]
   @(db/transact [[:db/retract (:db/id (u/assigned-ticket user)) :tito.ticket/assigned-to (:db/id user)]]))

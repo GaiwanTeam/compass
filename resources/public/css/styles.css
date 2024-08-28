@@ -239,6 +239,8 @@ body {
 
 .co_gaiwan_compass_html_components__avatar {
   border-radius: 9999px;
+  aspect-ratio: 1;
+  background-size: cover;
 }
 
 .co_gaiwan_compass_html_navigation__nav_bar {

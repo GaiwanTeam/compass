@@ -4,6 +4,9 @@
  :live.js?                     true
  :tito/fake-api-stubs?         true
 
+ :uploads/dir     "resources/public/uploads"
+ :http/asset-path "/uploads"
+
  ;; Compass Test Server (https://discord.gg/WD72GE3VAj)
  ;; compass-dev bot (https://discord.com/developers/applications/983315200398733362)
  :discord/client-id          "983315200398733362"

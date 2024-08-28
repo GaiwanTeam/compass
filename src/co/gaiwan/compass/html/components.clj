@@ -62,5 +62,7 @@
 
 (o/defstyled avatar :div.img
   :rounded-full
+  {:aspect-ratio 1
+   :background-size "cover"}
   ([image]
    [:<> {:style {:background-image image}}]))
