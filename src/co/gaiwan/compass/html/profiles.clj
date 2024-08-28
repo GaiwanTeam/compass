@@ -12,17 +12,32 @@
 (o/defprop --arc-thickness "30px")
 
 (o/defstyled image-frame :div
-  [:.img :w-full
-   {:padding --arc-thickness
+  [:.img :w-100px
+   {#_#_:padding --arc-thickness
     #_#_:margin-left "-100%"}
    [:>* :w-full :aspect-square :rounded-full
     {:background-size "cover"
      :background-position "50% 50%"}]]
-  ([{:profile/keys [image]} user]
+  ([{:profile/keys [image]}]
    [:<>
     [:div.img
      [:div
       {:style {:background-image image}}]]]))
+
+;; UI of attendee list
+
+(o/defstyled attendee-card :div
+  [image-frame :w-100px]
+  ([{:public-profile/keys [name bio]
+     :user/keys [uuid] :as user}]
+   [:<>
+    [image-frame {:profile/image (user/avatar-css-value user)}]
+    [:div.details
+     [:h3 name]
+     (when bio
+       [:textarea (m/md->hiccup bio)])]]))
+
+;; UI of profile detail
 
 (o/defstyled edit-profile-btn :button
   ([user]
@@ -38,23 +53,12 @@
   ([{:public-profile/keys [name]
      :user/keys [uuid] :as user}]
    [:<>
-    [image-frame {:profile/image (user/avatar-css-value user)} user]
+    [image-frame {:profile/image (user/avatar-css-value user)}]
     [:div.details
      [:h3.title name]]
     #_[:div (pr-str user)]
     [:div.actions
      [edit-profile-btn user]]]))
-
-(o/defstyled attendee-card :div
-  [image-frame :w-100px]
-  ([{:public-profile/keys [name bio]
-     :user/keys [uuid] :as user}]
-   [:<>
-    [image-frame {:profile/image (user/avatar-css-value user)} user]
-    [:div.details
-     [:h3 name]
-     (when bio
-       [:textarea (m/md->hiccup bio)])]]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
@@ -135,6 +139,8 @@
       "Show different name to confidantes?"]
      [:div.input-block {:id "private-name-block"}]
      [:div
+      (when user
+        [image-frame {:profile/image (user/avatar-css-value user)}])
       [:label {:for "image"} "Avatar"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
      [:div
