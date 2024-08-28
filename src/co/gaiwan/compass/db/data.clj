@@ -1,32 +1,28 @@
 (ns co.gaiwan.compass.db.data
   "Static data that gets imported at boot"
-  (:require [clojure.java.io :as io]
-            [clojure.pprint :as pprint]))
+  (:require
+   [clojure.java.io :as io]
+   [clojure.string :as str]
+   [co.gaiwan.compass.model.assets :as assets]))
 
 (require 'java-time-literals.core)
 
 (defn locations []
   [{:location/name "Het Depot"
     :db/ident      :location.type/depot}
-   {:location/name "Het Depot - main stage"
-    :db/ident      :location.type/depot-main-stage}
-   {:location/name "Het Depot - Bar"
-    :db/ident      :location.type/depot-bar}
-   {:location/name "Hal 5"
-    :db/ident      :location.type/hal5}
-   {:location/name "Hal 5 - zone A"
+   {:location/name "Hal 5 - Workshop Zone"
     :db/ident      :location.type/hal5-zone-a}
-   {:location/name "Hal 5 - zone B"
+   {:location/name "Hal 5 - Presentation Zone"
     :db/ident      :location.type/hal5-zone-b}
-   {:location/name "Hal 5 - HoC Café"
+   {:location/name "Hal 5 - Open Zone"
     :db/ident      :location.type/hal5-hoc-cafe}
    {:location/name "Hal 5 - Foodcourt"
     :db/ident      :location.type/hal5-foodcourt}
-   {:location/name "Hal 5 - park"
+   {:location/name "Hal 5 - Park"
     :db/ident      :location.type/hal5-park}
-   {:location/name "Hal 5 - outside seating"
+   {:location/name "Hal 5 - Outside seating"
     :db/ident      :location.type/hal5-outside-seating}
-   {:location/name "Hal 5 - long table"
+   {:location/name "Hal 5 - Long table"
     :db/ident      :location.type/hal5-long-table}])
 
 (defn session-types []
@@ -50,5 +46,8 @@
     :db/ident           :session.type/activity}])
 
 (defn schedule []
-  (read-string (slurp (io/resource "compass/schedule.edn"))))
+  (map
+   (fn [s]
+     (update s :session/image #(assets/download-image %)))
+   (read-string (slurp (io/resource "compass/schedule.edn")))))
 

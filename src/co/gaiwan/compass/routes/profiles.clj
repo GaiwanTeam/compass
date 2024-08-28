@@ -2,12 +2,14 @@
   "We need a page/route for user's profile"
   (:require
    [clojure.java.io :as io]
+   [clojure.string :as str]
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
-   [co.gaiwan.compass.model.attendees :as attendees]
    [co.gaiwan.compass.html.profiles :as h]
    [co.gaiwan.compass.http.response :as response]
+   [co.gaiwan.compass.model.assets :as assets]
+   [co.gaiwan.compass.model.attendees :as attendees]
    [ring.util.response :as ring-response]))
 
 (defn GET-profile [req]
@@ -83,33 +85,28 @@
            private-name-switch
            bio_public name_public
            bio_private name_private
-           rows-count] :as params}]
+           rows-count
+           image] :as params}]
   (tap> params)
-  (let [user-id (parse-long user-id)
-        out {:db/id user-id
-             :public-profile/bio bio_public
-             :private-profile/bio bio_private
-             :public-profile/name name_public}
-        ;; handle the links data
-        links (vec (mapcat #(index->link-data params %)
-                           (range (parse-long rows-count))))
-        txes (conj links out)
-        ;; handle the hidden?
-        txes (cond
-               (= "on" hidden?)
-               (conj txes [:db/add user-id :public-profile/hidden? true])
-               (nil? hidden?)
-               (conj txes [:db/retract user-id :public-profile/hidden? true]))
-        ;; handle the user private name
-        txes (cond
-               (and name_private
-                    (= "on" private-name-switch))
-               (conj txes [:db/add user-id :private-profile/name name_private])
-               (nil? private-name-switch)
-               (conj txes [:db/retract user-id :private-profile/name])
-               :else
-               txes)]
-    txes))
+  (let [user-id (parse-long user-id)]
+    (cond-> (into [{:db/id user-id
+                    :public-profile/bio bio_public
+                    :public-profile/name name_public
+                    :public-profile/hidden? (= "on" hidden?)
+                    :private-profile/bio bio_private}]
+                  (mapcat #(index->link-data params %))
+                  (range (parse-long rows-count)))
+      image
+      (conj [:db/add user-id :public-profile/avatar-url
+             (assets/add-to-content-addressed-storage (:content-type image) (:tempfile image))])
+
+      (and (= "on" private-name-switch)
+           (not (str/blank? name_private)))
+      (conj [:db/add user-id :private-profile/name name_private])
+
+      (or (not= "on" private-name-switch)
+          (str/blank? name_private))
+      (conj [:db/retract user-id :private-profile/name]))))
 
 (defn POST-save-profile
   "Save profile to DB
@@ -119,24 +116,9 @@
    :tityle \"CEO of Gaiwan\"
    :image {:content-type :filename :size :tempfile}}"
   [{:keys [params identity] :as req}]
-  (let [{:keys [filename tempfile] :as image}  (:image params)
-        file-id (str (:db/id identity))
-        filepath (str (config/value :uploads/dir) "/" file-id "_" filename)
-        ;; creating the transaction
-        txes (params->profile-data params)
-        txes (if image
-               (conj txes
-                     {:db/id (parse-long (:user-id params))
-                      :public-profile/avatar-url (str "/" filepath)})
-               txes)
-        _ (tap> {:txes txes})
-        {:keys [tempids]} @(db/transact txes)]
-    ;; (tap> req)
-    ;; Copy the image file content to the uploads directory
-    (when image
-      (io/copy tempfile (io/file filepath)))
-    (response/redirect "/profile"
-                       {:flash "Successfully Saved!"})))
+  @(db/transact (params->profile-data params))
+  (response/redirect "/profile"
+                     {:flash "Successfully Saved!"}))
 
 (defn file-handler [req]
   (let [file (io/file (config/value :uploads/dir) (get-in req [:path-params :filename]))]
