@@ -75,8 +75,6 @@
       (= published? "on")
       (assoc :session/published? true))))
 
-;; FIXME images not working in frontend (issue with paths)
-
 (defn session-image-file
   (^java.io.File
    [session-eid filename]
@@ -105,7 +103,7 @@
   [{:keys [params] {:keys [image]} :params}]
   (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
     (when image
-      @(db/transact [(save-uploaded-image session-image-file image)]))
+      @(db/transact [(save-uploaded-image (get tempids "session") image)]))
     (response/redirect ["/sessions" (get tempids "session")]
                        {:flash "Successfully created!"})))
 

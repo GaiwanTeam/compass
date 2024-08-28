@@ -6,4 +6,4 @@
 (defn asset-url [url]
   (if (str/starts-with? url "http")
     url
-    (str (config/value :http/asset-path) "/" url)))
+    (str (config/value :uploads/dir) "/" url)))
