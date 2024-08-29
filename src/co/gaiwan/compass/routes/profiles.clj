@@ -111,6 +111,19 @@
                txes)]
     txes))
 
+(defn profile-image-file
+  (^java.io.File
+   [profile-eid filename]
+   (io/file (config/value :uploads/dir) (str profile-eid "_" filename))))
+
+(defn save-uploaded-image
+  [profile-eid {:keys [filename tempfile]}]
+  (let [image-file (profile-image-file profile-eid filename)]
+    (io/make-parents image-file)
+    (io/copy tempfile image-file)
+    {:db/id profile-eid
+     :public-profile/avatar-url (.getName image-file)}))
+
 (defn POST-save-profile
   "Save profile to DB
 
@@ -118,23 +131,14 @@
   {:name \"Arne\"
    :tityle \"CEO of Gaiwan\"
    :image {:content-type :filename :size :tempfile}}"
-  [{:keys [params identity] :as req}]
-  (let [{:keys [filename tempfile] :as image}  (:image params)
-        file-id (str (:db/id identity))
-        filepath (str (config/value :uploads/dir) "/" file-id "_" filename)
-        ;; creating the transaction
-        txes (params->profile-data params)
-        txes (if image
-               (conj txes
-                     {:db/id (parse-long (:user-id params))
-                      :public-profile/avatar-url (str "/" filepath)})
-               txes)
-        _ (tap> {:txes txes})
-        {:keys [tempids]} @(db/transact txes)]
-    ;; (tap> req)
-    ;; Copy the image file content to the uploads directory
+  [{:keys [params] {:keys [image]} :params}]
+  (let [{:keys [tempids]} @(db/transact (params->profile-data params))]
+    (tap> {:transact-profile true})
     (when image
-      (io/copy tempfile (io/file filepath)))
+      @(db/transact
+        [(save-uploaded-image (parse-long (:user-id params)) image)]))
+    (tap> {:image image
+           :transact-image true})
     (response/redirect "/profile"
                        {:flash "Successfully Saved!"})))
 
