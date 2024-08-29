@@ -28,12 +28,19 @@
 
 (o/defstyled attendee-card :div
   [image-frame :w-100px]
-  ([{:public-profile/keys [name bio]
+  ([{:public-profile/keys [name hidden? bio]
      :user/keys [uuid] :as user}]
    [:<>
     [image-frame {:profile/image (user/avatar-css-value user)}]
     [:div.details
      [:h3 name]
+     (if hidden?
+       [:label "Hide profile from public listing"]
+       [:label "Show profile from public listing"])
+     (when (:private-profile/name user)
+       [:div
+        [:label "Another Name:"]
+        [:label (:private-profile/name user)]])
      (when bio
        [:textarea (m/md->hiccup bio)])]]))
 
