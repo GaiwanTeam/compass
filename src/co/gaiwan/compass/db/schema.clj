@@ -61,7 +61,7 @@
    [:session.type/name :string "Type of session, e.g. talk, activity"]
    [:session.type/color :string "CSS color or var reference used for rendering"]
 
-   [:location/name :string "Name of the location" :identity]
+   [:location/name :string "Name of the location"]
    [:oauth/state-id :uuid "State parameter passed along with the oauth flow" :identity]
    [:oauth/redirect-url :string "Location to redirect to after login"]
 

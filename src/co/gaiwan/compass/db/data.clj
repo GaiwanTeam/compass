@@ -8,22 +8,8 @@
 (require 'java-time-literals.core)
 
 (defn locations []
-  [{:location/name "Het Depot"
-    :db/ident      :location.type/depot}
-   {:location/name "Hal 5 - Workshop Zone"
-    :db/ident      :location.type/hal5}
-   {:location/name "Hal 5 - Presentation Zone"
-    :db/ident      :location.type/hal5-zone-b}
-   {:location/name "Hal 5 - Open Zone"
-    :db/ident      :location.type/hal5-hoc-cafe}
-   {:location/name "Hal 5 - Foodcourt"
-    :db/ident      :location.type/hal5-foodcourt}
-   {:location/name "Hal 5 - Park"
-    :db/ident      :location.type/hal5-park}
-   {:location/name "Hal 5 - Outside seating"
-    :db/ident      :location.type/hal5-outside-seating}
-   {:location/name "Hal 5 - Long table"
-    :db/ident      :location.type/hal5-long-table}])
+  [{:location/name "Het Depot"}
+   {:location/name "Hal 5"}])
 
 (defn session-types []
   [{:session.type/name  "Talk"
