@@ -98,7 +98,8 @@
      (for [[href caption] {"/"             "Sessions & Activities"
                            ;; "/attendees"    "Attendees"
                            ;; "/profile"      "Profile & Settings"
-                           "/sessions/new" "Create Activity"}]
+                           "/sessions/new" "Create Activity"
+                           "/contact" "Add Contact"}]
        [:li [:a {:href href
                  :on-click "document.body.classList.toggle('menu-open')"}
              caption]])]]))

@@ -10,6 +10,7 @@
    [co.gaiwan.compass.http.response :as response]
    [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.attendees :as attendees]
+   [clj.qrgen :as qr]
    [ring.util.response :as ring-response]))
 
 (defn GET-profile [req]
@@ -126,6 +127,15 @@
       (ring-response/file-response (.getPath file))
       (ring-response/not-found "File not found"))))
 
+(defn GET-qr-code
+  [{:keys [identity] :as req}]
+  (let [user-eid (:db/id identity)
+        host (config/value :compass/origin)
+        url (str host "/attendees/" user-eid)
+        qr-image (qr/as-bytes (qr/from url))]
+    (-> (ring-response/response qr-image)
+        (assoc-in [:headers "content-type"] "image/png"))))
+
 (defn GET-attendees [req]
   (let [attendees (q/all-users)]
     {:html/body
@@ -153,6 +163,9 @@
    ["/uploads/:filename"
     {:middleware [[response/wrap-requires-auth]]
      :get        {:handler file-handler}}]
+   ["/contact"
+    {:middleware [[response/wrap-requires-auth]]
+     :get        {:handler GET-qr-code}}]
    ["/attendees"
     {:middleware [[response/wrap-requires-auth]]
      :get        {:handler GET-attendees}}]])

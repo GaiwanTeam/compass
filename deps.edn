@@ -24,6 +24,8 @@
                          :exclusions [joda-time/joda-time]}
   com.cnuernber/charred {:mvn/version "1.034"}
 
+  clj.qrgen/clj.qrgen {:mvn/version "0.4.0"}
+
   hato/hato                             {:mvn/version "1.0.0"}
   lambdaisland/uri                      {:mvn/version "1.19.155"}
   cheshire/cheshire                     {:mvn/version "5.13.0"}
