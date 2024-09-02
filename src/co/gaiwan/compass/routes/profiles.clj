@@ -127,11 +127,31 @@
       (ring-response/file-response (.getPath file))
       (ring-response/not-found "File not found"))))
 
+(defn eid->qr-hash
+  "create an uuid as the hash for eid to prevent guessing
+   store this uuid in the user"
+  [user-eid]
+  (let [qr-hash (random-uuid)]
+    @(db/transact [{:db/id user-eid
+                    :user/hash qr-hash}])
+    qr-hash))
+
+(defn qr-hash->eid
+  "Accept a uuid type's qr-hash, and use it to query the
+   user's eid"
+  [qr-hash]
+  (db/q '[:find ?e .
+          :in $ ?hash
+          :where
+          [?e :user/hash ?hash]]
+        (db/db) qr-hash))
+
 (defn GET-qr-code
   [{:keys [identity] :as req}]
   (let [user-eid (:db/id identity)
         host (config/value :compass/origin)
-        url (str host "/attendees/" user-eid)
+        qr-hash (eid->qr-hash user-eid)
+        url (str host "/attendees/" qr-hash)
         qr-image (qr/as-bytes (qr/from url))]
     (-> (ring-response/response qr-image)
         (assoc-in [:headers "content-type"] "image/png"))))
@@ -143,6 +163,22 @@
       [:p "The Attendees List"]
       (for [atd (attendees/user-list attendees)]
         (h/attendee-card atd))]}))
+
+(defn GET-contact
+  "Part of the url is hash of the contact's user eid
+   Decode it and add that contact"
+  [{:keys [identity] :as req}]
+  (let [user-eid (:db/id identity)
+        qr-hash (parse-uuid (get-in req [:path-params :qr-hash]))
+        contact-eid (qr-hash->eid qr-hash)
+        ;; According to the schema
+        ;; A :u/c B means that user A agrees to show their public profile to user B.
+        ;; contact -> A
+        ;; user -> B
+        _ @(db/transact [{:db/id contact-eid
+                          :user/contacts user-eid}])]
+    (response/redirect "/profile"
+                       {:flash "Successfully Saved!"})))
 
 (defn routes []
   [["/profile"
@@ -167,5 +203,9 @@
     {:middleware [[response/wrap-requires-auth]]
      :get        {:handler GET-qr-code}}]
    ["/attendees"
-    {:middleware [[response/wrap-requires-auth]]
-     :get        {:handler GET-attendees}}]])
+    [""
+     {:middleware [[response/wrap-requires-auth]]
+      :get        {:handler GET-attendees}}]
+    ["/:qr-hash"
+     {:middleware [[response/wrap-requires-auth]]
+      :get        {:handler GET-contact}}]]])
