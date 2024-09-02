@@ -12,8 +12,8 @@
 (o/defprop --arc-thickness "30px")
 
 (o/defstyled image-frame :div
-  [:.img :w-100px
-   {#_#_:padding --arc-thickness
+  [:.img :w-full
+   {:padding --arc-thickness
     #_#_:margin-left "-100%"}
    [:>* :w-full :aspect-square :rounded-full
     {:background-size "cover"
@@ -56,7 +56,7 @@
     "Edit Profile"]))
 
 (o/defstyled profile-detail :div#detail
-  [image-frame :w-100px]
+  [image-frame :w-100px {--arc-thickness "7%"}]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user}]
    [:<>
