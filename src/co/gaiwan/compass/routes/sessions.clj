@@ -34,7 +34,7 @@
 (defn GET-session [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
     {:html/body [session-html/session-detail
-                 (db/entity session-eid)
+                 (q/session session-eid)
                  (:identity req)]}))
 
 (defn GET-session-card [req]
