@@ -19,6 +19,7 @@
   --workshop-color: var(--teal-2);
   --office-hours-color: var(--red-2);
   --activity-color: var(--red-2);
+  --highlight-yellow: var(--yellow-2);
   --highlight: var(--hoc-pink-1);
 }
 
@@ -29,6 +30,7 @@
     --workshop-color: var(--teal-8);
     --office-hours-color: var(--red-9);
     --activity-color: var(--red-9);
+    --highlight-yellow: var(--yellow-9);
     --highlight: var(--hoc-pink-4);
   }
 
@@ -590,8 +592,80 @@ body {
   animation: session-card-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.sessions-session_detail {
+  margin-top: var(--size-8);
+}
+
 .sessions-session_detail .sessions-capacity_gauge {
   width: 100px;
+}
+
+.sessions-session_detail .header-row {
+  display: flex;
+  gap: var(--size-2);
+  margin-bottom: var(--size-8);
+}
+
+.sessions-session_detail .header-row .title {
+  font-size: var(--size-8);
+  text-wrap: wrap;
+}
+
+.sessions-session_detail .header-row .type {
+  background: var(--sessions-session-type-color);
+  margin: var(--size-0);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: var(--size-1);
+}
+
+.sessions-session_detail .event-at {
+  box-shadow: -14px 14px 0 -4px black;
+  background: var(--highlight-yellow);
+  padding: var(--size-4);
+  max-width: 32rem;
+  margin-top: var(--size-2);
+  margin-bottom: var(--size-6);
+  margin-left: var(--size-2);
+}
+
+.sessions-session_detail .event-at >p {
+  font-weight: 600;
+}
+
+.sessions-session_detail .event-at .datetime {
+  font-size: var(--size-7);
+  font-weight: 700;
+}
+
+.sessions-session_detail .three-box {
+  background: var(--activity-color);
+  font-size: var(--size-6);
+  margin-top: var(--size-4);
+  margin-bottom: var(--size-4);
+  display: flex;
+  padding: var(--size-4);
+  gap: var(--size-4);
+}
+
+.sessions-session_detail .three-box >div {
+  border-width: 8px;
+  font-weight: 600;
+  padding: var(--size-4);
+  width: 33%;
+  text-align: center;
+}
+
+.sessions-session_detail .three-box >div >.small {
+  font-size: var(--size-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.sessions-session_detail .three-box >div >.large {
+  font-size: var(--size-7);
+  font-weight: 700;
 }
 
 .sessions-session_list .sessions {

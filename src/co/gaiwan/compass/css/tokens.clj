@@ -34,6 +34,7 @@
 (o/defprop --activity-color)
 
 (o/defprop --highlight)
+(o/defprop --highlight-yellow)
 
 (o/defrules session-colors
   [":where(html)"
@@ -41,6 +42,7 @@
     --workshop-color     --teal-2
     --office-hours-color --red-2
     --activity-color     --red-2
+    --highlight-yellow      --yellow-2
     --highlight          --hoc-pink-1}]
 
   (gs/at-media
@@ -50,4 +52,5 @@
      --workshop-color     --teal-8
      --office-hours-color --red-9
      --activity-color     --red-9
+     --highlight-yellow      --yellow-9
      --highlight          --hoc-pink-4}]))
