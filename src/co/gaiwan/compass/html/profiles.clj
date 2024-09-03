@@ -70,6 +70,12 @@
       [:div
        [:label "Another Name:"]
        [:label (:private-profile/name user)]])
+    [:div
+     [:label "Contacts"]
+     [:ul
+      (for [c (:user/contacts user)]
+        [:li (:public-profile/name c)])]]
+
     #_[:div (pr-str user)]
     [:div.actions
      [edit-profile-btn user]]]))
