@@ -3,4 +3,5 @@
                   :dynamic? #config :dynamic-routes?}
  :compass/router {:dynamic? #config :dynamic-routes?}
  :compass/db     {:url #config :datomic/url}
- :tito/sync      {:interval-seconds #config :tito/sync-interval-seconds}}
+ :tito/sync      {:db #ig/ref :compass/db
+                  :interval-seconds #config :tito/sync-interval-seconds}}

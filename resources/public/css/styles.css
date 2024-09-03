@@ -395,12 +395,13 @@ body {
   background-position: 50% 50%;
 }
 
-.profiles-profile_detail .profiles-image_frame {
+.profiles-attendee_card .profiles-image_frame {
   width: 100px;
 }
 
-.profiles-attendee_card .profiles-image_frame {
+.profiles-profile_detail .profiles-image_frame {
   width: 100px;
+  --profiles-arc-thickness: 7%;
 }
 
 .profiles-profile_form label, .profiles-profile_form input {

@@ -1,25 +1,27 @@
 (ns co.gaiwan.compass.db
   (:require
    [clojure.walk :as walk]
-   [co.gaiwan.compass.db.data :as data]
+   [co.gaiwan.compass.db.migrations :as migrations]
    [co.gaiwan.compass.db.schema :as schema]
    [datomic.api :as d]
    [integrant.core :as ig]
    [integrant.repl.state :as state]
    [io.pedestal.log :as log]
+   [lambdaisland.wagontrain :as wagontrain]
    [potemkin.collections :as po-coll]))
 
 (declare transact)
 
 (def event-time-zone (java.time.ZoneId/of "Europe/Brussels"))
 
+(declare munge-to-db)
+
 (defmethod ig/init-key :compass/db [_ {:keys [url]}]
   (d/create-database url)
   (let [conn (d/connect url)]
-    @(transact conn (schema/schema-tx))
-    @(transact conn (data/locations))
-    @(transact conn (data/session-types))
-    @(transact conn (data/schedule))
+    @(transact conn (concat (schema/schema-tx)
+                            wagontrain/schema))
+    (wagontrain/migrate! conn (munge-to-db migrations/all))
     conn))
 
 (defmethod ig/halt-key! :compass/db [_ conn])
@@ -40,7 +42,7 @@
   (meta [this] (meta e))
   (with-meta [this m] (->munged-entity (with-meta e m))))
 
-(defn munge-to-db [value]
+(defn munge-1-to-db [value]
   (cond
     (instance? java.time.Instant value)
     (java.util.Date/from value)
@@ -51,7 +53,12 @@
     :else
     value))
 
-(defn munge-from-db [value]
+(defn munge-to-db [value]
+  (if (coll? value)
+    (walk/postwalk munge-1-to-db value)
+    value))
+
+(defn munge-1-from-db [value]
   (cond
     (instance? java.util.Date value)
     (java.time.ZonedDateTime/ofInstant
@@ -64,18 +71,23 @@
     :else
     value))
 
+(defn munge-from-db [value]
+  (if (coll? value)
+    (walk/postwalk munge-1-from-db value)
+    value))
+
 (defn pull [selector id]
-  (walk/postwalk munge-from-db (d/pull (db) selector id)))
+  (munge-from-db (d/pull (db) selector id)))
 
 (defn transact
   ([tx-data]
    (transact (conn) tx-data))
   ([conn tx-data]
    (log/trace :datomic/transacting tx-data)
-   (d/transact conn (walk/postwalk munge-to-db tx-data))))
+   (d/transact conn (munge-to-db tx-data))))
 
 (defn q [& args]
-  (walk/postwalk munge-from-db (apply d/q args)))
+  (munge-from-db (apply d/q args)))
 
 (defn entity [lookup]
   (when-let [e (d/entity (db) lookup)]
