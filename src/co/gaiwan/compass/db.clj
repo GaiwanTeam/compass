@@ -32,10 +32,10 @@
 (defn db []
   (d/db (conn)))
 
-(declare munge-from-db ->munged-entity)
+(declare munge-1-from-db ->munged-entity)
 
 (po-coll/def-map-type munged-entity [e]
-  (get [this k default-value] (munge-from-db (get e k default-value)))
+  (get [this k default-value] (munge-1-from-db (get e k default-value)))
   (assoc [this k v] (->munged-entity (assoc e k v)))
   (dissoc [this k] (->munged-entity (dissoc e k)))
   (keys [this] (keys e))
@@ -99,4 +99,6 @@
 
   (transact [{:db/id 17592186045437,
               :session/capacity 1}])
+
+  (wagontrain/applied? (conn) :add-locations)
   )
