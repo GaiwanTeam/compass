@@ -33,7 +33,8 @@ apt-get update && apt-get install -yq \
   jq \
   cron \
   tmux \
-  locales-all
+  locales-all \
+  ed
 
 # Install Clojure
 curl -sL https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh | bash
@@ -71,7 +72,9 @@ server {
     listen  [::]:80;
     server_name  compass.heartofclojure.eu;
 
-    root /data/public_html;
+    location /uploads/ {
+      alias /home/compass/uploads/;
+    }
 
     # App
     location / {
@@ -80,11 +83,6 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
      }
-
-    # Static files
-    location /_static {
-      try_files $uri $uri/ =404;
-    }
 }
 EOF
 
@@ -183,11 +181,21 @@ https://compass.heartofclojure.eu
    systemctl status txor
    systemctl status compass
 
+-= Logs =-
+
+   journalctl -u compass --follow
+   journalctl -u compass --since '10 minutes ago'
+
+-= REPL =-
+
+   rlwrap nc localhost 5555
+
 -= Locations =-
 
    Bare git repo: /home/compass/repo
    Checkouts:     /home/compass/app
    Config:        /home/compass/config.edn
+   Nginx config:  /etc/nginx/sites-enabled/default
 
 -= Database =-
 
