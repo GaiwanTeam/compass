@@ -68,7 +68,6 @@
              :session/type (keyword "session.type" type)
              :session/location (keyword "location.type" location)
              :session/organized (parse-long organizer-id)
-             :session/signup-count 0
              :session/capacity (parse-long capacity)}
       (= ticket-required? "on")
       (assoc :session/ticket-required? true)
@@ -141,21 +140,18 @@
         session-eid (parse-long (get-in req [:path-params :id]))
         session-seletor '[* {:session/type [*]
                              :session/location [*]}]
-        pull-session #(db/pull session-seletor session-eid)
-        session (pull-session)
+        session (q/session session-eid)
         capacity (:session/capacity session)
-        signup-cnt (:session/signup-count session)]
+        signup-cnt (count (:session/participants session))]
     (cond
       ;; user leaves the session
       (session/participating? session user)
-      (do @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt (dec signup-cnt)]
-                         [:db/retract session-eid :session/participants user-id]])
+      (do @(db/transact [[:db/retract session-eid :session/participants user-id]])
           (session-updated-response session-eid))
       (< (or signup-cnt 0) capacity)
       ;; user participates the session
       (do
-        @(db/transact [[:db/cas session-eid :session/signup-count signup-cnt ((fnil inc 0) signup-cnt)]
-                       [:db/add session-eid :session/participants user-id]])
+        @(db/transact [[:db/add session-eid :session/participants user-id]])
         (session-updated-response session-eid))
       :else
       (session-unchanged-response session-eid))))

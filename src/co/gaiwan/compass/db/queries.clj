@@ -3,17 +3,26 @@
   (:require
    [co.gaiwan.compass.db :as db]))
 
+#_(set! *print-namespace-maps* false)
+
+(defn session [id]
+  (let [e (db/entity id)]
+    (-> (into {} e)
+        (update :session/type db/entity)
+        (update :session/location db/entity)
+        (assoc :session/signup-count (count (:session/participants e))))))
+
 (defn all-sessions
   []
   (sort-by
    :session/time
-   (db/q
-    '[:find
-      [(pull ?e [* {:session/type [*]
-                    :session/location [*]}]) ...]
-      :where
-      [?e :session/title]]
-    (db/db))))
+   (map session
+        (db/q
+         '[:find
+           [?e ...]
+           :where
+           [?e :session/title]]
+         (db/db)))))
 
 (defn all-users []
   (sort-by
