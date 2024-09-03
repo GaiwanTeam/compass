@@ -24,6 +24,7 @@
          (o/defined-garden))))
 
 (defn on-watcher-event [e]
+  (println "File changed, reloading css")
   (when (.isFile (io/file (str (:path e))))
     (when (.endsWith (str (:path e)) ".clj")
       (require

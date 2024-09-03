@@ -184,6 +184,25 @@
 
 (o/defstyled session-detail :div
   [capacity-gauge :w-100px]
+  :mt-8
+  [:.header-row :flex :gap-2 :mb-8
+   [:.title :font-size-8 {:text-wrap :wrap}]
+   [:.header-row-text]
+   [:.type
+    {:background --session-type-color}
+    :m-0 :font-bold :uppercase :tracking-widest :p-1]]
+  [:.event-at
+   {:box-shadow "-14px 14px 0 -4px black"
+    :background t/--highlight-yellow}
+   :p-4 :max-w-lg :mt-2 :mb-6 :ml-2
+   [:>p :font-semibold]
+   [:.datetime :font-size-7 :font-bold]
+   ]
+  [:.three-box {:background t/--activity-color}
+   :font-size-6 :my-4 :flex :p-4 :gap-4
+   [:>div :border-8 :font-semibold :p-4 :w-33% :text-center
+    [:>.small :font-size-3 :uppercase :tracking-widest]
+    [:>.large :font-size-7 :font-bold]]]
   ([{:session/keys [type title subtitle organized
                     time location image capacity
                     signup-count description
@@ -196,37 +215,46 @@
      :hx-select (str "." session-detail " > *")
      :hx-disinherit "hx-target hx-select "
      :style {--session-type-color (:session.type/color type)}}
-    [:div.type (:session.type/name type)]
 
     [:div.details
      [:a
       {:href "/"
        :style {:display "none"}
        :hx-trigger (str "session-" (:db/id session) "-deleted from:body")}]
-     [session-image+guage session user]
-     [:h3.title title]
+     [:div.header-row
+      [session-image+guage session user]
+      [:div.header-row-text
+       [:div.type (:session.type/name type)]
+       [:h3.title title]]]
+     [:div.event-at
+      [:p "Event scheduled at"]
+      [:div.datetime
+       (str (time/truncate-to (time/local-time time) :minutes)
+            ", "
+            (subs (str/capitalize (str (time/day-of-week time))) 0 3)
+            " "
+            (time/format "dd.MM" time))]]
      [:h3.subtitle subtitle]
-     [:div.datetime
-      [:div
-       (str (time/truncate-to (time/local-time time) :minutes))]
-      [:div
-       (subs (str/capitalize (str (time/day-of-week time))) 0 3) " "
-       (time/format "dd.MM" time)]]
      [:div.description
       [:div (m/component (m/md->hiccup description))]]
-     [:div.location
-      [:div "Location "]
-      [:div (:location/name location)]]
-     [:div.capacity
-      [:div "Spots available:"]
-      [:div (- (or capacity 0) (or signup-count 0))]]
+     [:div.three-box
+      [:div.location
+       [:div.small "Location "]
+       [:div.large (:location/name location)]]
+      [:div.capacity
+       [:div.small "Spots available"]
+       [:div.large (- (or capacity 0) (or signup-count 0))]]
+      [:div
+       [:p.small "Ticket required"]
+       (if (:session/ticket-required? session)
+         [:p.large "YES ✅"]
+         [:p.large "NO ❎"])]]
      (when (session/organizing? session user)
        ;; Only show the participants' list to organizer.
        [:div.participants
         [:div "Participants:"]
         [:ol (map attendee participants)]])
-     (when (:session/ticket-required? session)
-       [:p "Ticket Required"])
+
      [:div.actions
       [join-btn session user]
       (when (or (user/admin? user)
