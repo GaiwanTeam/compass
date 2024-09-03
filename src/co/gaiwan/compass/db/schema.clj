@@ -7,6 +7,7 @@
 (def schema
   [;; Start user entity
    [:user/uuid :uuid "Unique user identifier" :identity]
+   [:user/hash :uuid "Temporary QR code identifier"]
    [:user/contacts :ref "People you connected with / accepted a connection
    request from. A :u/c B means that user A agrees to show their public profile
    to user B. When two people connect we create connections in both directions,
