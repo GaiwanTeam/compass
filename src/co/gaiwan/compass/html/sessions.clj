@@ -64,7 +64,7 @@
 
 (declare session-card)
 
-(o/defstyled participate-btn c/form
+(o/defstyled join-btn c/form
   [:input {:color t/--text-2
            :background-color t/--surface-3
            :border-radius t/--radius-2}]
@@ -72,10 +72,9 @@
    ;; Progressive enhancement, without htmx the form submission will kick in
    [:<>
     {:method "POST"
-     :action (str "/sessions/" (:db/id session) "/participate")}
+     :action (url-for :session/participate {:id (:db/id session)})}
     [:input {:type "submit"
-             :hx-post (str "/sessions/" (:db/id session) "/participate")
-             :hx-indicator (str "closest ." session-card)
+             :hx-post (url-for :session/participate {:id (:db/id session)})
              :hx-swap "none"
              :value
              (if (session/participating? session user)
@@ -87,7 +86,7 @@
   :mt-2
   ([session user]
    [:<>
-    [participate-btn session user]
+    [join-btn session user]
     [:a.btn {:href (str "/sessions/" (:db/id session))}
      "Details"]]))
 
@@ -156,7 +155,7 @@
 
     [:div.left
      [session-image+guage session user]
-     [participate-btn session user]]
+     [join-btn session user]]
 
     [:div.details
      [:h2.title
@@ -229,7 +228,7 @@
      (when (:session/ticket-required? session)
        [:p "Ticket Required"])
      [:div.actions
-      [participate-btn session user]
+      [join-btn session user]
       (when (or (user/admin? user)
                 (session/organizing? session user))
         [:<>

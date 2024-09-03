@@ -671,3 +671,9 @@ body {
   display: flex;
   gap: var(--size-2);
 }
+
+.sessions-join_btn input {
+  color: var(--text-2);
+  background-color: var(--surface-3);
+  border-radius: var(--radius-2);
+}

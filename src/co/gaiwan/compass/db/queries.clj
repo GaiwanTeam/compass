@@ -7,7 +7,7 @@
 
 (defn session [id]
   (let [e (db/entity id)]
-    (-> (into {} e)
+    (-> (into {:db/id (:db/id e)} e)
         (update :session/type db/entity)
         (update :session/location db/entity)
         (assoc :session/signup-count (count (:session/participants e))))))
