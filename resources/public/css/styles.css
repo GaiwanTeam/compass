@@ -492,7 +492,7 @@ body {
   --icon-color: var(--hoc-green);
 }
 
-.sessions-participate_btn input {
+.sessions-join_btn input {
   color: var(--text-2);
   background-color: var(--surface-3);
   border-radius: var(--radius-2);
@@ -670,10 +670,4 @@ body {
 .sessions-session_form div.date-time {
   display: flex;
   gap: var(--size-2);
-}
-
-.sessions-join_btn input {
-  color: var(--text-2);
-  background-color: var(--surface-3);
-  border-radius: var(--radius-2);
 }
