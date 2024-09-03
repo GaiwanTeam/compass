@@ -99,10 +99,14 @@
                            ;; "/attendees"    "Attendees"
                            ;; "/profile"      "Profile & Settings"
                            "/sessions/new" "Create Activity"
-                           "/contact" "Add Contact"}]
+                           }]
        [:li [:a {:href href
                  :on-click "document.body.classList.toggle('menu-open')"}
-             caption]])]]))
+             caption]])]
+    [:li [:a {:href (url-for :contact/qr)
+              :hx-target "#modal"
+              :on-click "document.body.classList.toggle('menu-open')"}
+          "Add Contact"]]]))
 
 (o/defrules toggle-menu-button)
 

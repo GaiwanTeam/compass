@@ -1,6 +1,7 @@
 (ns co.gaiwan.compass.routes.profiles
   "We need a page/route for user's profile"
   (:require
+   [clj.qrgen :as qr]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [co.gaiwan.compass.config :as config]
@@ -8,9 +9,9 @@
    [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.profiles :as h]
    [co.gaiwan.compass.http.response :as response]
+   [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.attendees :as attendees]
-   [clj.qrgen :as qr]
    [ring.util.response :as ring-response]))
 
 (defn GET-profile [req]
@@ -146,13 +147,19 @@
           [?e :user/hash ?hash]]
         (db/db) qr-hash))
 
+(defn GET-qr-html [req]
+  {:html/body [:div
+               [:h2 "Add Contact"]
+               [:img {:src (url-for :contact/qr-png)}]]
+   :html/layout false})
+
 (defn GET-qr-code
   [{:keys [identity] :as req}]
   (let [user-eid (:db/id identity)
         host (config/value :compass/origin)
         qr-hash (eid->qr-hash user-eid)
         url (str host "/attendees/" qr-hash)
-        qr-image (qr/as-bytes (qr/from url))]
+        qr-image (qr/as-bytes (qr/from url :size [400 400]))]
     (-> (ring-response/response qr-image)
         (assoc-in [:headers "content-type"] "image/png"))))
 
@@ -164,7 +171,10 @@
       (for [atd (attendees/user-list attendees)]
         (h/attendee-card atd))]}))
 
-(defn GET-contact
+(defn GET-contact [req]
+  {:html/body [:button {:hx-post (url-for :contact/add {:uuid "123"})}]})
+
+(defn POST-contact
   "Part of the url is hash of the contact's user eid
    Decode it and add that contact"
   [{:keys [identity] :as req}]
@@ -200,8 +210,11 @@
     {:middleware [[response/wrap-requires-auth]]
      :get        {:handler file-handler}}]
    ["/contact"
-    {:middleware [[response/wrap-requires-auth]]
-     :get        {:handler GET-qr-code}}]
+    {:middleware [[response/wrap-requires-auth]]}
+    ["/qr" {:name :contact/qr
+            :get {:handler GET-qr-html}}]
+    ["/qr.png" {:name :contact/qr-png
+                :get {:handler GET-qr-code}}]]
    ["/attendees"
     [""
      {:middleware [[response/wrap-requires-auth]]
