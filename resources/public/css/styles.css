@@ -30,7 +30,7 @@
     --workshop-color: var(--teal-8);
     --office-hours-color: var(--red-9);
     --activity-color: var(--red-9);
-    --highlight-yellow: var(--yellow-9);
+    --highlight-yellow: var(--teal-12);
     --highlight: var(--hoc-pink-4);
   }
 
@@ -640,7 +640,7 @@ body {
 }
 
 .sessions-session_detail .three-box {
-  background: var(--activity-color);
+  position: relative;
   font-size: var(--size-6);
   margin-top: var(--size-4);
   margin-bottom: var(--size-4);
@@ -666,6 +666,19 @@ body {
 .sessions-session_detail .three-box >div >.large {
   font-size: var(--size-7);
   font-weight: 700;
+}
+
+.sessions-session_detail .three-box:before {
+  width: 90%;
+  top: 0;
+  height: 110%;
+  transform: rotate(1deg);
+  position: absolute;
+  z-index: -1;
+  content: '';
+  background-color: var(--activity-color);
+  border-radius: 900px;
+  left: 5%;
 }
 
 .sessions-session_list .sessions {

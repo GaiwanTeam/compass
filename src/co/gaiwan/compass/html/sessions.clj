@@ -198,11 +198,25 @@
    [:>p :font-semibold]
    [:.datetime :font-size-7 :font-bold]
    ]
-  [:.three-box {:background t/--activity-color}
+  [:.three-box #_{:background t/--activity-color}
+   :relative
    :font-size-6 :my-4 :flex :p-4 :gap-4
    [:>div :border-8 :font-semibold :p-4 :w-33% :text-center
     [:>.small :font-size-3 :uppercase :tracking-widest]
-    [:>.large :font-size-7 :font-bold]]]
+    [:>.large :font-size-7 :font-bold]]
+   [:&:before
+    {:content "''"
+     :position "absolute"
+     :top "0"
+     :left "5%"
+     :width "90%"
+     :height "110%"
+     :z-index -1
+     :background-color t/--activity-color
+     :border-radius "900px"
+     :transform "rotate(1deg)"}
+    ]]
+
   ([{:session/keys [type title subtitle organized
                     time location image capacity
                     signup-count description
