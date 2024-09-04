@@ -99,10 +99,13 @@
       {:get {:handler GET-discord-redirect}}]
      ["/callback"
       {:get {:handler GET-discord-callback}}]]]
-   ["/login" {:get {:handler GET-login}}]
+   ["/login"
+    {:name :login/index
+     :get {:handler GET-login}}]
    ["/logout"
-    {:get {:handler (fn [req]
+    {:name :logout/index
+     :get {:handler (fn [req]
                       (assoc
-                        (response/redirect "/")
-                        :flash "Thank you for using Compass! Please come again."
-                        :session {}))}}]])
+                       (response/redirect "/")
+                       :flash "Thank you for using Compass! Please come again."
+                       :session {}))}}]])

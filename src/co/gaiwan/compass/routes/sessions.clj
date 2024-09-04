@@ -95,7 +95,7 @@
 
 (defn PATCH-edit-session
   "Same as [[POST-create-session]], but edits an existing session."
-  [{ :keys [params path-params identity]}]
+  [{:keys [params path-params identity]}]
   (let [{:keys [id]} path-params
         id (parse-long id)
         session (db/pull '[*] id)

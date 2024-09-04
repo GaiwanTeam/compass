@@ -193,7 +193,8 @@
 (defn routes []
   [["/profile"
     [""
-     {:middleware [[response/wrap-requires-auth]]
+     {:name :profile/index
+      :middleware [[response/wrap-requires-auth]]
       :get        {:handler GET-profile}}]
     ["/edit"
      {:get {:handler GET-profile-form}}]
@@ -217,7 +218,8 @@
                 :get {:handler GET-qr-code}}]]
    ["/attendees"
     [""
-     {:middleware [[response/wrap-requires-auth]]
+     {:name :attendees/index
+      :middleware [[response/wrap-requires-auth]]
       :get        {:handler GET-attendees}}]
     ["/:qr-hash"
      {:middleware [[response/wrap-requires-auth]]
