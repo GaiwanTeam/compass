@@ -607,8 +607,17 @@ body {
 }
 
 .sessions-session_detail .header-row .title {
-  font-size: var(--size-8);
+  font-size: var(--size-7);
   text-wrap: wrap;
+  word-break: break-word;
+}
+
+@media (min-width: 1024px) {
+
+  .sessions-session_detail .header-row .title {
+    font-size: var(--size-8);
+  }
+
 }
 
 .sessions-session_detail .header-row .type {
@@ -641,31 +650,63 @@ body {
 
 .sessions-session_detail .three-box {
   position: relative;
-  font-size: var(--size-6);
   margin-top: var(--size-4);
   margin-bottom: var(--size-4);
   display: flex;
   padding: var(--size-4);
   gap: var(--size-4);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+
+  .sessions-session_detail .three-box {
+    display: flex;
+    flex-direction: row;
+  }
+
 }
 
 .sessions-session_detail .three-box >div {
   border-width: 8px;
   font-weight: 600;
   padding: var(--size-4);
-  width: 33%;
   text-align: center;
 }
 
+@media (min-width: 1024px) {
+
+  .sessions-session_detail .three-box >div {
+    width: 33%;
+  }
+
+}
+
 .sessions-session_detail .three-box >div >.small {
-  font-size: var(--size-3);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
+@media (min-width: 1024px) {
+
+  .sessions-session_detail .three-box >div >.small {
+    font-size: var(--size-3);
+  }
+
+}
+
 .sessions-session_detail .three-box >div >.large {
-  font-size: var(--size-7);
+  font-size: var(--size-6);
   font-weight: 700;
+}
+
+@media (min-width: 1024px) {
+
+  .sessions-session_detail .three-box >div >.large {
+    font-size: var(--size-7);
+  }
+
 }
 
 .sessions-session_detail .three-box:before {

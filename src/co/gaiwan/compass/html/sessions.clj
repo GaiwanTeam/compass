@@ -186,7 +186,10 @@
   [capacity-gauge :w-100px]
   :mt-8
   [:.header-row :flex :gap-2 :mb-8
-   [:.title :font-size-8 {:text-wrap :wrap}]
+   [:.title :lg:font-size-8
+    :font-size-7
+    {:text-wrap :wrap
+     :word-break :break-word}]
    [:.header-row-text]
    [:.type
     {:background --session-type-color}
@@ -198,11 +201,10 @@
    [:>p :font-semibold]
    [:.datetime :font-size-7 :font-bold]]
   [:.three-box #_{:background t/--activity-color}
-   :relative
-   :font-size-6 :my-4 :flex :p-4 :gap-4
-   [:>div :border-8 :font-semibold :p-4 :w-33% :text-center
-    [:>.small :font-size-3 :uppercase :tracking-widest]
-    [:>.large :font-size-7 :font-bold]]
+   :relative :my-4 :flex :p-4 :gap-4 :lg:flex-row :flex-col
+   [:>div :border-8 :font-semibold :p-4 :lg:w-33% :text-center
+    [:>.small :lg:font-size-3 :uppercase :tracking-widest]
+    [:>.large :font-size-6 :lg:font-size-7 :font-bold]]
    [:&:before
     {:content "''"
      :position "absolute"
