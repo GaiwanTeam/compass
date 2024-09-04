@@ -186,7 +186,9 @@
         ;; contact -> A
         ;; user -> B
         _ @(db/transact [{:db/id contact-eid
-                          :user/contacts user-eid}])]
+                          :user/contacts user-eid}
+                         {:db/id user-eid
+                          :user/contacts contact-eid}])]
     (response/redirect "/profile"
                        {:flash "Successfully Saved!"})))
 
