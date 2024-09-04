@@ -2,10 +2,11 @@
   {:ornament/prefix "filters-"}
   (:require
    [co.gaiwan.compass.html.components :as c]
+   [co.gaiwan.compass.http.routing :refer [url-for]]
    [lambdaisland.ornament :as o]))
 
 (def filter-props
-  {:hx-put "/filters"
+  {:hx-put (url-for :filters/index)
    :hx-include "#filters input"
    :hx-swap "none"})
 
@@ -22,7 +23,7 @@
   :my-3
   [#{:button :.btn c/toggle-button} :font-normal :flex-grow]
   ([state]
-   [:<> {:hx-get     "/filters"
+   [:<> {:hx-get     (url-for :filters/index)
          :hx-trigger "filters-updated from:body"
          :hx-swap    "outerHTML"}
 
@@ -54,5 +55,4 @@
      {:id :spots-available,
       :caption "Spots Available",
       :checked? (get state :spots-available)}]
-    #_[:a.btn {:href "/sessions/new" :hx-boost "false"} "Create An Activity"]
-    ]))
+    #_[:a.btn {:href (url-for :session/new) :hx-boost "false"} "Create An Activity"]]))

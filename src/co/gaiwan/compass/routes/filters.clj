@@ -21,7 +21,7 @@
 
 (defn routes []
   ["/filters"
-   {:name :filters
+   {:name :filters/index
     :put {:handler PUT-filters}
     :get {:handler GET-filters}}])
 
