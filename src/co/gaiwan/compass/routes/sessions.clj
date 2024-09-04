@@ -95,7 +95,7 @@
 
 (defn PATCH-edit-session
   "Same as [[POST-create-session]], but edits an existing session."
-  [{ :keys [params path-params identity]}]
+  [{:keys [params path-params identity]}]
   (let [{:keys [id]} path-params
         id (parse-long id)
         session (db/pull '[*] id)
@@ -188,7 +188,8 @@
       :patch {:middleware [[response/wrap-requires-auth]]
               :handler PATCH-edit-session}}]
     ["/:id/edit"
-     {:get {:handler GET-session-edit}}]
+     {:name :session/edit
+      :get {:handler GET-session-edit}}]
     ["/:id/participate"
      {:name :session/participate
       :post {:middleware [[response/wrap-requires-auth]]

@@ -87,7 +87,7 @@
   ([session user]
    [:<>
     [join-btn session user]
-    [:a.btn {:href (str "/sessions/" (:db/id session))}
+    [:a.btn {:href (url-for :session/get {:id (:db/id session)})}
      "Details"]]))
 
 (o/defprop --session-type-color)
@@ -143,7 +143,7 @@
                     capacity signup-count] :as session}
     user]
    [:<>
-    {:hx-get (str "/sessions/" (:db/id session) "/card")
+    {:hx-get (url-for :session/card {:id (:db/id session)})
      :hx-trigger (str "session-" (:db/id session) "-updated from:body")
      :hx-target (str "closest ." session-card)
      :hx-select (str "." session-card " > *")
@@ -159,7 +159,7 @@
 
     [:div.details
      [:h2.title
-      [:a {:href (str "/sessions/" (:db/id session))}
+      [:a {:href (url-for :session/get {:id (:db/id session)})}
        [:span.datetime
         (str (time/truncate-to (time/local-time time) :minutes)) " · "]
        title]]
@@ -196,8 +196,7 @@
     :background t/--highlight-yellow}
    :p-4 :max-w-lg :mt-2 :mb-6 :ml-2
    [:>p :font-semibold]
-   [:.datetime :font-size-7 :font-bold]
-   ]
+   [:.datetime :font-size-7 :font-bold]]
   [:.three-box #_{:background t/--activity-color}
    :relative
    :font-size-6 :my-4 :flex :p-4 :gap-4
@@ -214,8 +213,7 @@
      :z-index -1
      :background-color t/--activity-color
      :border-radius "900px"
-     :transform "rotate(1deg)"}
-    ]]
+     :transform "rotate(1deg)"}]]
 
   ([{:session/keys [type title subtitle organized
                     time location image capacity
@@ -223,7 +221,7 @@
                     participants] :as session}
     user]
    [:<>
-    {:hx-get (str "/sessions/" (:db/id session))
+    {:hx-get (url-for :session/get {:id (:db/id session)})
      :hx-trigger (str "session-" (:db/id session) "-updated from:body")
      :hx-target (str "closest ." session-detail)
      :hx-select (str "." session-detail " > *")
@@ -232,7 +230,7 @@
 
     [:div.details
      [:a
-      {:href "/"
+      {:href (url-for :sessions/index)
        :style {:display "none"}
        :hx-trigger (str "session-" (:db/id session) "-deleted from:body")}]
      [:div.header-row
@@ -274,9 +272,9 @@
       (when (or (user/admin? user)
                 (session/organizing? session user))
         [:<>
-         [:a {:href (str "/sessions/" (:db/id session) "/edit")}
+         [:a {:href (url-for :session/edit {:id (:db/id session)})}
           [:button  "Edit"]]
-         [:button {:hx-delete (str "/sessions/" (:db/id session))} "Delete"]])]
+         [:button {:hx-delete (url-for :session/get {:id (:db/id session)})} "Delete"]])]
      #_[:p.host "Organized by " organized]
      #_[:ol (map attendee participants)]
      #_[:p (pr-str user)]

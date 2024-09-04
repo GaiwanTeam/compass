@@ -49,7 +49,7 @@
 (o/defstyled edit-profile-btn :button
   ([user]
    [:<>
-    {:hx-get "/profile/edit"
+    {:hx-get (url-for :profile/edit)
      :hx-select "#form"
      :hx-target "#detail"
      :hx-swap "outerHTML"}

@@ -31,7 +31,7 @@
   ([user]
    [:<>
     [graphics/compass-logo]
-    [:h1 [:a {:href "/"} "Compass"]]
+    [:h1 [:a {:href (url-for :sessions/index)} "Compass"]]
     [:button {:cx-toggle "menu-open" :cx-target "body"}
      [graphics/hamburger]
      (when (and user (not (user/assigned-ticket user)))
@@ -42,7 +42,7 @@
     (into [:a props] children)
     (into
      [:a {:hx-target "#modal"
-          :hx-get (str "/login?next=" (:href props))
+          :hx-get (str (url-for :login/index) "?next=" (:href props))
           :href "#"}]
      children)))
 
@@ -79,7 +79,7 @@
       (when user
         [:<>
          [c/avatar (user/avatar-css-value user)]
-         "Signed in as " (:public-profile/name user) "." [:a {:href "/logout"} "Sign out"]])]
+         "Signed in as " (:public-profile/name user) "." [:a {:href (url-for :logout/index)} "Sign out"]])]
      [:button {:cx-toggle "menu-open" :cx-target "body"}
       [graphics/cross]]]
     #_[:pre (pr-str user)]
@@ -95,18 +95,17 @@
                      :on-click "document.body.classList.toggle('menu-open')"}
                  [:strong "Claim your Ti.to ticket for full access"]]]
           [:div.notifier-dot]]))
-     (for [[href caption] {"/"             "Sessions & Activities"
-                           ;; "/attendees"    "Attendees"
-                           ;; "/profile"      "Profile & Settings"
-                           "/sessions/new" "Create Activity"
-                           }]
+     (for [[href caption] {(url-for :sessions/index)        "Sessions & Activities"
+                           ;; (url-for :attendees/index)    "Attendees"
+                           ;; (url-for :profile/index)      "Profile & Settings"
+                           (url-for :session/new) "Create Activity"}]
        [:li [:a {:href href
                  :on-click "document.body.classList.toggle('menu-open')"}
-             caption]])]
-    [:li [:a {:href (url-for :contact/qr)
-              :hx-target "#modal"
-              :on-click "document.body.classList.toggle('menu-open')"}
-          "Add Contact"]]]))
+             caption]])
+     [:li [:a {:href (url-for :contact/qr)
+               :hx-target "#modal"
+               :on-click "document.body.classList.toggle('menu-open')"}
+           "Add Contact"]]]]))
 
 (o/defrules toggle-menu-button)
 
