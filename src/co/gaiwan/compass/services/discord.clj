@@ -4,7 +4,8 @@
    [clojure.string :as str]
    [co.gaiwan.compass.config :as config]
    [hato.client :as hato]
-   [io.pedestal.log :as log]))
+   [io.pedestal.log :as log]
+   [co.gaiwan.compass.db :as db]))
 
 (def discord-api-endpoint "https://discord.com/api/v10")
 
@@ -23,7 +24,7 @@
                    :as :auto
                    :headers (bot-auth-headers)}
             body (assoc :content-type :json :form-params body)))]
-     (log/trace :discord/request (:request response) :discord/response (dissoc response :request))
+     (log/trace :discord/request (-> response :request (update :headers dissoc "Authorization")) :discord/response (dissoc response :request))
      response)))
 
 (defn fetch-user-info [token]
@@ -71,3 +72,79 @@
                  "late-conference"
                  "student"} slug)
               (conj "regular-ticket")))))
+
+(defn create-session-thread
+  "Create private thread for session in channel configured by `:discord/session-channel-id`."
+  [session]
+  (let [{:keys [status] thread :body :as response}
+        (discord-bot-request
+         :post
+         (str "/channels/" (config/value :discord/session-channel-id) "/threads")
+         {:name (->> session :session/title (take 100) str/join)
+          :type 12 ;; PRIVATE_THREAD
+          :invitable true})]
+    (case status
+      201
+      (do
+        (db/transact [[:db/add (:db/id session) :session/thread-id (:id thread)]])
+        thread)
+      (log/error :discord/thread-create-failed "Failed to create session thread"
+                 :session session
+                 :response (dissoc response :request)))))
+
+(defn get-session-thread
+  "Get existing thread for session (or `nil`)."
+  [session]
+  (let [id (:session/thread-id session)
+        {channel :body :keys [status] :as response} (discord-bot-request :get (str "/channels/" id))]
+    (case status
+      ;; thread already exists
+      200 channel
+      ;; thread does not exist
+      404 nil
+      ;; something else?
+      (log/error
+        :discord/thread-fetch-failed (str "Unhandled status code " status " for getting session thread")
+        :session session
+        :response (dissoc response :request)))))
+
+(defn user-mention
+  "Discord ID -> text that pings user"
+  [user-id]
+  (str "<@" user-id ">"))
+
+(defn send-session-thread-message
+  "Send a message to the session thread belonging to `session-id`.
+
+  Returns `nil`.
+  A `message` containing @everyone will send a notification to all thread members.
+  A `message` mentioning one or more individual users ([[user-mention]]) will notify and add those users to the thread.
+  Will fail if there is no session thread (yet) or if the sending the message fails.
+  In both cases, an error message is logged."
+  [session-id message]
+  (if-let [{:keys [id] :as _thread} (get-session-thread (db/entity session-id))]
+    (let [{:keys [status] :as response}
+          (discord-bot-request
+           :post
+           (str "/channels/" id "/messages")
+           {:content message
+            :allowed_mentions {:parse ["users" "everyone"]}})]
+      (when-not (= status 200)
+        (log/error
+          :discord/message-send-fail "Failed to send message to session thread"
+          :session (db/entity session-id)
+          :response (dissoc response :request))))
+    (log/error :discord/missing-session-thread "Tried to send message to session thread that doesn't exist")))
+
+(defn add-to-session-thread
+  "Add user with `user-id` to session thread of session with `session-id`.
+
+  Returns `nil`. In case of failure, an error message is logged."
+  [session-id user-id]
+  (let [session (db/entity session-id)
+        {:keys [status] :as response} (discord-bot-request :put (str "/channels/" (:session/thread-id session) "/thread-members/" user-id))]
+    (when-not (= status 204)
+      (log/error
+        :discord/thread-member-add-failed "Failed to add member to session thread"
+        :session session
+        :response (dissoc response :request)))))

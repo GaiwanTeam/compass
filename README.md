@@ -41,6 +41,7 @@ To get started you need to set up a discord bot, and then create a
  :discord/client-id     "..."
  :discord/public-key    "..."
  :discord/server-id "..."
+ :discord/session-channel-id "..." ;; ID of the channel where session threads will be created
  :discord/ticket-holder-role "role-id"
  :discord/ticket-roles
  {"release-slug" "role-id"}}

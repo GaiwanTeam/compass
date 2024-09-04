@@ -57,6 +57,7 @@
    [:session/ticket-required? :boolean "If this session requires a ticket"]
    [:session/published? :boolean "If this session is published/visible?"]
    [:session/participants :ref "reference points to the user" :many]
+   [:session/thread-id :string "ID of the Discord thread associated with the session, if any"]
 
    [:session.type/name :string "Type of session, e.g. talk, activity"]
    [:session.type/color :string "CSS color or var reference used for rendering"]
