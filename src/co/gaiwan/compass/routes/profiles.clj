@@ -149,6 +149,7 @@
 
 (defn GET-qr-html [req]
   {:html/body [:div
+               {:style {:margin "var(--size-4)"}}
                [:h2 "Add Contact"]
                [:img {:src (url-for :contact/qr-png)}]]
    :html/layout false})
