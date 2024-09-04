@@ -188,7 +188,8 @@
       :patch {:middleware [[response/wrap-requires-auth]]
               :handler PATCH-edit-session}}]
     ["/:id/edit"
-     {:get {:handler GET-session-edit}}]
+     {:name :session/edit
+      :get {:handler GET-session-edit}}]
     ["/:id/participate"
      {:name :session/participate
       :post {:middleware [[response/wrap-requires-auth]]
