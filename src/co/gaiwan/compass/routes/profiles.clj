@@ -158,8 +158,8 @@
   [{:keys [identity] :as req}]
   (let [user-eid (:db/id identity)
         host (config/value :compass/origin)
-        qr-hash (eid->qr-hash user-eid)
-        url (str host "/attendees/" qr-hash)
+        qr-hash (str (eid->qr-hash user-eid))
+        url (str host (url-for :contact/add {:qr-hash qr-hash}))
         qr-image (qr/as-bytes (qr/from url :size [400 400]))]
     (-> (ring-response/response qr-image)
         (assoc-in [:headers "content-type"] "image/png"))))
@@ -172,8 +172,17 @@
       (for [atd (attendees/user-list attendees)]
         (h/attendee-card atd))]}))
 
-(defn GET-contact [req]
-  {:html/body [:button {:hx-post (url-for :contact/add {:uuid "123"})}]})
+(defn GET-contact
+  [req]
+  {:html/body
+   [:div
+    [:a
+     {:href (url-for :profile/index)
+      :style {:display "none"}
+      :hx-trigger "contact-added from:body"}]
+    [:button
+     {:hx-post (url-for :contact/add {:qr-hash (get-in req [:path-params :qr-hash])})}
+     (str "Accept invite")]]})
 
 (defn POST-contact
   "Part of the url is hash of the contact's user eid
@@ -190,8 +199,8 @@
                           :user/contacts user-eid}
                          {:db/id user-eid
                           :user/contacts contact-eid}])]
-    (response/redirect "/profile"
-                       {:flash "Successfully Saved!"})))
+    {:location :contact/add
+     :hx/trigger "contact-added"}))
 
 (defn routes []
   [["/profile"
@@ -219,12 +228,13 @@
     ["/qr" {:name :contact/qr
             :get {:handler GET-qr-html}}]
     ["/qr.png" {:name :contact/qr-png
-                :get {:handler GET-qr-code}}]]
+                :get {:handler GET-qr-code}}]
+    ["/:qr-hash"
+     {:name :contact/add
+      :post       {:handler POST-contact}
+      :get        {:handler GET-contact}}]]
    ["/attendees"
     [""
      {:name :attendees/index
       :middleware [[response/wrap-requires-auth]]
-      :get        {:handler GET-attendees}}]
-    ["/:qr-hash"
-     {:middleware [[response/wrap-requires-auth]]
-      :get        {:handler GET-contact}}]]])
+      :get        {:handler GET-attendees}}]]])
