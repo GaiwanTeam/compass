@@ -197,7 +197,8 @@
       :middleware [[response/wrap-requires-auth]]
       :get        {:handler GET-profile}}]
     ["/edit"
-     {:get {:handler GET-profile-form}}]
+     {:name :profile/edit
+      :get {:handler GET-profile-form}}]
     ["/edit/private-name"
      {:name :profile/private-name
       :get {:handler GET-private-name}}]
