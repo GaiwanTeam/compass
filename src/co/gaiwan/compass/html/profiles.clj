@@ -57,7 +57,7 @@
 
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px {--arc-thickness "7%"}]
-  [:.contact-list :flex :flex-wrap :gap-2]
+  [:.contact-list :flex :flex-wrap :gap-4]
   [:.remove-btn
    :cursor-pointer]
   [:.contact
