@@ -2,6 +2,7 @@
   "Views and components (hiccup/ornament) related to profiles"
   {:ornament/prefix "profiles-"}
   (:require
+   [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.db.queries :as queries]
    [co.gaiwan.compass.http.routing :refer [url-for]]
@@ -83,7 +84,7 @@
       (for [c (:user/contacts user)]
         [:div.contact
          [image-frame {:profile/image (user/avatar-css-value c)}]
-         [:button.remove-btn "Remove"]])]]
+         [:button.remove-btn [graphics/person-remove]]])]]
 
     #_[:div (pr-str user)]
     ;; Disable Edit Profile before we can show profile details pretty
