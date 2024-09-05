@@ -57,7 +57,13 @@
 
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px {--arc-thickness "7%"}]
-  ;[:span [image-frame :w-50px {--arc-thickness "7%"}]]
+  [:.contact-list :flex :flex-wrap :gap-2]
+  [:.remove-btn
+   :cursor-pointer]
+  [:.contact
+   :flex
+   :items-center
+   [image-frame :w-50px {--arc-thickness "7%"}]]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user}]
    [:<>
@@ -72,10 +78,12 @@
        [:label "Another Name:"]
        [:label (:private-profile/name user)]])
     [:div
-     [:label "Contacts"]
-     [:ul
+     [:h3 "Contacts"]
+     [:div.contact-list
       (for [c (:user/contacts user)]
-        [:span [image-frame {:profile/image (user/avatar-css-value c)}]])]]
+        [:div.contact
+         [image-frame {:profile/image (user/avatar-css-value c)}]
+         [:button.remove-btn "Remove"]])]]
 
     #_[:div (pr-str user)]
     [:div.actions
