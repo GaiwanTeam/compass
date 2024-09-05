@@ -57,10 +57,11 @@
 
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px {--arc-thickness "7%"}]
+  ;[:span [image-frame :w-50px {--arc-thickness "7%"}]]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user}]
    [:<>
-    [image-frame {:profile/image (user/avatar-css-value user)}]
+    [:div [image-frame {:profile/image (user/avatar-css-value user)}]]
     [:div.details
      [:h3.title name]]
     (if hidden?
@@ -74,7 +75,7 @@
      [:label "Contacts"]
      [:ul
       (for [c (:user/contacts user)]
-        [:li (:public-profile/name c)])]]
+        [:span [image-frame {:profile/image (user/avatar-css-value c)}]])]]
 
     #_[:div (pr-str user)]
     [:div.actions
@@ -123,6 +124,7 @@
     [row link params]]))
 
 (o/defstyled profile-form :div#form
+  [image-frame :w-100px {--arc-thickness "7%"}]
   [#{:label :input} :block]
   [:label
    :mb-1 :mt-2
