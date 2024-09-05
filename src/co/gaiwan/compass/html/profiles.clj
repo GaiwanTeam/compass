@@ -59,12 +59,10 @@
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px {--arc-thickness "7%"}]
   [:.contact-list :flex :flex-wrap :gap-4]
-  [:.remove-btn
-   :cursor-pointer]
-  [:.contact
-   :flex
-   :items-center
-   [image-frame :w-50px {--arc-thickness "7%"}]]
+  [:.remove-btn :cursor-pointer :border-none {:background-color t/--surface-3}]
+  [:.remove-btn [:&:hover {:background-color t/--surface-4}]]
+  [:.contact :flex :items-center
+   [image-frame :w-50px {--arc-thickness "7%"} :mr-2]]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user}]
    [:<>

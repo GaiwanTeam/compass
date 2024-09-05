@@ -24,6 +24,8 @@
       [:path {:d (str "M 2," x " H 18")}])]))
 
 (o/defstyled person-remove :svg
+  {:--_remove-color "#ff4d4d"}
+  [:path {:fill "var(--_remove-color)"}]
   ([]
    [:<> {:viewBox "0 0 24 24"}
     [:rect {:fill "none", :height "24", :width "24"}]
