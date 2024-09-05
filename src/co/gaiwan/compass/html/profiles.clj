@@ -86,8 +86,9 @@
          [:button.remove-btn "Remove"]])]]
 
     #_[:div (pr-str user)]
-    [:div.actions
-     [edit-profile-btn user]]]))
+    ;; Disable Edit Profile before we can show profile details pretty
+    #_[:div.actions
+       [edit-profile-btn user]]]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
