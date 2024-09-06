@@ -191,6 +191,15 @@
      {:hx-post (url-for :contact/add {:qr-hash (get-in req [:path-params :qr-hash])})}
      (str "Accept invite")]]})
 
+(defn DELETE-contact
+  [req]
+  (let [me-id (:db/id (:identity req))
+        contact-id (parse-long (get-in req [:path-params :id]))]
+    @(db/transact [[:db/retract me-id :user/contacts contact-id]
+                   [:db/retract contact-id :user/contacts me-id]])
+    {:location :contacts/index
+     :hx/trigger "contact-deleted"}))
+
 (defn POST-contact
   "Part of the url is hash of the contact's user eid
    Decode it and add that contact"
@@ -239,7 +248,10 @@
     ["/:qr-hash"
      {:name :contact/add
       :post       {:handler POST-contact}
-      :get        {:handler GET-contact}}]]
+      :get        {:handler GET-contact}}]
+    ["/link/:id"
+     {:name :contact/link
+      :delete     {:handler DELETE-contact}}]]
    ["/contacts"
     {:middleware [[response/wrap-requires-auth]]}
     ["/" {:name :contacts/index

@@ -95,12 +95,17 @@
               :hx-get (url-for :contact/qr)}
      "Add Contact"]
     [:div
+     [:a
+      {:href (url-for :contacts/index)
+       :style {:display "none"}
+       :hx-trigger "contact-deleted from:body"}]
      [:h3 "Contacts"]
      [:div.contact-list
       (for [c (:user/contacts user)]
         [:div.contact
          [image-frame {:profile/image (user/avatar-css-value c)}]
-         [:button.remove-btn [graphics/person-remove]]])]]]))
+         [:button.remove-btn {:hx-delete (url-for :contact/link {:id (:db/id c)})}
+          [graphics/person-remove]]])]]]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
