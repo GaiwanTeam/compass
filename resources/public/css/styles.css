@@ -132,6 +132,14 @@ body {
   stroke: var(--text-1);
 }
 
+.graphics-person_remove {
+  --_remove-color: #ff4d4d;
+}
+
+.graphics-person_remove path {
+  fill: var(--_remove-color);
+}
+
 .graphics-cross {
   stroke-width: 13%;
   stroke-linecap: round;
@@ -402,6 +410,37 @@ body {
 }
 
 .profiles-profile_detail .profiles-image_frame {
+  width: 100px;
+  --profiles-arc-thickness: 7%;
+}
+
+.profiles-profile_detail .contact-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4);
+}
+
+.profiles-profile_detail .remove-btn, .profiles-profile_detail cursor-pointer {
+  border-style: none;
+  background-color: var(--surface-3);
+}
+
+.profiles-profile_detail .remove-btn:hover {
+  background-color: var(--surface-4);
+}
+
+.profiles-profile_detail .contact {
+  display: flex;
+  align-items: center;
+}
+
+.profiles-profile_detail .contact .profiles-image_frame {
+  width: 50px;
+  --profiles-arc-thickness: 7%;
+  margin-right: var(--size-2);
+}
+
+.profiles-profile_form .profiles-image_frame {
   width: 100px;
   --profiles-arc-thickness: 7%;
 }

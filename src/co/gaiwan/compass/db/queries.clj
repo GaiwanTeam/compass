@@ -46,3 +46,10 @@
       :where
       [?l :profile-link/user ?u]]
     (db/db) user-eid)))
+
+(defn all-session-types []
+  (db/q
+   '[:find [(pull ?t [*]) ...]
+     :where
+     [?t :session.type/name]]
+   (db/db)))

@@ -1,0 +1,29 @@
+#!/usr/bin/env bb
+
+(require
+ '[clojure.java.io :as io]
+ '[clojure.java.shell :as shell]
+ '[clojure.pprint :as pprint]
+ '[clojure.string :as str]
+ '[lambdaisland.cli :as cli]
+ '[lambdaisland.shellutils :as su]
+ )
+
+(def init {})
+
+(defn prod-repl
+  "REPL into production"
+  [opts]
+  (su/spawn "ssh" "root@compass.heartofclojure.eu" "nc" "localhost" "5555"))
+
+(def commands
+  ["prod-repl" #'prod-repl])
+
+(def flags
+  ["-v, --verbose"          "Increase verbosity"
+   "-n, --dry-run"          "Show shell commands, but don't execute them"])
+
+(cli/dispatch
+ {:init init
+  :commands commands
+  :flags flags})

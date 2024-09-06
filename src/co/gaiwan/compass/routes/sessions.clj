@@ -22,15 +22,16 @@
      :headers {"HX-Trigger" "login-required"}} #_(util/redirect)
     {:html/head [:title "Create new session"]
      :html/body [session-html/session-form (:identity req)
-                 nil]}))
+                 nil
+                 (q/all-session-types)]}))
 
 (defn GET-session-edit [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
     {:html/body [session-html/session-form
                  (:identity req)
-                 (db/pull '[* {:session/type [*]
-                               :session/location [*]
-                               :session.type [*]}] session-eid)]}))
+                 (q/session session-eid)
+                 (q/all-session-types)]}))
+
 (defn GET-session [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
     {:html/body [session-html/session-detail
@@ -40,9 +41,7 @@
 (defn GET-session-card [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
     {:html/body [session-html/session-card
-                 (db/pull '[* {:session/type [*]
-                               :session/location [*]
-                               :session.type [*]}] session-eid)
+                 (q/session session-eid)
                  (:identity req)]}))
 
 (defn params->session-data
@@ -51,8 +50,7 @@
            type location
            capacity organizer-id
            ticket-required? published?
-           image]
-    :or {type "activity"}}]
+           image]}]
   (let [local-date (time/local-date start-date)
         local-time (time/local-time start-time)
         local-date-time (time/local-date-time local-date local-time)
@@ -65,7 +63,7 @@
              :session/time start
              :session/duration duration
              :session/description description
-             :session/type (keyword "session.type" type)
+             :session/type (or (some-> type parse-long) :session.type/activity)
              :session/location (keyword "location.type" location)
              :session/organized (parse-long organizer-id)
              :session/capacity (parse-long capacity)}
@@ -98,7 +96,7 @@
   [{:keys [params path-params identity]}]
   (let [{:keys [id]} path-params
         id (parse-long id)
-        session (db/pull '[*] id)
+        session (q/session id)
         organizer-id (get-in session [:session/organized :db/id])]
     (if session
       (if (or (user/admin? identity)

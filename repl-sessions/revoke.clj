@@ -1,6 +1,6 @@
 (ns repl-sessions.revoke
   "Prepare some testing data for revoke contacts feature
-  
+
    How to use:
    1. You first login by Discord
    2. Run this revoke namespace to create another 10 temp users
@@ -45,7 +45,6 @@
       (range 1 11)))))
 
 (def tx (temp-user-tx
-         (test-user-eid "Laurence")))
+         (test-user-eid "Arne")))
 
 (db/transact tx)
-

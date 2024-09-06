@@ -1,1 +1,3 @@
-{:deps {com.lambdaisland/launchpad {:mvn/version "0.33.149-alpha"}}}
+{:deps {com.lambdaisland/launchpad {:mvn/version "0.33.149-alpha"}
+        com.lambdaisland/cli {:mvn/version "0.18.74"}
+        com.lambdaisland/shellutils  {:mvn/version "0.2.17"}}}

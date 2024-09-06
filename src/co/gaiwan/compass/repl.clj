@@ -1,7 +1,16 @@
 (ns co.gaiwan.compass.repl
+  "REPL utility functions for quick maintenance tasks
+
+  See also `bin/dev prod-repl`
+  "
   (:require
    [co.gaiwan.compass.db :as db :refer :all]
    [co.gaiwan.compass.model.user :as u]))
+
+(comment
+  (require 'co.gaiwan.compass.repl)
+  (in-ns 'co.gaiwan.compass.repl)
+  )
 
 (defn user [name-or-email]
   (db/entity

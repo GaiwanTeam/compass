@@ -1,7 +1,7 @@
 {:paths ["src" "resources"]
 
  :deps
- {org.clojure/clojure     {:mvn/version "1.11.4"}
+ {org.clojure/clojure     {:mvn/version "1.12.0"}
   ring/ring-jetty-adapter {:mvn/version "2.0.0-alpha1"}
   fi.metosin/reitit       {:mvn/version "0.7.0-alpha6"}
   integrant/integrant     {:mvn/version "0.11.0"}
@@ -12,7 +12,7 @@
 
   com.lambdaisland/cli {:mvn/version "0.18.74"}
 
-  com.lambdaisland/hiccup   {:mvn/version "0.9.48"}
+  com.lambdaisland/hiccup   {:mvn/version "0.10.51"}
   com.lambdaisland/ornament {:git/sha "0af129132bfbfeba940705031f83b60250e71dcf" ;; ornament-next with defprop/defrules/import-tokens
                              :git/url "https://github.com/lambdaisland/ornament.git"}
   #_{:local/root "/home/arne/github/lambdaisland/ornament"}

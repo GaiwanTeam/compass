@@ -163,7 +163,9 @@
        [:span.datetime
         (str (time/truncate-to (time/local-time time) :minutes)) " · "]
        title]]
-     [:h3.subtitle subtitle]
+     [:h3.subtitle (if-let [organizer-name (and (str/blank? subtitle) (-> session :session/organized :public-profile/name))]
+                     (str "organized by " organizer-name)
+                     subtitle)]
      #_[:div.expansion
         [session-card-actions session user]]
      [:div.loc (fmt-dur duration) " @ " (:location/name location)]
@@ -311,8 +313,6 @@
 
 ;; Create / edit
 
-(def xxx #time/zdt "2024-08-16T10:30+02:00[Europe/Brussels]")
-
 (o/defstyled session-form :div
   [#{:label :input} :block]
   [:label
@@ -327,7 +327,8 @@
     :flex
     :gap-3]]
   [:div.date-time :flex :gap-2]
-  ([user session]
+  ([user session session-types]
+   (def session session)
    [:<>
     (if session
       [:h2 "Edit Activity"]
@@ -343,7 +344,8 @@
                       :required true :min-length 2}
                session
                (assoc :value (:session/title session)))]
-     [:label {:for "subtitle"} "Subtitle (optional)"]
+     (when (user/admin? user)
+       [:label {:for "subtitle"} "Subtitle (optional)"])
      [:input (cond-> {:id "subtitle" :name "subtitle" :type "text"
                       :min-length 10}
                session
@@ -355,9 +357,9 @@
                         (str (time/local-date (:session/time session)))
                         (str (java.time.LocalDate/now)))}]
       [:input (cond->
-               {:id "start-time" :name "start-time" :type "time"
-                :min "06:00" :max "23:00" :required true
-                :step 60}
+                  {:id "start-time" :name "start-time" :type "time"
+                   :min "06:00" :max "23:00" :required true
+                   :step 60}
                 session
                 (assoc :value
                        (str (time/local-time (:session/time session)))))]]
@@ -369,9 +371,15 @@
                 (session/duration (:session/duration session))
                 45)}]
 
-     [:label {:for "type"} "Type"]
-     [:select {:id "type" :name "type"}
-      [:option {:value "activity"} "Activity"]]
+     (when (user/admin? user)
+       [:<>
+        [:label {:for "type"} "Type"]
+        [:select {:id "type" :name "type"}
+         (for [{n :session.type/name id :db/id} session-types]
+           [:option (cond-> {:value id}
+                      (= id (:db/id (:session/type session)))
+                      (assoc :selected "selected"))
+            n])]])
 
      [:label {:for "location"} "Location"]
      [:select (cond-> {:id "location" :name "location"}
