@@ -83,14 +83,19 @@
        [edit-profile-btn user]]]))
 
 (o/defstyled contact-detail :div
-  ;; [image-frame :w-100px {--arc-thickness "7%"}]
-  [:.contact-list :flex :flex-wrap :gap-4]
+  [image-frame :w-100px {--arc-thickness "7%"}]
+  ;;[:.contact-list :flex :flex-wrap :gap-4]
   [:.remove-btn :cursor-pointer :border-none {:background-color t/--surface-3}]
   [:.remove-btn [:&:hover {:background-color t/--surface-4}]]
   [:.contact :flex :items-center
+   [:div :mr-2]
    [image-frame :w-50px {--arc-thickness "7%"} :mr-2]]
-  ([{:user/keys [uuid] :as user}]
+  ([{:public-profile/keys [name]
+     :user/keys [uuid] :as user}]
    [:<>
+    [:div [image-frame {:profile/image (user/avatar-css-value user)}]]
+    [:div.details
+     [:h3.title name]]
     [:button {:hx-target "#modal"
               :hx-get (url-for :contact/qr)}
      "Add Contact"]
@@ -101,11 +106,14 @@
        :hx-trigger "contact-deleted from:body"}]
      [:h3 "Contacts"]
      [:div.contact-list
-      (for [c (:user/contacts user)]
-        [:div.contact
-         [image-frame {:profile/image (user/avatar-css-value c)}]
-         [:button.remove-btn {:hx-delete (url-for :contact/link {:id (:db/id c)})}
-          [graphics/person-remove]]])]]]))
+      [:ul
+       (for [c (:user/contacts user)]
+         [:li.contact
+          [image-frame {:profile/image (user/avatar-css-value c)}]
+          [:div [:label (:public-profile/name c)]
+           [:label (:discord/email c)]]
+          [:button.remove-btn {:hx-delete (url-for :contact/link {:id (:db/id c)})}
+           [graphics/person-remove] "Remove Contact"]])]]]]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
