@@ -91,6 +91,9 @@
    [image-frame :w-50px {--arc-thickness "7%"} :mr-2]]
   ([{:user/keys [uuid] :as user}]
    [:<>
+    [:button {:hx-target "#modal"
+              :hx-get (url-for :contact/qr)}
+     "Add Contact"]
     [:div
      [:h3 "Contacts"]
      [:div.contact-list
