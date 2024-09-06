@@ -243,11 +243,12 @@
      [:div.event-at
       [:p "Event scheduled at"]
       [:div.datetime
-       (str (time/truncate-to (time/local-time time) :minutes)
-            ", "
-            (subs (str/capitalize (str (time/day-of-week time))) 0 3)
-            " "
-            (time/format "dd.MM" time))]]
+       (when time
+         (str (time/truncate-to (time/local-time time) :minutes)
+              ", "
+              (subs (str/capitalize (str (time/day-of-week time))) 0 3)
+              " "
+              (time/format "dd.MM" time)))]]
      [:h3.subtitle subtitle]
      [:div.description
       [:div (m/component (m/md->hiccup description))]]
