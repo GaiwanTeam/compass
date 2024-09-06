@@ -128,6 +128,13 @@
       (ring-response/file-response (.getPath file))
       (ring-response/not-found "File not found"))))
 
+(defn GET-contact-list
+  "Show the private contact list of the user. 
+    - Users can revoke their contacts in this page"
+  [req]
+  {:html/body [h/contact-detail
+               (:identity req)]})
+
 (defn eid->qr-hash
   "create an uuid as the hash for eid to prevent guessing
    store this uuid in the user"
@@ -225,6 +232,8 @@
      :get        {:handler file-handler}}]
    ["/contact"
     {:middleware [[response/wrap-requires-auth]]}
+    ["/" {:name :contact/index
+          :get {:handler GET-contact-list}}]
     ["/qr" {:name :contact/qr
             :get {:handler GET-qr-html}}]
     ["/qr.png" {:name :contact/qr-png

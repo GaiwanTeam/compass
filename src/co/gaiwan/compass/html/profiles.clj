@@ -76,18 +76,28 @@
       [:div
        [:label "Another Name:"]
        [:label (:private-profile/name user)]])
+
+    #_[:div (pr-str user)]
+    ;; Disable Edit Profile before we can show profile details pretty
+    #_[:div.actions
+       [edit-profile-btn user]]]))
+
+(o/defstyled contact-detail :div
+  ;; [image-frame :w-100px {--arc-thickness "7%"}]
+  [:.contact-list :flex :flex-wrap :gap-4]
+  [:.remove-btn :cursor-pointer :border-none {:background-color t/--surface-3}]
+  [:.remove-btn [:&:hover {:background-color t/--surface-4}]]
+  [:.contact :flex :items-center
+   [image-frame :w-50px {--arc-thickness "7%"} :mr-2]]
+  ([{:user/keys [uuid] :as user}]
+   [:<>
     [:div
      [:h3 "Contacts"]
      [:div.contact-list
       (for [c (:user/contacts user)]
         [:div.contact
          [image-frame {:profile/image (user/avatar-css-value c)}]
-         [:button.remove-btn [graphics/person-remove]]])]]
-
-    #_[:div (pr-str user)]
-    ;; Disable Edit Profile before we can show profile details pretty
-    #_[:div.actions
-       [edit-profile-btn user]]]))
+         [:button.remove-btn [graphics/person-remove]]])]]]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
