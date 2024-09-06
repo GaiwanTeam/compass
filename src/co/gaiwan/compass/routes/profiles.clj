@@ -232,8 +232,6 @@
      :get        {:handler file-handler}}]
    ["/contact"
     {:middleware [[response/wrap-requires-auth]]}
-    ["/" {:name :contact/index
-          :get {:handler GET-contact-list}}]
     ["/qr" {:name :contact/qr
             :get {:handler GET-qr-html}}]
     ["/qr.png" {:name :contact/qr-png
@@ -242,6 +240,10 @@
      {:name :contact/add
       :post       {:handler POST-contact}
       :get        {:handler GET-contact}}]]
+   ["/contacts"
+    {:middleware [[response/wrap-requires-auth]]}
+    ["/" {:name :contacts/index
+          :get {:handler GET-contact-list}}]]
    ["/attendees"
     [""
      {:name :attendees/index

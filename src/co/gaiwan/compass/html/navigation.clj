@@ -99,7 +99,7 @@
                            ;; (url-for :attendees/index)    "Attendees"
                            ;; (url-for :profile/index)      "Profile & Settings"
                            (url-for :session/new) "Create Activity"
-                           (url-for :contact/index)  "Contact List"}]
+                           (url-for :contacts/index)  "Contacts"}]
        [:li [:a {:href href
                  :on-click "document.body.classList.toggle('menu-open')"}
              caption]])
