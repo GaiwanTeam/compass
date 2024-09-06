@@ -2,6 +2,7 @@
   "Views and components (hiccup/ornament) related to profiles"
   {:ornament/prefix "profiles-"}
   (:require
+   [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.db.queries :as queries]
    [co.gaiwan.compass.http.routing :refer [url-for]]
@@ -57,10 +58,15 @@
 
 (o/defstyled profile-detail :div#detail
   [image-frame :w-100px {--arc-thickness "7%"}]
+  [:.contact-list :flex :flex-wrap :gap-4]
+  [:.remove-btn :cursor-pointer :border-none {:background-color t/--surface-3}]
+  [:.remove-btn [:&:hover {:background-color t/--surface-4}]]
+  [:.contact :flex :items-center
+   [image-frame :w-50px {--arc-thickness "7%"} :mr-2]]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user}]
    [:<>
-    [image-frame {:profile/image (user/avatar-css-value user)}]
+    [:div [image-frame {:profile/image (user/avatar-css-value user)}]]
     [:div.details
      [:h3.title name]]
     (if hidden?
@@ -71,14 +77,17 @@
        [:label "Another Name:"]
        [:label (:private-profile/name user)]])
     [:div
-     [:label "Contacts"]
-     [:ul
+     [:h3 "Contacts"]
+     [:div.contact-list
       (for [c (:user/contacts user)]
-        [:li (:public-profile/name c)])]]
+        [:div.contact
+         [image-frame {:profile/image (user/avatar-css-value c)}]
+         [:button.remove-btn [graphics/person-remove]]])]]
 
     #_[:div (pr-str user)]
-    [:div.actions
-     [edit-profile-btn user]]]))
+    ;; Disable Edit Profile before we can show profile details pretty
+    #_[:div.actions
+       [edit-profile-btn user]]]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
@@ -123,6 +132,7 @@
     [row link params]]))
 
 (o/defstyled profile-form :div#form
+  [image-frame :w-100px {--arc-thickness "7%"}]
   [#{:label :input} :block]
   [:label
    :mb-1 :mt-2
