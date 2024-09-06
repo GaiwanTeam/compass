@@ -35,6 +35,7 @@
       (fn [x]
         {:db/id (str "temp-" x)
          :user/contacts eid
+         :discord/email (str "temp-email-" x "@gaiwan.co")
          :public-profile/name (str "temp-user-" x)
          :public-profile/avatar-url (assets/download-image (str avatar-url-part x ".png"))})
       (range 1 11))
@@ -45,6 +46,6 @@
       (range 1 11)))))
 
 (def tx (temp-user-tx
-         (test-user-eid "Arne")))
+         (test-user-eid "Laurence")))
 
 (db/transact tx)
