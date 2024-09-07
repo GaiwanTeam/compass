@@ -86,7 +86,7 @@
     (case status
       201
       (do
-        (db/transact [[:db/add (:db/id session) :session/thread-id (:id thread)]])
+        @(db/transact [[:db/add (:db/id session) :session/thread-id (:id thread)]])
         thread)
       (log/error :discord/thread-create-failed "Failed to create session thread"
                  :session session
@@ -136,15 +136,12 @@
           :response (dissoc response :request))))
     (log/error :discord/missing-session-thread "Tried to send message to session thread that doesn't exist")))
 
-(defn add-to-session-thread
-  "Add user with `user-id` to session thread of session with `session-id`.
+(defn update-session-thread-member
+  "Add or remove user with `user-id` to or from session thread of session with `session-id`.
 
-  Returns `nil`. In case of failure, an error message is logged."
-  [session-id user-id]
+  To add, use `action` `:add`, to remove use `action` `:remove`
+  Returns whether it was sucessful or not."
+  [session-id user-id action]
   (let [session (db/entity session-id)
-        {:keys [status] :as response} (discord-bot-request :put (str "/channels/" (:session/thread-id session) "/thread-members/" user-id))]
-    (when-not (= status 204)
-      (log/error
-        :discord/thread-member-add-failed "Failed to add member to session thread"
-        :session session
-        :response (dissoc response :request)))))
+        {:keys [status]} (discord-bot-request ({:add :put :remove :delete} action) (str "/channels/" (:session/thread-id session) "/thread-members/" user-id))]
+    (= status 204)))

@@ -14,7 +14,8 @@
    [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.session :as session]
    [co.gaiwan.compass.model.user :as user]
-   [java-time.api :as time]))
+   [java-time.api :as time]
+   [co.gaiwan.compass.services.discord :as discord]))
 
 (defn GET-session-new [req]
   (if-not (:identity req)
@@ -105,6 +106,7 @@
           @(db/transact
             [(-> (params->session-data params)
                  (assoc :db/id id))])
+          ;; TODO add a @everyone notification via discord/send-session-thread-message if there is a thread and something important changes
           {:location [:session/get {:id id}]
            :flash "Successfully edited!"})
         {:status 403
@@ -136,23 +138,45 @@
   (let [user (:identity req)
         user-id (:db/id user)
         session-eid (parse-long (get-in req [:path-params :id]))
-        session-seletor '[* {:session/type [*]
-                             :session/location [*]}]
         session (q/session session-eid)
         capacity (:session/capacity session)
         signup-cnt (count (:session/participants session))]
     (cond
       ;; user leaves the session
       (session/participating? session user)
-      (do @(db/transact [[:db/retract session-eid :session/participants user-id]])
-          (session-updated-response session-eid))
+      (do
+        @(db/transact [[:db/retract session-eid :session/participants user-id]])
+        (when (:session/thread-id session)
+          (discord/update-session-thread-member session-eid (:discord/id user) :remove))
+        (session-updated-response session-eid))
       (< (or signup-cnt 0) capacity)
       ;; user participates the session
       (do
         @(db/transact [[:db/add session-eid :session/participants user-id]])
+        (when (:session/thread-id session)
+          (discord/update-session-thread-member session-eid (:discord/id user) :add))
         (session-updated-response session-eid))
       :else
       (session-unchanged-response session-eid))))
+
+(defn POST-create-session-thread
+  [{:keys [identity path-params]}]
+  (let [session-eid (parse-long (:id path-params))
+        session (q/session session-eid)]
+    (if (or (user/admin? identity)
+            (session/organizing? session identity))
+      (if (:session/thread-id session)
+        {:status 409
+         :body "Session thread already exists"}
+        (if (discord/create-session-thread session)
+          (do
+            (discord/update-session-thread-member session-eid (:discord/id identity) :add)
+            {:location [:session/get {:id session-eid}]
+             :flash "Thread created! You should have got a notification in Discord."})
+          {:status 500
+           :body "Thread could not be created"}))
+      {:status 403
+       :body "Missing permissions."})))
 
 (defn GET-sessions [req]
   (let [filters  (-> req :session :session-filters)
@@ -194,4 +218,8 @@
              :handler POST-participate}}]
     ["/:id/card"
      {:name :session/card
-      :get {:handler GET-session-card}}]]])
+      :get {:handler GET-session-card}}]
+    ["/:id/thread"
+     {:name :session/create-thread
+      :post {:middleware [[response/wrap-requires-auth]]
+             :handler POST-create-session-thread}}]]])

@@ -277,6 +277,12 @@
       (when (or (user/admin? user)
                 (session/organizing? session user))
         [:<>
+         [:button
+          {:hx-post (url-for :session/create-thread {:id (:db/id session)})
+           :title "Create a Discord thread for participants of this session"
+           :disabled (some? (:session/thread-id session))}
+          "Create Thread"]
+         [:br]
          [:a {:href (url-for :session/edit {:id (:db/id session)})}
           [:button  "Edit"]]
          [:button {:hx-delete (url-for :session/get {:id (:db/id session)})} "Delete"]])]
