@@ -150,6 +150,30 @@ body {
   margin-top: var(--size-1);
 }
 
+ul {
+  padding-top: var(--size-2);
+  padding-bottom: var(--size-2);
+}
+
+ul li {
+  padding-top: var(--size-1);
+  padding-bottom: var(--size-1);
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+ol {
+  padding-top: var(--size-2);
+  padding-bottom: var(--size-2);
+}
+
+ol li {
+  padding-top: var(--size-1);
+  padding-bottom: var(--size-1);
+  list-style-type: decimal;
+  list-style-position: inside;
+}
+
 .graphics-compass_logo path {
   fill: var(--hoc-pink);
 }

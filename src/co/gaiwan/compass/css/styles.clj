@@ -30,4 +30,7 @@
     [:h4 {:margin-top t/--size-2
           :margin-bottom t/--size-1}]
     [:h5 {:margin-top t/--size-1}]]
+
+   [:ul :py-2 [:li :py-1 :list-disc :list-inside]]
+   [:ol :py-2 [:li :py-1 :list-decimal :list-inside]]
    ])
