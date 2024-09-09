@@ -429,7 +429,7 @@
      (when session
        [session-image+guage session user])
      [:label {:for "image"} "Activity Image"]
-     [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]
+     [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg, image/gif, image/webp, image/svg+xml"}]
 
      [:input {:type "submit" :value (if session
                                       "Save"
