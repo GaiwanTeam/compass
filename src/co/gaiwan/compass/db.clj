@@ -1,7 +1,6 @@
 (ns co.gaiwan.compass.db
   (:require
    [clojure.walk :as walk]
-   [co.gaiwan.compass.db.migrations :as migrations]
    [co.gaiwan.compass.db.schema :as schema]
    [datomic.api :as d]
    [integrant.core :as ig]
@@ -21,7 +20,7 @@
   (let [conn (d/connect url)]
     @(transact conn (concat (schema/schema-tx)
                             wagontrain/schema))
-    (wagontrain/migrate! conn (munge-to-db migrations/all))
+    (wagontrain/migrate! conn (munge-to-db @(requiring-resolve 'co.gaiwan.compass.db.migrations/all)))
     conn))
 
 (defmethod ig/halt-key! :compass/db [_ conn])

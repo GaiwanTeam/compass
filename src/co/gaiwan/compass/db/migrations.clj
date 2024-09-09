@@ -1,5 +1,7 @@
 (ns co.gaiwan.compass.db.migrations
-  (:require [co.gaiwan.compass.db.data :as data]))
+  (:require
+   [co.gaiwan.compass.db.data :as data]
+   [datomic.api :as d]))
 
 (def all
   [{:label :add-locations
@@ -28,4 +30,21 @@
      {:db/ident :location.type/hal5
       :location/name "Hal 5 - Workshop Zone"}
      {:location/name "Hal 5 - Community Space"}]}
+
+   {:label :cap-capacity-fn
+    :tx-data
+    [{:db/ident :compass.fn/cap-capacity
+      :db/fn (d/function {:lang "clojure"
+                          :params '[db cap]
+                          :code '(for [sid (datomic.api/q '[:find [?e ...]
+                                                            :in $ ?cap
+                                                            :where
+                                                            [?e :session/capacity ?c]
+                                                            [(< ?cap ?c)]]
+                                                          db cap)]
+                                   [:db/add sid :session/capacity cap])})}]}
+
+   {:label :cap-capacity-250
+    :tx-data
+    [[:compass.fn/cap-capacity 250]]}
    ])
