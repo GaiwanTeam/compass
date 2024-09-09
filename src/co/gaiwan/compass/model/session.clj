@@ -116,3 +116,10 @@
 
 (defn session-image-css-value [session]
   (str "url(" (assets/image-url (:session/image session)) ")"))
+
+(defn subtitle
+  "Returns the subtitle if there is one, or 'organized by <person>' otherwise."
+  [{:session/keys [subtitle] :as session}]
+  (if-let [organizer-name (and (str/blank? subtitle) (-> session :session/organized :public-profile/name))]
+    (str "organized by " organizer-name)
+    subtitle))

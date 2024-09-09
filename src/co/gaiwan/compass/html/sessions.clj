@@ -4,6 +4,7 @@
   (:require
    [clojure.string :as str]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
+   [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.components :as c]
    [co.gaiwan.compass.html.filters :as filters]
    [co.gaiwan.compass.html.graphics :as graphics]
@@ -110,13 +111,19 @@
      (when (< 0 m)
        (str m " min")))))
 
+(o/defstyled img+join-widget :div
+  :flex-col :items-center :py-3 :mx-2
+  ([session user]
+   [:<>
+    [session-image+guage session user]
+    [join-btn session user]]))
+
 (o/defstyled session-card :div
   :flex :gap-1
   :bg-surface-2
   :shadow-2
   :boder :border-solid :border-surface-3
   #_:text-center
-  [:.left :flex-col :items-center :py-3 :mx-2]
   [:.title :font-size-4 :font-semibold :mt-3 :mb-2
    [:a {:color t/--text-1}]]
   [:.subtitle :font-size-3 :font-medium :mb-3
@@ -135,7 +142,7 @@
   [:.expansion {:display "none"}]
   [:&.expanded [:.expansion {:display "block"}]]
   [:&.htmx-request
-   [#{:.left :.details}
+   [#{(str "." img+join-widget) :.details}
     {:opacity "0.5"
      :animation "session-card-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite"}]]
   ([{:session/keys [type title subtitle organized time
@@ -153,9 +160,8 @@
      :hx-disinherit "hx-target hx-select"}
     [:div.type (:session.type/name type)]
 
-    [:div.left
-     [session-image+guage session user]
-     [join-btn session user]]
+    [img+join-widget session user]
+
 
     [:div.details
      [:h2.title
@@ -163,9 +169,7 @@
        [:span.datetime
         (str (time/truncate-to (time/local-time time) :minutes)) " · "]
        title]]
-     [:h3.subtitle (if-let [organizer-name (and (str/blank? subtitle) (-> session :session/organized :public-profile/name))]
-                     (str "organized by " organizer-name)
-                     subtitle)]
+     [:h3.subtitle (session/subtitle session)]
      #_[:div.expansion
         [session-card-actions session user]]
      [:div.loc (fmt-dur duration) " @ " (:location/name location)]
@@ -188,6 +192,7 @@
   [capacity-gauge :w-100px]
   :mt-8
   [:.header-row :flex :gap-2 :mb-8
+   :items-center
    [:.title :lg:font-size-8
     :font-size-7
     {:text-wrap :wrap
@@ -195,7 +200,7 @@
    [:.header-row-text]
    [:.type
     {:background --session-type-color}
-    :m-0 :font-bold :uppercase :tracking-widest :p-1]]
+    :my-1 :font-bold :uppercase :tracking-widest :p-1]]
   [:.event-at
    {:box-shadow "-14px 14px 0 -4px black"
     :background t/--highlight-yellow}
@@ -203,8 +208,8 @@
    [:>p :font-semibold]
    [:.datetime :font-size-7 :font-bold]]
   [:.three-box #_{:background t/--activity-color}
-   :relative :my-4 :flex :p-4 :gap-4 :lg:flex-row :flex-col
-   [:>div :border-8 :font-semibold :p-4 :lg:w-33% :text-center
+   :relative :my-4 :p-4 :gap-4 :lg:flex-row :flex-col
+   [:>div :border-8 :font-semibold :p-4 :text-center :flex-grow
     [:>.small :lg:font-size-3 :uppercase :tracking-widest]
     [:>.large :font-size-6 :lg:font-size-7 :font-bold]]
    [:&:before
@@ -220,7 +225,7 @@
      :transform "rotate(1deg)"}]]
 
   ([{:session/keys [type title subtitle organized
-                    time location image capacity
+                    time duration location image capacity
                     signup-count description
                     participants] :as session}
     user]
@@ -238,21 +243,25 @@
        :style {:display "none"}
        :hx-trigger (str "session-" (:db/id session) "-deleted from:body")}]
      [:div.header-row
-      [session-image+guage session user]
+      [img+join-widget session user]
       [:div.header-row-text
-       [:div.type (:session.type/name type)]
-       [:h3.title title]]]
+       [:div [:span.type (:session.type/name type)]]
+       [:h3.title title]
+       [:h4 (session/subtitle session)]]]
      [:div.event-at
-      [:p "Event scheduled at"]
+      #_[:p "Event scheduled at"]
       [:div.datetime
        (when time
-         (str (time/truncate-to (time/local-time time) :minutes)
-              ", "
-              (subs (str/capitalize (str (time/day-of-week time))) 0 3)
-              " "
-              (time/format "dd.MM" time)))]]
-     [:h3.subtitle subtitle]
-     [:div.description
+         (str
+          (subs (str/capitalize (str (time/day-of-week time))) 0 3)
+          " "
+          (time/format "dd.MM" time)
+          ", "
+          (time/truncate-to (time/local-time time) :minutes)))
+       " → "
+       (fmt-dur duration)]]
+
+     [:div.description.site-copy
       [:div (m/component (m/md->hiccup description))]]
      [:div.three-box
       [:div.location
@@ -261,11 +270,11 @@
       [:div.capacity
        [:div.small "Spots available"]
        [:div.large (- (or capacity 0) (or signup-count 0))]]
-      [:div
-       [:p.small "Ticket required"]
-       (if (:session/ticket-required? session)
-         [:p.large "YES ✅"]
-         [:p.large "NO ❎"])]]
+      #_[:div
+         [:p.small "Ticket required"]
+         (if (:session/ticket-required? session)
+           [:p.large "YES ✅"]
+           [:p.large "NO ❎"])]]
      (when (session/organizing? session user)
        ;; Only show the participants' list to organizer.
        [:div.participants
@@ -273,7 +282,7 @@
         [:ol (map attendee participants)]])
 
      [:div.actions
-      [join-btn session user]
+
       (when (or (user/admin? user)
                 (session/organizing? session user))
         [:<>
@@ -388,19 +397,13 @@
             n])]])
 
      [:label {:for "location"} "Location"]
-     [:select (cond-> {:id "location" :name "location"}
-                session
-                (assoc :value
-                       (name (get-in session [:session/location :db/ident]))))
-      [:option {:value "depot-main-stage"} "Het Depot - main stage"]
-      [:option {:value "depot-bar"} "Het Depot - Bar"]
-      [:option {:value "hal5-zone-a"} "Hal 5 - zone A"]
-      [:option {:value "hal5-zone-b"} "Hal 5 - zone B"]
-      [:option {:value "hal5-hoc-cafe"} "Hal 5 - HoC Café"]
-      [:option {:value "hal5-foodcourt"} "Hal 5 - Foodcourt"]
-      [:option {:value "hal5-park"} "Hal 5 - park"]
-      [:option {:value "hal5-outside-seating"} "Hal 5 - outside seating"]
-      [:option {:value "hal5-long-table"} "Hal 5 - long table"]]
+
+     [:select {:id "location" :name "location"}
+      (for [{:location/keys [name] :db/keys [id]} (q/all-locations)]
+        [:option (cond-> {:value id}
+                   (= id (get-in session [:session/location :db/id]))
+                   (assoc :selected "selected"))
+         name])]
 
      [:label {:for "capacity"} "How many people can you accomodate?"]
      [:input (cond-> {:id "capacity" :name "capacity" :type "number"

@@ -52,7 +52,7 @@
 
 (defn migrate1
   [conn {:keys [label tx-data]}]
-  @(d/transact conn (up-tx label tx-data)))
+  @(d/transact conn (up-tx label (if (fn? tx-data) (tx-data) tx-data))))
 
 (defn migrate! [conn migrations]
   (run! (partial migrate1 conn) migrations))

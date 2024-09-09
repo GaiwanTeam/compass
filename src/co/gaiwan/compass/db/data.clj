@@ -51,9 +51,9 @@
     :session.type/color "var(--activity-color)"
     :db/ident           :session.type/activity}])
 
-(defn schedule []
+(defn load-schedule [resource-path]
   (map
    (fn [s]
      (update s :session/image #(assets/download-image %)))
-   (read-string (slurp (io/resource "compass/schedule.edn")))))
+   (read-string (slurp (io/resource resource-path)))))
 

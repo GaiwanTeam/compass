@@ -53,3 +53,10 @@
      :where
      [?t :session.type/name]]
    (db/db)))
+
+(defn all-locations []
+  (db/q
+   '[:find [(pull ?t [*]) ...]
+     :where
+     [?t :location/name]]
+   (db/db)))

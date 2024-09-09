@@ -101,4 +101,9 @@
               :session/capacity 1}])
 
   (wagontrain/applied? (conn) :add-locations)
+
+  (wagontrain/rollback! (conn) :add-live-set)
+  (wagontrain/rollback! (conn) :add-updated-schedule)
+  (wagontrain/migrate! (conn) (munge-to-db migrations/all))
+
   )

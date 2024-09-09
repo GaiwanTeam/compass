@@ -18,4 +18,16 @@
    [:dialog :p-0]
 
    [:body {:font-family "Open Sans, sans-serif"}]
+
+   [:.site-copy
+    [:p {:line-height 2}]
+    [:h1 {:margin-top t/--size-5
+          :margin-bottom t/--size-4}]
+    [:h2 {:margin-top t/--size-4
+          :margin-bottom t/--size-3}]
+    [:h3 {:margin-top t/--size-3
+          :margin-bottom t/--size-2}]
+    [:h4 {:margin-top t/--size-2
+          :margin-bottom t/--size-1}]
+    [:h5 {:margin-top t/--size-1}]]
    ])

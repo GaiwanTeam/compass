@@ -122,6 +122,34 @@ body {
   font-family: Open Sans, sans-serif;
 }
 
+.site-copy p {
+  line-height: 2;
+}
+
+.site-copy h1 {
+  margin-top: var(--size-5);
+  margin-bottom: var(--size-4);
+}
+
+.site-copy h2 {
+  margin-top: var(--size-4);
+  margin-bottom: var(--size-3);
+}
+
+.site-copy h3 {
+  margin-top: var(--size-3);
+  margin-bottom: var(--size-2);
+}
+
+.site-copy h4 {
+  margin-top: var(--size-2);
+  margin-bottom: var(--size-1);
+}
+
+.site-copy h5 {
+  margin-top: var(--size-1);
+}
+
 .graphics-compass_logo path {
   fill: var(--hoc-pink);
 }
@@ -555,16 +583,7 @@ body {
   width: 100px;
 }
 
-.sessions-session_card {
-  display: flex;
-  gap: var(--size-1);
-  background-color: var(--surface-2);
-  box-shadow: var(--shadow-2);
-  border-style: solid;
-  border-color: var(--surface-3);
-}
-
-.sessions-session_card .left {
+.sessions-img_PLUS_join_widget {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -572,6 +591,15 @@ body {
   padding-bottom: var(--size-3);
   margin-left: var(--size-2);
   margin-right: var(--size-2);
+}
+
+.sessions-session_card {
+  display: flex;
+  gap: var(--size-1);
+  background-color: var(--surface-2);
+  box-shadow: var(--shadow-2);
+  border-style: solid;
+  border-color: var(--surface-3);
 }
 
 .sessions-session_card .title {
@@ -626,7 +654,7 @@ body {
   display: block;
 }
 
-.sessions-session_card.htmx-request .left, .sessions-session_card.htmx-request .details {
+.sessions-session_card.htmx-request .details, .sessions-session_card.htmx-request .sessions-img_PLUS_join_widget {
   opacity: 0.5;
   animation: session-card-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -643,6 +671,7 @@ body {
   display: flex;
   gap: var(--size-2);
   margin-bottom: var(--size-8);
+  align-items: center;
 }
 
 .sessions-session_detail .header-row .title {
@@ -661,7 +690,8 @@ body {
 
 .sessions-session_detail .header-row .type {
   background: var(--sessions-session-type-color);
-  margin: var(--size-0);
+  margin-top: var(--size-1);
+  margin-bottom: var(--size-1);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -691,7 +721,6 @@ body {
   position: relative;
   margin-top: var(--size-4);
   margin-bottom: var(--size-4);
-  display: flex;
   padding: var(--size-4);
   gap: var(--size-4);
   display: flex;
@@ -712,14 +741,7 @@ body {
   font-weight: 600;
   padding: var(--size-4);
   text-align: center;
-}
-
-@media (min-width: 1024px) {
-
-  .sessions-session_detail .three-box >div {
-    width: 33%;
-  }
-
+  flex-grow: 1;
 }
 
 .sessions-session_detail .three-box >div >.small {
