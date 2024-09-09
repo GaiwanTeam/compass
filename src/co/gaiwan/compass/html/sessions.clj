@@ -415,11 +415,13 @@
       (when session
         (:session/description session))]
 
+     #_
      [:label {:for "ticket"}
       [:input {:id "ticket" :name "ticket-required?" :type "checkbox"
                :checked (:session/ticket-required? session)}]
       "Requires Ticket?"]
 
+     #_
      [:label {:for "published"}
       [:input {:id "published" :name "published?" :type "checkbox"
                :checked (:session/published? session)}]
