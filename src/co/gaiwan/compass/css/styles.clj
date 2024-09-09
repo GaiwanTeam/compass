@@ -9,7 +9,9 @@
    [:p {:max-inline-size "inherit"}]
    [#{:ul :ol} :list-none :m-0 :p-0]
    [:body :overflow-x-hidden :w-screen]
-   [#{:h1 :h2 :h3 :h4 :h5} {:max-inline-size "inherit"}]
+   [#{:h1 :h2 :h3 :h4 :h5}
+    {:color t/--text-1
+     :max-inline-size "inherit"}]
 
    ;; override open-props normalize, we like the buttons a bit more rounded
    [#{:button :.btn} {:border-radius t/--radius-2}]
@@ -29,8 +31,8 @@
           :margin-bottom t/--size-2}]
     [:h4 {:margin-top t/--size-2
           :margin-bottom t/--size-1}]
-    [:h5 {:margin-top t/--size-1}]]
+    [:h5 {:margin-top t/--size-1}]
 
-   [:ul :py-2 [:li :py-1 :list-disc :list-inside]]
-   [:ol :py-2 [:li :py-1 :list-decimal :list-inside]]
+    [:ul :py-2 [:li :py-1 :list-disc :list-inside]]
+    [:ol :py-2 [:li :py-1 :list-decimal :list-inside]]]
    ])

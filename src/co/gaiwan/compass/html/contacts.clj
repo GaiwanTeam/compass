@@ -31,34 +31,42 @@
        [:textarea (m/md->hiccup bio)])]]))
 
 (o/defstyled contact-detail :div
-  [c/image-frame :w-100px {--arc-thickness "7%"}]
+  [:.heading :flex :justify-between
+   :mb-3]
   [:.contact-list :w-full :ga-4]
   [:.remove-btn :cursor-pointer :border-none {:background-color t/--surface-3}]
-  [:.remove-btn [:&:hover {:background-color t/--surface-4}]]
-  [:.contact :flex :items-center :justify-between
-   [:div :mr-2]
-   [c/image-frame :w-50px {--arc-thickness "7%"} :mr-2]]
+  [:.remove-btn
+   :font-semibold
+   {:color t/--text-1}
+   [#{:&:hover :&:active}
+    {:background-color t/--surface-4}]]
+  [:.contact :flex :items-center :my-2 :py-2
+   :shadow-2 :font-size-3
+   {:background-color t/--surface-2}
+   [:.details :flex-grow :mr-2]
+   [c/image-frame :w-50px {--arc-thickness "7%"} :mx-2]]
+  [:.profile-name :font-semibold]
+  [:.email :font-size-3 {:color t/--text-2}]
+
   ([{:public-profile/keys [name]
      :user/keys [uuid] :as user}]
    [:<>
-    [:div [c/image-frame {:profile/image (user/avatar-css-value user)}]]
-    [:div.details
-     [:h3.title name]]
-    [:button {:hx-target "#modal"
-              :hx-get (url-for :contact/qr)}
-     "Add Contact"]
+    [:div.heading
+     [:h2 "Your Contacts"]
+     [:button {:hx-target "#modal"
+               :hx-get (url-for :contact/qr)}
+      [graphics/scan-icon] "Add Contact"]]
     [:div
      [:a
       {:href (url-for :contacts/index)
        :style {:display "none"}
        :hx-trigger "contact-deleted from:body"}]
-     [:h3 "Contacts"]
      [:div.contact-list
       (for [c (:user/contacts user)]
         [:div.contact
          [c/image-frame {:profile/image (user/avatar-css-value c)}]
-         [:div
-          [:div (:public-profile/name c)]
-          [:div (:discord/email c)]]
+         [:div.details
+          [:div.profile-name (:public-profile/name c)]
+          [:div.email (:discord/email c)]]
          [:button.remove-btn {:hx-delete (url-for :contact/link {:id (:db/id c)})}
-          [graphics/person-remove] "Remove Contact"]])]]]))
+          [graphics/person-remove] "Remove"]])]]]))
