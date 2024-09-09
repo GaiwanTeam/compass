@@ -36,6 +36,8 @@
 (o/defprop --highlight)
 (o/defprop --highlight-yellow)
 
+(o/defprop --arc-thickness "30px")
+
 (o/defrules session-colors
   [":where(html)"
    {--talk-color         --blue-2

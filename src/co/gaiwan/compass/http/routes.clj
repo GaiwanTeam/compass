@@ -2,6 +2,7 @@
   "Combined HTTP routing table"
   (:require
    [co.gaiwan.compass.routes.admin :as admin]
+   [co.gaiwan.compass.routes.contacts :as contacts]
    [co.gaiwan.compass.routes.filters :as filters]
    [co.gaiwan.compass.routes.meta :as meta]
    [co.gaiwan.compass.routes.oauth :as oauth]
@@ -13,6 +14,7 @@
   [(meta/routes)
    (sessions/routes)
    (profiles/routes)
+   (contacts/routes)
    (oauth/routes)
    (filters/routes)
    (ticket/routes)

@@ -46,6 +46,6 @@
       (range 1 11)))))
 
 (def tx (temp-user-tx
-         (test-user-eid "Laurence")))
+         (test-user-eid "Arne")))
 
 (db/transact tx)

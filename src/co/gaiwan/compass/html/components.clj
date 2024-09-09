@@ -66,3 +66,16 @@
    :background-size "cover"}
   ([image]
    [:<> {:style {:background-image image}}]))
+
+(o/defstyled image-frame :div
+  [:.img :w-full
+   {:padding t/--arc-thickness
+    #_#_:margin-left "-100%"}
+   [:>* :w-full :aspect-square :rounded-full
+    {:background-size "cover"
+     :background-position "50% 50%"}]]
+  ([{:profile/keys [image]}]
+   [:<>
+    [:div.img
+     [:div
+      {:style {:background-image image}}]]]))

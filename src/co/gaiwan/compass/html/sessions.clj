@@ -16,14 +16,13 @@
    [markdown-to-hiccup.core :as m]))
 
 (o/defprop --arc-degrees "240deg")
-(o/defprop --arc-thickness "30px")
 (o/defprop --arc-color --lime-5)
 
 (o/defstyled arc :div
   "Partial circle arc, clockwise. Expects arc (a value in CSS `deg` units) and
   thickness to be passed as props or set as css vars by a parent element."
   {:aspect-ratio  --ratio-square
-   :padding       --arc-thickness
+   :padding       t/--arc-thickness
    :border-radius --radius-round
    :background    --arc-color
    :mask          (str "linear-gradient(#0000 0 0) content-box intersect, conic-gradient(#000 " --arc-degrees ", #0000 0)")})
@@ -34,14 +33,14 @@
   {:position "relative"}
   [:>* {:position "absolute" :top 0 :left 0}]
   [arc :w-full]
-  {--arc-thickness "7%"}
+  {t/--arc-thickness "7%"}
   [:.checkmark :hidden :w-full :justify-center :h-full :items-center
    {:font-size "5rem"}]
   [:&.checked
    [:.checkmark :flex]
    [:.img {:filter "brightness(50%)"}]]
   [:.img :w-full
-   {:padding --arc-thickness
+   {:padding t/--arc-thickness
     #_#_:margin-left "-100%"}
    [:>* :w-full :aspect-square :rounded-full
     {:background-size "cover"
