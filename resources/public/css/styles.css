@@ -6,9 +6,8 @@
   --hoc-pink-3: var(--hoc-pink);
   --hoc-green: #99db70;
   --sessions-arc-degrees: 240deg;
-  --profiles-arc-thickness: 30px;
-  --sessions-arc-thickness: 30px;
   --hoc-pink-1: #e7879d;
+  --arc-thickness: 30px;
   --hoc-pink-2: #cd4e6a;
   --hoc-pink-4: #c0415b;
   --co-gaiwan-compass-html-components--toggle-radius-right: var(--radius-2);
@@ -107,6 +106,7 @@ body {
 }
 
 h5, h4, h2, h1, h3 {
+  color: var(--text-1);
   max-inline-size: inherit;
 }
 
@@ -150,24 +150,24 @@ body {
   margin-top: var(--size-1);
 }
 
-ul {
+.site-copy ul {
   padding-top: var(--size-2);
   padding-bottom: var(--size-2);
 }
 
-ul li {
+.site-copy ul li {
   padding-top: var(--size-1);
   padding-bottom: var(--size-1);
   list-style-type: disc;
   list-style-position: inside;
 }
 
-ol {
+.site-copy ol {
   padding-top: var(--size-2);
   padding-bottom: var(--size-2);
 }
 
-ol li {
+.site-copy ol li {
   padding-top: var(--size-1);
   padding-bottom: var(--size-1);
   list-style-type: decimal;
@@ -305,6 +305,19 @@ ol li {
   background-size: cover;
 }
 
+.co_gaiwan_compass_html_components__image_frame .img {
+  width: 100%;
+  padding: var(--arc-thickness);
+}
+
+.co_gaiwan_compass_html_components__image_frame .img >* {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 9999px;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
 .co_gaiwan_compass_html_navigation__nav_bar {
   display: flex;
   align-items: center;
@@ -431,6 +444,67 @@ ol li {
   opacity: 0.5;
 }
 
+.contacts-attendee_card .co_gaiwan_compass_html_components__image_frame {
+  width: 100px;
+}
+
+.contacts-contact_detail .heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--size-3);
+}
+
+.contacts-contact_detail .contact-list {
+  width: 100%;
+}
+
+.contacts-contact_detail .remove-btn, .contacts-contact_detail cursor-pointer {
+  border-style: none;
+  background-color: var(--surface-3);
+}
+
+.contacts-contact_detail .remove-btn {
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.contacts-contact_detail .remove-btn:active, .contacts-contact_detail .remove-btn:hover {
+  background-color: var(--surface-4);
+}
+
+.contacts-contact_detail .contact {
+  display: flex;
+  align-items: center;
+  margin-top: var(--size-2);
+  margin-bottom: var(--size-2);
+  padding-top: var(--size-2);
+  padding-bottom: var(--size-2);
+  box-shadow: var(--shadow-2);
+  font-size: var(--size-3);
+  background-color: var(--surface-2);
+}
+
+.contacts-contact_detail .contact .details {
+  flex-grow: 1;
+  margin-right: var(--size-2);
+}
+
+.contacts-contact_detail .contact .co_gaiwan_compass_html_components__image_frame {
+  width: 50px;
+  --arc-thickness: 7%;
+  margin-left: var(--size-2);
+  margin-right: var(--size-2);
+}
+
+.contacts-contact_detail .profile-name {
+  font-weight: 600;
+}
+
+.contacts-contact_detail .email {
+  font-size: var(--size-3);
+  color: var(--text-2);
+}
+
 .filters-filter_section {
   display: flex;
   flex-wrap: wrap;
@@ -444,57 +518,14 @@ ol li {
   flex-grow: 1;
 }
 
-.profiles-image_frame .img {
-  width: 100%;
-  padding: var(--profiles-arc-thickness);
-}
-
-.profiles-image_frame .img >* {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 9999px;
-  background-size: cover;
-  background-position: 50% 50%;
-}
-
-.profiles-attendee_card .profiles-image_frame {
+.profiles-profile_detail .co_gaiwan_compass_html_components__image_frame {
   width: 100px;
+  --arc-thickness: 7%;
 }
 
-.profiles-profile_detail .profiles-image_frame {
+.profiles-profile_form .co_gaiwan_compass_html_components__image_frame {
   width: 100px;
-  --profiles-arc-thickness: 7%;
-}
-
-.profiles-profile_detail .contact-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--size-4);
-}
-
-.profiles-profile_detail .remove-btn, .profiles-profile_detail cursor-pointer {
-  border-style: none;
-  background-color: var(--surface-3);
-}
-
-.profiles-profile_detail .remove-btn:hover {
-  background-color: var(--surface-4);
-}
-
-.profiles-profile_detail .contact {
-  display: flex;
-  align-items: center;
-}
-
-.profiles-profile_detail .contact .profiles-image_frame {
-  width: 50px;
-  --profiles-arc-thickness: 7%;
-  margin-right: var(--size-2);
-}
-
-.profiles-profile_form .profiles-image_frame {
-  width: 100px;
-  --profiles-arc-thickness: 7%;
+  --arc-thickness: 7%;
 }
 
 .profiles-profile_form label, .profiles-profile_form input {
@@ -529,7 +560,7 @@ ol li {
 
 .sessions-arc {
   aspect-ratio: var(--ratio-square);
-  padding: var(--sessions-arc-thickness);
+  padding: var(--arc-thickness);
   border-radius: var(--radius-round);
   background: var(--sessions-arc-color);
   mask: linear-gradient(#0000 0 0) content-box intersect, conic-gradient(#000 var(--sessions-arc-degrees), #0000 0);
@@ -538,7 +569,7 @@ ol li {
 .sessions-capacity_gauge {
   aspect-ratio: 1 / 1;
   position: relative;
-  --sessions-arc-thickness: 7%;
+  --arc-thickness: 7%;
 }
 
 .sessions-capacity_gauge >* {
@@ -570,7 +601,7 @@ ol li {
 
 .sessions-capacity_gauge .img {
   width: 100%;
-  padding: var(--sessions-arc-thickness);
+  padding: var(--arc-thickness);
 }
 
 .sessions-capacity_gauge .img >* {

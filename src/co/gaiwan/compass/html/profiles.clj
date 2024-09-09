@@ -2,48 +2,12 @@
   "Views and components (hiccup/ornament) related to profiles"
   {:ornament/prefix "profiles-"}
   (:require
-   [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.db.queries :as queries]
+   [co.gaiwan.compass.html.components :as c]
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.user :as user]
-   [lambdaisland.ornament :as o]
-   [markdown-to-hiccup.core :as m]))
-
-(o/defprop --arc-thickness "30px")
-
-(o/defstyled image-frame :div
-  [:.img :w-full
-   {:padding --arc-thickness
-    #_#_:margin-left "-100%"}
-   [:>* :w-full :aspect-square :rounded-full
-    {:background-size "cover"
-     :background-position "50% 50%"}]]
-  ([{:profile/keys [image]}]
-   [:<>
-    [:div.img
-     [:div
-      {:style {:background-image image}}]]]))
-
-;; UI of attendee list
-
-(o/defstyled attendee-card :div
-  [image-frame :w-100px]
-  ([{:public-profile/keys [name hidden? bio]
-     :user/keys [uuid] :as user}]
-   [:<>
-    [image-frame {:profile/image (user/avatar-css-value user)}]
-    [:div.details
-     [:h3 name]
-     (if hidden?
-       [:label "Hide profile from public listing"]
-       [:label "Show profile from public listing"])
-     (when (:private-profile/name user)
-       [:div
-        [:label "Another Name:"]
-        [:label (:private-profile/name user)]])
-     (when bio
-       [:textarea (m/md->hiccup bio)])]]))
+   [lambdaisland.ornament :as o]))
 
 ;; UI of profile detail
 
@@ -57,16 +21,11 @@
     "Edit Profile"]))
 
 (o/defstyled profile-detail :div#detail
-  [image-frame :w-100px {--arc-thickness "7%"}]
-  [:.contact-list :flex :flex-wrap :gap-4]
-  [:.remove-btn :cursor-pointer :border-none {:background-color t/--surface-3}]
-  [:.remove-btn [:&:hover {:background-color t/--surface-4}]]
-  [:.contact :flex :items-center
-   [image-frame :w-50px {--arc-thickness "7%"} :mr-2]]
+  [c/image-frame :w-100px {t/--arc-thickness "7%"}]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user}]
    [:<>
-    [:div [image-frame {:profile/image (user/avatar-css-value user)}]]
+    [:div [c/image-frame {:profile/image (user/avatar-css-value user)}]]
     [:div.details
      [:h3.title name]]
     (if hidden?
@@ -76,18 +35,11 @@
       [:div
        [:label "Another Name:"]
        [:label (:private-profile/name user)]])
-    [:div
-     [:h3 "Contacts"]
-     [:div.contact-list
-      (for [c (:user/contacts user)]
-        [:div.contact
-         [image-frame {:profile/image (user/avatar-css-value c)}]
-         [:button.remove-btn [graphics/person-remove]]])]]
 
     #_[:div (pr-str user)]
     ;; Disable Edit Profile before we can show profile details pretty
-    #_[:div.actions
-       [edit-profile-btn user]]]))
+    [:div.actions
+     [edit-profile-btn user]]]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
@@ -132,7 +84,7 @@
     [row link params]]))
 
 (o/defstyled profile-form :div#form
-  [image-frame :w-100px {--arc-thickness "7%"}]
+  [c/image-frame :w-100px {t/--arc-thickness "7%"}]
   [#{:label :input} :block]
   [:label
    :mb-1 :mt-2
@@ -170,7 +122,7 @@
      [:div.input-block {:id "private-name-block"}]
      [:div
       (when user
-        [image-frame {:profile/image (user/avatar-css-value user)}])
+        [c/image-frame {:profile/image (user/avatar-css-value user)}])
       [:label {:for "image"} "Avatar"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
      [:div
