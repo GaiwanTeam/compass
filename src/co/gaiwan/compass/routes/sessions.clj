@@ -65,7 +65,7 @@
              :session/duration duration
              :session/description description
              :session/type (or (some-> type parse-long) :session.type/activity)
-             :session/location (keyword "location.type" location)
+             :session/location (or (some-> location parse-long) :location.type/hal5-long-table)
              :session/organized (parse-long organizer-id)
              :session/capacity (parse-long capacity)}
       (= ticket-required? "on")
