@@ -47,4 +47,9 @@
    {:label :cap-capacity-250
     :tx-data
     [[:compass.fn/cap-capacity 250]]}
+
+   {:label :add-other-location
+    :tx-data
+    [{:location/name "Other location (see description)"}]}
+
    ])
