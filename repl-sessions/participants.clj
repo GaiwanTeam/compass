@@ -1,10 +1,10 @@
 (ns repl-sessions.participants
-  "Prepare some testing data for testing participants in a session.
+  "Prepare some testing data for showing participants in a session.
 
    How to use:
    1. You create a session and get the session id from the URL 
    2. Run this participants namespace to create another 10 temp users
-   3. Go to the sessions/:id page to do the revoke testing
+   3. Go to the sessions/:id page to do the testing
   "
   (:require
    [co.gaiwan.compass.db :as db]
