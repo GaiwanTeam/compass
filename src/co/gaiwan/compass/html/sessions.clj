@@ -161,7 +161,6 @@
 
     [img+join-widget session user]
 
-
     [:div.details
      [:h2.title
       [:a {:href (url-for :session/get {:id (:db/id session)})}
@@ -180,12 +179,21 @@
    ["0%, 100%" {:opacity 1}]
    ["50%" {:opacity 0.5}]))
 
-(o/defstyled attendee :li
-  ([participant]
+(o/defstyled attendee :div
+  :flex :items-center :my-2 :py-2
+  :shadow-2 :font-size-3
+  {:background-color t/--surface-2}
+  [:.details :flex-grow :mr-2]
+  [c/image-frame :w-50px {--arc-thickness "7%"} :mx-2]
+  ([p]
    ;; (prn "debug datatype " (type participant))
    ;; participant is of `Datomic.query.EntityMap` type
    ;; So, we can access its attribute directly
-   (:user/handle participant)))
+   [:<>
+    [c/image-frame {:profile/image (user/avatar-css-value p)}]
+    [:div.details
+     [:div.profile-name (:public-profile/name p)]
+     [:div.email (:discord/email p)]]]))
 
 (o/defstyled session-detail :div
   [capacity-gauge :w-100px]
@@ -277,8 +285,10 @@
      (when (session/organizing? session user)
        ;; Only show the participants' list to organizer.
        [:div.participants
-        [:div "Participants:"]
-        [:ol (map attendee participants)]])
+        [:h3 "Participants"]
+        #_(pr-str participants)
+        (for [p participants]
+          [attendee p])])
 
      [:div.actions
 
@@ -294,8 +304,6 @@
          [:a {:href (url-for :session/edit {:id (:db/id session)})}
           [:button  "Edit"]]
          [:button {:hx-delete (url-for :session/get {:id (:db/id session)})} "Delete"]])]
-     #_[:p.host "Organized by " organized]
-     #_[:ol (map attendee participants)]
      #_[:p (pr-str user)]
      #_[:p (pr-str session)]]]))
 
@@ -371,9 +379,9 @@
                         (str (time/local-date (:session/time session)))
                         (str (java.time.LocalDate/now)))}]
       [:input (cond->
-                  {:id "start-time" :name "start-time" :type "time"
-                   :min "06:00" :max "23:00" :required true
-                   :step 60}
+               {:id "start-time" :name "start-time" :type "time"
+                :min "06:00" :max "23:00" :required true
+                :step 60}
                 session
                 (assoc :value
                        (str (time/local-time (:session/time session)))))]]
@@ -415,17 +423,15 @@
       (when session
         (:session/description session))]
 
-     #_
-     [:label {:for "ticket"}
-      [:input {:id "ticket" :name "ticket-required?" :type "checkbox"
-               :checked (:session/ticket-required? session)}]
-      "Requires Ticket?"]
+     #_[:label {:for "ticket"}
+        [:input {:id "ticket" :name "ticket-required?" :type "checkbox"
+                 :checked (:session/ticket-required? session)}]
+        "Requires Ticket?"]
 
-     #_
-     [:label {:for "published"}
-      [:input {:id "published" :name "published?" :type "checkbox"
-               :checked (:session/published? session)}]
-      "Published/Visible?"]
+     #_[:label {:for "published"}
+        [:input {:id "published" :name "published?" :type "checkbox"
+                 :checked (:session/published? session)}]
+        "Published/Visible?"]
 
      (when session
        [session-image+guage session user])
