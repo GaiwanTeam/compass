@@ -40,10 +40,7 @@
         (db/db) qr-hash))
 
 (defn GET-qr-html [req]
-  {:html/body [:div
-               {:style {:margin "var(--size-4)"}}
-               [:h2 "Add Contact"]
-               [:img {:src (url-for :contact/qr-png)}]]
+  {:html/body [h/qr-dialog]
    :html/layout false})
 
 (defn GET-qr-code
@@ -104,8 +101,7 @@
      :hx/trigger "contact-added"}))
 
 (defn routes []
-  [
-   ["/contact"
+  [["/contact"
     {:middleware [[response/wrap-requires-auth]]}
     ["/qr" {:name :contact/qr
             :get {:handler GET-qr-html}}]
@@ -122,9 +118,8 @@
     {:middleware [[response/wrap-requires-auth]]}
     ["/" {:name :contacts/index
           :get {:handler GET-contact-list}}]]
-   #_
-   ["/attendees"
-    [""
-     {:name :attendees/index
-      :middleware [[response/wrap-requires-auth]]
-      :get        {:handler GET-attendees}}]]])
+   #_["/attendees"
+      [""
+       {:name :attendees/index
+        :middleware [[response/wrap-requires-auth]]
+        :get        {:handler GET-attendees}}]]])
