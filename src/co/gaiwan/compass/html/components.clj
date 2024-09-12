@@ -2,11 +2,22 @@
   "Generic components"
   (:require
    [co.gaiwan.compass.css.tokens :as t]
+   [co.gaiwan.compass.html.graphics :as graphics]
+   [co.gaiwan.compass.http.routing :refer [url-for]]
    [lambdaisland.ornament :as o]
    [ring.middleware.anti-forgery :as anti-forgery]))
 
 (o/defprop --toggle-radius-left t/--radius-2)
 (o/defprop --toggle-radius-right t/--radius-2)
+
+(o/defstyled close-dialog-button :button
+  ([]
+   [:<> {:id "close-dialog"
+         :hx-get (str (url-for :sessions/index))
+         :hx-push-url (str (url-for :sessions/index))
+         :hx-target "body"
+         :hx-swap "outerHTML"}
+    [graphics/cross]]))
 
 (o/defstyled toggle-button :label
   "Toggle implemented as a checkbox (can also be used as a radio button)."
