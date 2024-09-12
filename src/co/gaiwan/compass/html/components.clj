@@ -17,7 +17,12 @@
          :hx-push-url (str (url-for :sessions/index))
          :hx-target "body"
          :hx-swap "outerHTML"}
-    [graphics/cross]]))
+    [graphics/cross]
+    [:script
+     "document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') { // check if ESC is pressed 
+        document.getElementById('close-dialog').click(); // click the button 
+      }});"]]))
 
 (o/defstyled toggle-button :label
   "Toggle implemented as a checkbox (can also be used as a radio button)."
