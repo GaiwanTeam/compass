@@ -10,6 +10,16 @@
    [lambdaisland.ornament :as o]
    [markdown-to-hiccup.core :as m]))
 
+(o/defstyled qr-dialog :div
+  :m-4
+  [:.control :flex :justify-between]
+  ([]
+   [:<>
+    [:div.control
+     [:h2 "Add Contact"]
+     [c/close-dialog-button]]
+    [:img {:src (url-for :contact/qr-png)}]]))
+
 ;; UI of attendee list
 
 (o/defstyled attendee-card :div
