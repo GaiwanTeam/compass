@@ -367,11 +367,12 @@
                session
                (assoc :value (:session/title session)))]
      (when (user/admin? user)
-       [:label {:for "subtitle"} "Subtitle (optional)"])
-     [:input (cond-> {:id "subtitle" :name "subtitle" :type "text"
-                      :min-length 10}
-               session
-               (assoc :value (:session/subtitle session)))]
+       [:<>
+        [:label {:for "subtitle"} "Subtitle (optional)"]
+        [:input (cond-> {:id "subtitle" :name "subtitle" :type "text"
+                         :min-length 10}
+                  session
+                  (assoc :value (:session/subtitle session)))]])
      [:label {:for "start-time"} "Day and Start Time"]
      [:div.date-time
       [:input {:id "start-date" :name "start-date" :type "date"
