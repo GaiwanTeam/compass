@@ -15,4 +15,4 @@ out
 *.local.*
 uploads
 resources/public/uploads
-
+resources/public/css/styles.css
