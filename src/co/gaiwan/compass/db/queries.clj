@@ -5,11 +5,21 @@
 
 #_(set! *print-namespace-maps* false)
 
+(defn ?resolve-ident
+  "Maybe resolve ident
+
+  We gave some entities idents, which messes up `db/entity`, which thinks you're
+  dealing with an enum, and 'helpfully' returns a keyword."
+  [o]
+  (if (keyword? o)
+    (db/entity o)
+    o))
+
 (defn session [id]
   (let [e (db/entity id)]
     (-> (into {:db/id (:db/id e)} e)
-        (update :session/type db/entity)
-        (update :session/location db/entity)
+        (update :session/type ?resolve-ident)
+        (update :session/location ?resolve-ident)
         (assoc :session/signup-count (count (:session/participants e))))))
 
 (defn all-sessions

@@ -60,7 +60,6 @@
         duration (str "PT" duration-time "M")]
     (cond-> {:db/id "session"
              :session/title title
-             :session/subtitle subtitle
              :session/time start
              :session/duration duration
              :session/description description
@@ -68,6 +67,9 @@
              :session/location (or (some-> location parse-long) :location.type/hal5-long-table)
              :session/organized (parse-long organizer-id)
              :session/capacity (parse-long capacity)}
+
+      subtitle
+      (assoc :session/subtitle subtitle)
       (= ticket-required? "on")
       (assoc :session/ticket-required? true)
       (= published? "on")
@@ -88,7 +90,7 @@
    :ticket-required? \"on\"
    :published? \"on\"}"
   [{:keys [params]}]
-  (let [{:keys [tempids]} @(db/transact [(params->session-data params)])]
+  (let [{:keys [tempids]} @(db/transact [(doto (params->session-data params) prn)])]
     (response/redirect ["/sessions" (get tempids "session")]
                        {:flash "Successfully created!"})))
 
