@@ -210,8 +210,9 @@
     :my-1 :font-bold :uppercase :tracking-widest :p-1]]
   [:.event-at
    {:box-shadow "-14px 14px 0 -4px black"
-    :background t/--highlight-yellow}
-   :p-4 :max-w-lg :mt-2 :mb-6 :ml-2
+    :background t/--highlight-yellow
+    :max-width "34rem"}
+   :p-4  :mt-2 :mb-6 :ml-2
    [:>p :font-semibold]
    [:.datetime :font-size-7 :font-bold]]
   [:.three-box #_{:background t/--activity-color}
