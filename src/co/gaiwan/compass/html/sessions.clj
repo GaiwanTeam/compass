@@ -192,8 +192,7 @@
    [:<>
     [c/image-frame {:profile/image (user/avatar-css-value p)}]
     [:div.details
-     [:div.profile-name (:public-profile/name p)]
-     [:div.email (:discord/email p)]]]))
+     [:div.profile-name (:public-profile/name p)]]]))
 
 (o/defstyled session-detail :div
   [capacity-gauge :w-100px]
