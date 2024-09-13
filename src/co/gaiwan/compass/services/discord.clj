@@ -7,6 +7,8 @@
    [io.pedestal.log :as log]
    [co.gaiwan.compass.db :as db]))
 
+(def message-limit 2000)
+
 (def discord-api-endpoint "https://discord.com/api/v10")
 
 (defn bot-auth-headers []

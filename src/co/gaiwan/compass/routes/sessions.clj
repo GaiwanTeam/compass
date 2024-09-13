@@ -15,7 +15,9 @@
    [co.gaiwan.compass.model.session :as session]
    [co.gaiwan.compass.model.user :as user]
    [java-time.api :as time]
-   [co.gaiwan.compass.services.discord :as discord]))
+   [co.gaiwan.compass.services.discord :as discord]
+   [co.gaiwan.compass.util :as util]
+   [clojure.string :as str]))
 
 (defn GET-session-new [req]
   (if-not (:identity req)
@@ -171,8 +173,21 @@
         {:status 409
          :body "Session thread already exists"}
         (if (discord/create-session-thread session)
-          (do
+          (let [participant-ids
+                (db/q '[:find [?id ...]
+                        :in $ ?sid
+                        :where
+                        [?sid :session/participants ?pid]
+                        [?pid :discord/id ?id]]
+                      (db/db) session-eid)
+                notif-msgs (->> participant-ids
+                                (map discord/user-mention)
+                                (map (partial format " %s "))
+                                (util/partition-with-limit discord/message-limit)
+                                (map str/join))]
             (discord/update-session-thread-member session-eid (:discord/id identity) :add)
+            (doseq [msg notif-msgs]
+              (discord/send-session-thread-message session-eid msg))
             {:location [:session/get {:id session-eid}]
              :flash "Thread created! You should have got a notification in Discord."})
           {:status 500

@@ -84,3 +84,17 @@
 (defn expires-in->instant
   [expires-in]
   (.plusSeconds (Instant/now) (- expires-in 60)))
+
+(defn partition-with-limit
+  [limit parts]
+  (loop [result []
+         current []
+         length 0
+         [p & rest] parts]
+    (let [part-length (count p)
+          new-length (+ length part-length)]
+      (cond
+        (> part-length limit) nil
+        (nil? p) (cond-> result (seq current) (conj current))
+        (<= new-length limit) (recur result (conj current p) new-length rest)
+        :else (recur (conj result current) [] 0 (list* p rest))))))
