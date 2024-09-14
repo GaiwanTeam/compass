@@ -179,6 +179,12 @@
    ["0%, 100%" {:opacity 1}]
    ["50%" {:opacity 0.5}]))
 
+(o/defstyled handle-the-hidden :div
+  ([participants]
+   (let [hiddens (count (filter #(:public-profile/hidden? %) participants))]
+     (when (pos? hiddens)
+       (str "and " hiddens " more")))))
+
 (o/defstyled attendee :div
   :flex :items-center :my-2 :py-2
   :shadow-2 :font-size-3
@@ -282,13 +288,13 @@
          (if (:session/ticket-required? session)
            [:p.large "YES ✅"]
            [:p.large "NO ❎"])]]
-     (when (session/organizing? session user)
-       ;; Only show the participants' list to organizer.
-       [:div.participants
-        [:h3 "Participants"]
-        #_(pr-str participants)
-        (for [p participants]
-          [attendee p])])
+     #_(when (session/organizing? session user))
+     [:div.participants
+      [:h3 "Participants"]
+      (for [p participants]
+        (when-not (:public-profile/hidden? p)
+          [attendee p]))
+      [handle-the-hidden participants]]
 
      [:div.actions
 

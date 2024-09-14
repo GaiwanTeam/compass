@@ -12,7 +12,7 @@
    [datomic.api :as d]))
 
 (def new-session-eid
-  17592186045520)
+  17592186045455)
 ;; Avatar source URL https://github.com/alohe/avatars
 (defn temp-user-tx
   " Create the user txes
@@ -27,6 +27,7 @@
       (fn [x]
         {:db/id (str "temp-" x)
          :discord/email (str "temp-email-" x "@gaiwan.co")
+         :public-profile/hidden? (if (even? x) true false)
          :public-profile/name (str "temp-user-" x)
          :public-profile/avatar-url (assets/download-image (str avatar-url-part x ".png"))})
       (range 1 11))
