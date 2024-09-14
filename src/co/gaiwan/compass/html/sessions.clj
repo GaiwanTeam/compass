@@ -198,7 +198,8 @@
    [:<>
     [c/image-frame {:profile/image (user/avatar-css-value p)}]
     [:div.details
-     [:div.profile-name (:public-profile/name p)]]]))
+     [:a {:href (url-for :profile/show {:profile-id (:user/uuid p)})}
+      [:div.profile-name (:public-profile/name p)]]]]))
 
 (o/defstyled session-detail :div
   [capacity-gauge :w-100px]

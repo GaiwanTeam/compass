@@ -15,6 +15,7 @@
    [ring.util.response :as ring-response]))
 
 (defn GET-profile [{:keys [params] :as req}]
+  (tap> {:params params})
   {:html/body
    [h/profile-detail
     (if-let [user-uuid (:user-uuid params)]
@@ -90,7 +91,7 @@
 (defn parse-link-data [params variant]
   (map vector
        (get params (keyword (str variant "-link-type")))
-       (get params (keyword (str variant "-link-ref"))))  )
+       (get params (keyword (str variant "-link-ref")))))
 
 (defn reconcile-links [user-id variant old-links new-links]
   (let [existing-pairs (map (juxt :profile-link/type :profile-link/href) old-links)
@@ -149,8 +150,7 @@
       (conj [:db/retract user-id :private-profile/name (:private-profile/name user)])
 
       (not (str/blank? name_private))
-      (conj [:db/add user-id :private-profile/name name_private])
-      )))
+      (conj [:db/add user-id :private-profile/name name_private]))))
 
 (defn POST-save-profile
   "Save profile to DB

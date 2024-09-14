@@ -26,6 +26,7 @@
      (mapv
       (fn [x]
         {:db/id (str "temp-" x)
+         :user/uuid (random-uuid)
          :discord/email (str "temp-email-" x "@gaiwan.co")
          :public-profile/hidden? (if (even? x) true false)
          :public-profile/name (str "temp-user-" x)
