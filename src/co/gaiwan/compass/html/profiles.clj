@@ -11,14 +11,10 @@
 
 ;; UI of profile detail
 
-(o/defstyled edit-profile-btn :button
+(o/defstyled edit-profile-btn :a.btn
   ([user]
    [:<>
-    {:hx-get (url-for :profile/edit)
-     :hx-select "#form"
-     :hx-target "#detail"
-     :hx-swap "outerHTML"}
-    "Edit Profile"]))
+    {:href (url-for :profile/edit)} "Edit Profile"]))
 
 (o/defstyled profile-detail :div#detail
   [c/image-frame :w-100px {t/--arc-thickness "7%"}]
@@ -52,36 +48,51 @@
      [:div#private-name-block])))
 
 (o/defstyled row :tr.link-row
-  ([link {:keys [row-index] :as params}]
+  ([{:keys [variant] :as link}]
    [:<>
     [:td
-     ;; (pr-str link)
      (when (:db/id link)
-       [:input {:type "hidden" :name (str "link-id-" row-index) :value (:db/id link)}])
+       [:input {:type "hidden" :name (str variant "-link-id[]") :value (:db/id link)}])
      (let [link-type (:profile-link/type link)]
-       [:select {:name (str "link-type-" row-index)}
+       [:select {:name (str variant "-link-type[]")}
         [:option {:value "email" :selected (= link-type "email")} "Email"]
-        [:option {:value "twitter" :selected (= link-type "twitter")} "Twitter"]
         [:option {:value "mastodon" :selected (= link-type "mastodon")} "Mastodon"]
         [:option {:value "linkedin" :selected (= link-type "linkedin")} "LinkedIn"]
         [:option {:value "personal-site" :selected (= link-type "personal-site")} "Personal Site"]
         [:option {:value "other" :selected (= link-type "other")} "Other"]])]
     [:td
-     [:input (cond-> {:name (str "link-ref-" row-index) :type "text" :required true
-                      :min-length 2}
-               (:db/id link)
-               (assoc :value (:profile-link/href link)))]]
-    [:td
-     [:input {:name (str "public-" row-index) :type "checkbox"
-              :checked (:public-link link)}]]
-    [:td
-     [:input {:name (str "private-" row-index) :type "checkbox"
-              :checked (:private-link link)}]]]))
+     [:input
+      {:type "text"
+       :name (str variant "-link-ref[]")
+       :value (str (:profile-link/href link))}]]]))
+
+(def always-show ["email" "mastodon"])
 
 (o/defstyled links-table :div
-  ([link {:keys [row-index] :as params}]
-   [:table
-    [row link params]]))
+  ([links {:keys [caption variant]}]
+   (let [link-map (into {} (map (juxt :profile-link/type :profile-link/href)) links)
+         link-vals (concat
+                    (for [t always-show]
+                      [t (get link-map t)])
+                    (apply dissoc link-map always-show))]
+     [:<>
+      [:template
+       [row {:profile-link/type "other"
+             :profile-link/href ""
+             :variant variant}]]
+      [:table
+       [:thead
+        [:tr
+         [:th {:colspan 2} caption]]]
+       [:tbody
+        (for [[t h] link-vals]
+          [row {:profile-link/type t
+                :profile-link/href h
+                :variant variant}])]]
+      [:input#add-link
+       {:value "+ Add Link"
+        :type "button"
+        :on-click "let form = this.parentElement; form.querySelector('tbody').append(form.querySelector('template').content.cloneNode(true))"}]])))
 
 (o/defstyled profile-form :div#form
   [c/image-frame :w-100px {t/--arc-thickness "7%"}]
@@ -98,7 +109,15 @@
     :flex
     :gap-3]]
   [:table :w-full]
+  [:.contact-card
+   :shadow-3
+   :my-6
+   {:background-color t/--surface-2
+    :padding t/--size-3
+    :border-radius t/--size-2}
+   [#{:textarea "input[type='text']"} {:background-color t/--surface-3}]]
   ([user]
+   (def user user)
    [:<>
     [:h2 "Edit Profile"]
     [:form {:method "POST" :action "/profile/save" :enctype "multipart/form-data"}
@@ -107,63 +126,43 @@
       [:input {:id "hidding" :name "hidden?" :type "checkbox"
                :checked (:public-profile/hidden? user)}]
       "Hide profile from public listings?"]
-     [:label {:for "name"} "Name (public)"]
+     [:label {:for "name"} "Display Name"]
      [:input {:id "name" :name "name_public" :type "text"
-              :required true :min-length 2
+              :required true
               :value (:public-profile/name user)}]
-     [:label {:for "show-another-name"}
-      [:input {:id "show-another-name" :name "private-name-switch" :type "checkbox"
-               :hx-get (url-for :profile/private-name)
-               :hx-target "#private-name-block"
-               :hx-select "#private-name-block"
-               :hx-trigger "change"
-               :hx-swap "outerHTML"}]
-      "Show different name to confidantes?"]
-     [:div.input-block {:id "private-name-block"}]
+     [:div
+      [:label {:for "bio_public"}
+       "Bio (accepts markdown)"]
+      [:textarea {:id "bio_public" :name "bio_public"}
+       (when (:public-profile/bio user)
+         (:public-profile/bio user))]]
      [:div
       (when user
         [c/image-frame {:profile/image (user/avatar-css-value user)}])
       [:label {:for "image"} "Avatar"]
       [:input {:id "image" :name "image" :type "file" :accept "image/png, image/jpeg"}]]
-     [:div
-      [:label {:for "bio_public"}
-       "Bio (public, markdown)"]
-      [:textarea {:id "bio_public" :name "bio_public"}
-       (when (:public-profile/bio user)
-         (:public-profile/bio user))]]
+     [links-table (:public-profile/links user)
+      {:variant "public"
+       :caption "Public Profile Links"}]
 
-     [:div
-      [:label {:for "bio_private"}
-       "Bio (confidential, markdown)"]
-      [:textarea {:id "bio_private" :name "bio_private"}
-       (when (:private-profile/bio user)
-         (:private-profile/bio user))]]
-     [:div
-      [:table
-       [:thead
-        [:tr
-         [:th {:colspan 2} "Links"]
-         [:th "public"]
-         [:th "confidential"]]]
-       [:tbody#links-block
-        (let [links (map (fn [link]
-                           (cond-> link
-                             (:public-profile/_links link)
-                             (assoc :public-link true)
-                             (:private-profile/_links link)
-                             (assoc :private-link true)))
-                         (queries/all-links (:db/id user)))]
-          (map-indexed
-           (fn [idx itm]
-             [row itm {:row-index idx}]) links))]]
-      [:input#rows-count {:type "hidden" :name "rows-count" :value (count (queries/all-links (:db/id user)))}]
-      [:input#add-link {:type "button" :value "Add Links"
-                        :hx-get (url-for :profile/add-link)
-                        :hx-target "#links-block"
-                        :hx-select ".link-row"
-                        :hx-trigger "click"
-                        :hx-swap "beforeend"}]]
-     [:input {:type "submit" :value "Save"}]]
+     [:div.contact-card
+      [:h3 "Contact Card"]
+      [:p.info "This information is only shown to people you add as a contact."]
+      [:label {:for "name"} "Name"]
+      [:input {:id "name" :name "name_private" :type "text"
+               :value (:private-profile/name user)}]
+      [:div
+       [:label {:for "bio_private"}
+        "Private Bio (accepts markdown)"]
+       [:textarea {:id "bio_private" :name "bio_private"}
+        (when (:private-profile/bio user)
+          (:private-profile/bio user))]]
+      [links-table (:private-profile/links user)
+       {:variant "private"
+        :caption "Links Visible to Contacts"}]
+      ]
+
+     [:input {:type "submit" :value "Save Profile"}]]
     [:script
      "document.getElementById('add-link').addEventListener('htmx:configRequest', function(evt) {
       const url = new URL(evt.detail.path, window.location.origin);

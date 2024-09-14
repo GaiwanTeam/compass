@@ -29,7 +29,7 @@
    [:private-profile/bio :string "Free-form Markdown field"]
    ;; End user entity
 
-   [:profile-link/user :ref "User this link belongs too"]
+   #_[:profile-link/user :ref "User this link belongs too"]
    [:profile-link/type :string "`mastodon`, `linkedin`, `personal-site`, etc."]
    [:profile-link/href :string "http/mailto URL"]
 

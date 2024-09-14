@@ -72,6 +72,13 @@
    [:a {:text-decoration "underline"}]]
   [:a:visited {:color t/--link}]
   ["li:has(.notifier-dot)" :flex :gap-1]
+  [:svg :inline :mr-1 {:height "1em" :margin-bottom "-0.15em"}
+   [:path {:fill t/--text-1}]]
+  [:.bottom :fixed :bottom-0 :left-0
+   :w-full :mb-3
+   :text-center
+
+   [:p  :m-2]]
   ([user]
    [:<>
     [:div.bar
@@ -95,18 +102,32 @@
                      :on-click "document.body.classList.toggle('menu-open')"}
                  [:strong "Claim your Ti.to ticket for full access"]]]
           [:div.notifier-dot]]))
-     (for [[href caption] {(url-for :sessions/index)        "Sessions & Activities"
-                           ;; (url-for :attendees/index)    "Attendees"
-                           ;; (url-for :profile/index)      "Profile & Settings"
-                           (url-for :session/new) "Create Activity"
-                           (url-for :contacts/index)  "Contacts"}]
-       [:li [:a {:href href
-                 :on-click "document.body.classList.toggle('menu-open')"}
-             caption]])
-     [:li [:a {:href (url-for :contact/qr)
-               :hx-target "#modal"
-               :on-click "document.body.classList.toggle('menu-open')"}
-           "Add Contact"]]]]))
+
+     [:li
+      [:a
+       {:href (url-for :sessions/index), :on-click "document.body.classList.toggle('menu-open')"}
+       "Sessions & Activities"]]
+     [:li
+      [:a
+       {:href (url-for :profile/edit), :on-click "document.body.classList.toggle('menu-open')"}
+       [graphics/cog-icon] "Profile & Settings"]]
+     [:li
+      [:a
+       {:href (url-for :contacts/index), :on-click "document.body.classList.toggle('menu-open')"}
+       "Contacts"]]
+     [:li
+      [:a {:href (url-for :contact/qr)
+           :hx-target "#modal"
+           :on-click "document.body.classList.toggle('menu-open')"}
+       [graphics/scan-icon] "Add Contact"]]
+     [:li
+      [:a
+       {:href (url-for :session/new), :on-click "document.body.classList.toggle('menu-open')"}
+       "Create Activity"]]
+     [:div.bottom
+      [:p "Proudly made by the " [:a {:href "https://gaiwan.co" :target "_blank"} "Gaiwan Team"] " and contributors."]
+      [:p [:a {:href "https://github.com/GaiwanTeam/compass" :target "_blank"} [graphics/github-icon] "GaiwanTeam/compass"]]]
+     ]]))
 
 (o/defrules toggle-menu-button)
 

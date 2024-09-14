@@ -45,17 +45,25 @@
       [?e :public-profile/name]]
     (db/db))))
 
-(defn all-links [user-eid]
-  (sort-by
-   :db/id
-   (db/q
-    '[:find [(pull ?l [*
-                       {:public-profile/_links [:db/id]}
-                       {:private-profile/_links [:db/id]}]) ...]
-      :in $ ?u
-      :where
-      [?l :profile-link/user ?u]]
-    (db/db) user-eid)))
+(defn public-links [user-eid]
+  (map db/entity
+       (db/q
+        '[:find [?l ...]
+          :in $ ?u
+          :where
+          [?u :public-profile/links ?l]]
+        (db/db)
+        user-eid)))
+
+(defn private-links [user-eid]
+  (map db/entity
+       (db/q
+        '[:find [?l ...]
+          :in $ ?u
+          :where
+          [?u :public-profile/links ?l]]
+        (db/db)
+        user-eid)))
 
 (defn all-session-types []
   (db/q

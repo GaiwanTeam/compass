@@ -14,9 +14,12 @@
    [co.gaiwan.compass.model.attendees :as attendees]
    [ring.util.response :as ring-response]))
 
-(defn GET-profile [req]
-  {:html/body [h/profile-detail
-               (:identity req)]})
+(defn GET-profile [{:keys [params] :as req}]
+  {:html/body
+   [h/profile-detail
+    (if-let [profile-id (:profile-id params)]
+      (db/entity profile-id)
+      (:identity req))]})
 
 (defn GET-profile-form [req]
   {:html/body [h/profile-form
@@ -81,6 +84,30 @@
       (conj [:db/retract user-id :public-profile/links link-id-val])
       (and link-id-val (nil? (public-profile-links link-id-val)) public-link-val)
       (conj [:db/add user-id :public-profile/links link-id-val]))))
+;; (params->profile-data params)
+;; (parse-link-data params "public")
+
+(defn parse-link-data [params variant]
+  (map vector
+       (get params (keyword (str variant "-link-type")))
+       (get params (keyword (str variant "-link-ref"))))  )
+
+(defn reconcile-links [user-id variant old-links new-links]
+  (let [existing-pairs (map (juxt :profile-link/type :profile-link/href) old-links)
+        del (remove (set new-links) existing-pairs)
+        add (remove (set existing-pairs) new-links)]
+    (concat
+     (for [[k v] del
+           :when (not (str/blank? v))
+           :let [id (some #(when (= [k v] ((juxt :profile-link/type :profile-link/href) %))
+                             (:db/id %)) old-links)]
+           :when id]
+       [:db/retractEntity id])
+     (for [[k v] add
+           :when (not (str/blank? v))]
+       {(keyword (str variant "-profile/_links")) user-id
+        :profile-link/type k
+        :profile-link/href v}))))
 
 (defn params->profile-data
   [{:keys [user-id hidden?
@@ -89,26 +116,41 @@
            bio_private name_private
            rows-count
            image] :as params}]
-  (tap> params)
-  (let [user-id (parse-long user-id)]
-    (cond-> (into [{:db/id user-id
-                    :public-profile/bio bio_public
-                    :public-profile/name name_public
-                    :public-profile/hidden? (= "on" hidden?)
-                    :private-profile/bio bio_private}]
-                  (mapcat #(index->link-data params %))
-                  (range (parse-long rows-count)))
+  (let [user-id (parse-long user-id)
+        user (db/entity user-id)
+        public-links (reconcile-links
+                      user-id
+                      "public"
+                      (:public-profile/links user)
+                      (parse-link-data params "public"))
+        private-links (reconcile-links
+                       user-id
+                       "private"
+                       (:private-profile/links user)
+                       (parse-link-data params "private"))]
+    (cond-> (concat
+             [{:db/id user-id
+               :public-profile/bio bio_public
+               :public-profile/name name_public
+               :private-profile/bio bio_private}]
+             public-links
+             private-links)
       image
       (conj [:db/add user-id :public-profile/avatar-url
              (assets/add-to-content-addressed-storage (:content-type image) (:tempfile image))])
 
-      (and (= "on" private-name-switch)
-           (not (str/blank? name_private)))
-      (conj [:db/add user-id :private-profile/name name_private])
+      (= "on" private-name-switch)
+      (conj [:db/add user-id  :public-profile/hidden? true])
 
-      (or (not= "on" private-name-switch)
-          (str/blank? name_private))
-      (conj [:db/retract user-id :private-profile/name]))))
+      (not= "on" private-name-switch)
+      (conj [:db/retract user-id :public-profile/hidden? true])
+
+      (and (str/blank? name_private) (:private-profile/name user))
+      (conj [:db/retract user-id :private-profile/name (:private-profile/name user)])
+
+      (not (str/blank? name_private))
+      (conj [:db/add user-id :private-profile/name name_private])
+      )))
 
 (defn POST-save-profile
   "Save profile to DB
@@ -149,4 +191,11 @@
    ["/uploads/:filename"
     {:middleware [[response/wrap-requires-auth]]
      :get        {:handler file-handler}}]
-   ])
+   ["/user/:profile-id"
+    {:name :profile/show
+     :middleware [[response/wrap-requires-auth]]
+     :get        {:handler GET-profile}}]
+   ["/me"
+    {:name :profile/me
+     :middleware [[response/wrap-requires-auth]]
+     :get        {:handler GET-profile}}]])
