@@ -46,6 +46,17 @@
           :href "#"}]
      children)))
 
+(o/defstyled menu-panel-user :div
+  :flex :items-center :gap-2
+  [:a {:text-decoration "underline"}]
+  ([user]
+   [:<>
+    (when user
+      [:<>
+       [c/avatar (user/avatar-css-value user)]
+       "Signed in as " (:public-profile/name user) "." [:a {:href (url-for :logout/index)} "Sign out"]])]
+   ))
+
 (o/defstyled menu-panel :nav
   :bg-surface-2
   :h-screen
@@ -58,55 +69,55 @@
   [:svg {:width  t/--font-size-5
          :height t/--font-size-5}]
   [:.bar :flex :justify-between :p-3]
-  [:li :font-size-3
-   :line-height-5 ;; FIXME
-   :border-b :border-solid :border-surface-4
-   :px-4 :py-1
+  [:li :font-size-3 :my-4
+   [:>a
+    :block :bg-surface-1 :hover:bg-surface-3
+    :px-4 :py-4 :mx-4 :my-2 :rounded-lg
+    :no-underline]
    {:font-size t/--font-size-3}
    [:&:last-child :border-0]
    [:&.discord-button :border-0]]
   [c/avatar {:height "2rem"}]
   [:.discord-button :flex :justify-center :py-3
    [#{:a :a:visited} {:color t/--gray-2}]]
-  [:.user :flex :items-center :gap-2
-   [:a {:text-decoration "underline"}]]
   [:a:visited {:color t/--link}]
-  ["li:has(.notifier-dot)" :flex :gap-1]
+  ["a:has(.notifier-dot)" :flex :gap-1]
   [:svg :inline :mr-1 {:height "1em" :margin-bottom "-0.15em"}
    [:path {:fill t/--text-1}]]
   [:.bottom :fixed :bottom-0 :left-0
    :w-full :mb-3
    :text-center
-
    [:p  :m-2]]
   ([user]
    [:<>
     [:div.bar
-     [:div.user
-      (when user
-        [:<>
-         [c/avatar (user/avatar-css-value user)]
-         "Signed in as " (:public-profile/name user) "." [:a {:href (url-for :logout/index)} "Sign out"]])]
+     [menu-panel-user user]
      [:button {:cx-toggle "menu-open" :cx-target "body"}
       [graphics/cross]]]
     #_[:pre (pr-str user)]
     [:ul
-     [:li.discord-button
-      (when-not user
-        [auth/discord-button {:text "Sign in with Discord"}])]
+     (when-not user
+       [:li.discord-button
+        [auth/discord-button {:text "Sign in with Discord"}]])
      (when user
        (if-let [ticket (user/assigned-ticket user)]
          [:li "Ti.to ticket " [:strong (:tito.ticket/reference ticket)]]
          [:li
-          [:div [:a {:href (url-for :ticket/connect)
-                     :on-click "document.body.classList.toggle('menu-open')"}
-                 [:strong "Claim your Ti.to ticket for full access"]]]
-          [:div.notifier-dot]]))
+          [:a {:href (url-for :ticket/connect)
+               :on-click "document.body.classList.toggle('menu-open')"}
+           [:strong "Claim your Ti.to ticket for full access"]
+          [:div.notifier-dot]]]))
 
      [:li
       [:a
        {:href (url-for :sessions/index), :on-click "document.body.classList.toggle('menu-open')"}
+       [graphics/sessions-icon]
        "Sessions & Activities"]]
+     [:li
+      [:a
+       {:href (url-for :session/new), :on-click "document.body.classList.toggle('menu-open')"}
+       [graphics/plus-icon]
+       "Create Activity"]]
      [:li
       [:a
        {:href (url-for :profile/edit), :on-click "document.body.classList.toggle('menu-open')"}
@@ -120,10 +131,11 @@
            :hx-target "#modal"
            :on-click "document.body.classList.toggle('menu-open')"}
        [graphics/scan-icon] "Add Contact"]]
-     [:li
-      [:a
-       {:href (url-for :session/new), :on-click "document.body.classList.toggle('menu-open')"}
-       "Create Activity"]]
+
+     [:li [:a {:href "https://github.com/heartofclojure/heartofclojure-site-2024/wiki/Attendee-Guide-2024"
+               :target "_blank"
+               }
+           "Attendee Guide"]]
      [:div.bottom
       [:p "Proudly made by the " [:a {:href "https://gaiwan.co" :target "_blank"} "Gaiwan Team"] " and contributors."]
       [:p [:a {:href "https://github.com/GaiwanTeam/compass" :target "_blank"} [graphics/github-icon] "GaiwanTeam/compass"]]]
