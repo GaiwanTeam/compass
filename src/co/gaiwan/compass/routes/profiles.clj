@@ -4,6 +4,7 @@
    [clj.qrgen :as qr]
    [clojure.java.io :as io]
    [clojure.string :as str]
+   [io.pedestal.log :as log]
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
@@ -12,14 +13,16 @@
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.attendees :as attendees]
+
    [ring.util.response :as ring-response]))
 
 (defn GET-profile [{:keys [params] :as req}]
+  ;; (log/debug :debug {:req req})
   {:html/body
    [h/profile-detail
-    (if-let [user-uuid (:user-uuid params)]
-      (db/entity [:user/uuid user-uuid])
-      (:identity req))]})
+    (if-let [profile-id (get-in req [:path-params :user-uuid])]
+      (db/entity [:user/uuid (parse-uuid profile-id)])
+      (:identity req)) (:identity req)]})
 
 (defn GET-profile-form [req]
   {:html/body [h/profile-form
@@ -90,7 +93,7 @@
 (defn parse-link-data [params variant]
   (map vector
        (get params (keyword (str variant "-link-type")))
-       (get params (keyword (str variant "-link-ref"))))  )
+       (get params (keyword (str variant "-link-ref")))))
 
 (defn reconcile-links [user-id variant old-links new-links]
   (let [existing-pairs (map (juxt :profile-link/type :profile-link/href) old-links)
@@ -149,8 +152,7 @@
       (conj [:db/retract user-id :private-profile/name (:private-profile/name user)])
 
       (not (str/blank? name_private))
-      (conj [:db/add user-id :private-profile/name name_private])
-      )))
+      (conj [:db/add user-id :private-profile/name name_private]))))
 
 (defn POST-save-profile
   "Save profile to DB
