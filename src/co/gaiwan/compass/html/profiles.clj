@@ -117,7 +117,6 @@
     :border-radius t/--size-2}
    [#{:textarea "input[type='text']"} {:background-color t/--surface-3}]]
   ([user]
-   (def user user)
    [:<>
     [:h2 "Edit Profile"]
     [:form {:method "POST" :action "/profile/save" :enctype "multipart/form-data"}

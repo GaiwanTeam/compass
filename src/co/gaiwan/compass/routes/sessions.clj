@@ -77,7 +77,8 @@
       (= published? "on")
       (assoc :session/published? true)
       image
-      (assoc :session/image (assets/add-to-content-addressed-storage (:content-type image) (:tempfile image))))))
+      (assoc :session/image (assets/add-to-content-addressed-storage (:content-type image) (:tempfile image))
+             :session/thumbnail (assets/add-to-content-addressed-storage "image/png" (assets/resize-image (:content-type image) (:tempfile image) 500 500))))))
 
 (defn POST-create-session
   "Create new session, save to Datomic

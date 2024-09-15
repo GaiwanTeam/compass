@@ -115,7 +115,8 @@
    (merge default-filters filters)))
 
 (defn session-image-css-value [session]
-  (str "url(" (assets/image-url (:session/image session)) ")"))
+  (str "url(" (assets/image-url (or (:session/thumbnail session)
+                                    (:session/image session))) ")"))
 
 (defn subtitle
   "Returns the subtitle if there is one, or 'organized by <person>' otherwise."

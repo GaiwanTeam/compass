@@ -53,6 +53,7 @@
    [:session/duration :string "Duration of the session in ISO interval notation"]
    [:session/location :ref "Where does the session take place"]
    [:session/image :string "Image URL, either absolute, or relative to compass root"]
+   [:session/thumbnail :string "Downsized image thumbnail"]
    [:session/capacity :long "Number of people that are able to join this session"]
    [:session/ticket-required? :boolean "If this session requires a ticket"]
    [:session/published? :boolean "If this session is published/visible?"]

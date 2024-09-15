@@ -17,8 +17,8 @@
 (defn GET-profile [{:keys [params] :as req}]
   {:html/body
    [h/profile-detail
-    (if-let [profile-id (:profile-id params)]
-      (db/entity profile-id)
+    (if-let [user-uuid (:user-uuid params)]
+      (db/entity [:user/uuid user-uuid])
       (:identity req))]})
 
 (defn GET-profile-form [req]
@@ -191,7 +191,7 @@
    ["/uploads/:filename"
     {:middleware [[response/wrap-requires-auth]]
      :get        {:handler file-handler}}]
-   ["/user/:profile-id"
+   ["/user/:user-uuid"
     {:name :profile/show
      :middleware [[response/wrap-requires-auth]]
      :get        {:handler GET-profile}}]
