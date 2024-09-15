@@ -4,6 +4,7 @@
    [clj.qrgen :as qr]
    [clojure.java.io :as io]
    [clojure.string :as str]
+   [io.pedestal.log :as log]
    [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
@@ -12,14 +13,15 @@
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.attendees :as attendees]
+
    [ring.util.response :as ring-response]))
 
 (defn GET-profile [{:keys [params] :as req}]
-  (tap> {:params params})
+  (log/debug :debug {:req req})
   {:html/body
    [h/profile-detail
-    (if-let [user-uuid (:user-uuid params)]
-      (db/entity [:user/uuid user-uuid])
+    (if-let [profile-id (get-in req [:path-params :profile-id])]
+      (db/entity [:user/uuid (parse-uuid profile-id)])
       (:identity req))]})
 
 (defn GET-profile-form [req]
