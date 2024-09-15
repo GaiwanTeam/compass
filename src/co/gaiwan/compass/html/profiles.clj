@@ -7,6 +7,7 @@
    [co.gaiwan.compass.html.components :as c]
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.user :as user]
+   [markdown-to-hiccup.core :as m]
    [lambdaisland.ornament :as o]))
 
 ;; UI of profile detail
@@ -18,24 +19,30 @@
 
 (o/defstyled profile-detail :div#detail
   [c/image-frame :w-100px {t/--arc-thickness "7%"}]
+  [:.details
+   [:.links :my-2]
+   [:.link :w-full :flex :flex-1 :py-1 :font-size-3]
+   [:.link-type :w-12 :px-2]
+   [:.link-ref :flex-grow :px-2]]
+
   ([{:public-profile/keys [name hidden?]
-     :user/keys [uuid] :as user}]
+     :user/keys [uuid] :as user} viewer]
    [:<>
     [:div [c/image-frame {:profile/image (user/avatar-css-value user)}]]
     [:div.details
-     [:h3.title name]]
-    (if hidden?
-      [:label "Hide profile from public listing"]
-      [:label "Show profile from public listing"])
-    (when (:private-profile/name user)
-      [:div
-       [:label "Another Name:"]
-       [:label (:private-profile/name user)]])
+     [:h3.title name]
+     [:div.bio
+      (m/component (m/md->hiccup (:public-profile/bio user)))]
+     [:div.links
+      (for [link (:public-profile/links user)]
+        [:div.link
+         [:div.link-type (:profile-link/type link)]
+         [:div.link-ref (:profile-link/href link)]])]]
 
-    #_[:div (pr-str user)]
-    ;; Disable Edit Profile before we can show profile details pretty
-    [:div.actions
-     [edit-profile-btn user]]]))
+;; hide edit button unless it's your own profile
+    (when (= (:db/id viewer) (:db/id user))
+      [:div.actions
+       [edit-profile-btn user]])]))
 
 (o/defstyled private-name :div
   ([user {:keys [private-name-switch] :as params}]
@@ -158,8 +165,7 @@
           (:private-profile/bio user))]]
       [links-table (:private-profile/links user)
        {:variant "private"
-        :caption "Links Visible to Contacts"}]
-      ]
+        :caption "Links Visible to Contacts"}]]
 
      [:input {:type "submit" :value "Save Profile"}]]
     [:script

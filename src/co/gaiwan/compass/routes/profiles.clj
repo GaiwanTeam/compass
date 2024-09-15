@@ -17,12 +17,12 @@
    [ring.util.response :as ring-response]))
 
 (defn GET-profile [{:keys [params] :as req}]
-  (log/debug :debug {:req req})
+  ;; (log/debug :debug {:req req})
   {:html/body
    [h/profile-detail
     (if-let [profile-id (get-in req [:path-params :profile-id])]
       (db/entity [:user/uuid (parse-uuid profile-id)])
-      (:identity req))]})
+      (:identity req)) (:identity req)]})
 
 (defn GET-profile-form [req]
   {:html/body [h/profile-form
