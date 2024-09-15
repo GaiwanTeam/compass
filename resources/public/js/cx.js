@@ -29,9 +29,22 @@ function apply_handlers() {
   ensure_show_modal()
 }
 
+function handle_response_errors(err) {
+  console.error("HTML response error: ", err)
+  var error;
+  if (err.detail.xhr.status === 413) {
+    error = err.detail.xhr.statusText;
+  } else {
+    error = err.detail.xhr.response;
+  }
+  document.getElementById("modal").innerHTML = error;
+  showModal();
+}
+
 addEventListener('DOMContentLoaded', apply_handlers);
 addEventListener('htmx:afterSwap', (_) => apply_handlers());
 addEventListener('popstate', () => setTimeout(apply_handlers, 0));
+addEventListener("htmx:responseError", handle_response_errors)
 
 // Local Variables:
 // js-indent-level: 2
