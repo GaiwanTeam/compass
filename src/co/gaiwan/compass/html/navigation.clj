@@ -85,6 +85,9 @@
    [:&.discord-button :border-0]]
   [c/avatar {:height "2rem"}]
   [:.discord-button :flex :justify-center :py-3
+   [:>a
+    {:background-color "#7289da"}
+    [:&:hover {:background-color "#7289da"}]]
    [#{:a :a:visited} {:color t/--gray-2}]]
   [:a:visited {:color t/--link}]
   ["a:has(.notifier-dot)" :flex :gap-1 :items-baseline]
