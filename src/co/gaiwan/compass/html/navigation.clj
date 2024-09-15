@@ -61,7 +61,7 @@
   :bg-surface-2
   :h-screen
   :flex :flex-col
-  :overflow-hidden :shadow-5 :z-1 :fixed
+  :overflow-y-auto :shadow-5 :z-1 :fixed
   {:transition "transform 300ms ease-in"
    :width      t/--size-fluid-10
    :right      0
