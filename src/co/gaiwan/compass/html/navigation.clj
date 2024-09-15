@@ -60,6 +60,7 @@
 (o/defstyled menu-panel :nav
   :bg-surface-2
   :h-screen
+  :flex :flex-col
   :overflow-hidden :shadow-5 :z-1 :fixed
   {:transition "transform 300ms ease-in"
    :width      t/--size-fluid-10
@@ -68,10 +69,15 @@
    :transform  "translate(100%, 0)"}
   [:svg {:width  t/--font-size-5
          :height t/--font-size-5}]
-  [:.bar :flex :justify-between :p-3]
+  [:.bar :flex :justify-between :p-3 :mb-2 :border-b-4 :border-surface-3]
   [:li :font-size-3 :my-4
+   [:>hr :my-6]
+   #_[:svg [:path :w-5 :h-5]]
    [:>a
-    :block :bg-surface-1 :hover:bg-surface-3
+    :block
+    :bg-surface-1 :hover:bg-surface-3
+    ;; {:background t/--highlight}
+    ;; [:&:hover {:background t/--highlight-yellow}]
     :px-4 :py-4 :mx-4 :my-2 :rounded-lg
     :no-underline]
    {:font-size t/--font-size-3}
@@ -81,12 +87,12 @@
   [:.discord-button :flex :justify-center :py-3
    [#{:a :a:visited} {:color t/--gray-2}]]
   [:a:visited {:color t/--link}]
-  ["a:has(.notifier-dot)" :flex :gap-1]
+  ["a:has(.notifier-dot)" :flex :gap-1 :items-baseline]
   [:svg :inline :mr-1 {:height "1em" :margin-bottom "-0.15em"}
-   [:path {:fill t/--text-1}]]
-  [:.bottom :fixed :bottom-0 :left-0
-   :w-full :mb-3
-   :text-center
+   [:path
+    #_{:fill t/--text-1}
+    #_{:color t/--text-1}]]
+  [:.bottom :mt-auto :w-full :mb-3 :text-center
    [:p  :m-2]]
   ([user]
    [:<>
@@ -105,6 +111,7 @@
          [:li
           [:a {:href (url-for :ticket/connect)
                :on-click "document.body.classList.toggle('menu-open')"}
+           [graphics/ticket-icon]
            [:strong "Claim your Ti.to ticket for full access"]
           [:div.notifier-dot]]]))
 
@@ -119,27 +126,33 @@
        [graphics/plus-icon]
        "Create Activity"]]
      [:li
+      [:hr]]
+     [:li
       [:a
        {:href (url-for :profile/edit), :on-click "document.body.classList.toggle('menu-open')"}
-       [graphics/cog-icon] "Profile & Settings"]]
+       [graphics/cog-icon]
+       [:span "Profile & Settings"]]]
      [:li
       [:a
        {:href (url-for :contacts/index), :on-click "document.body.classList.toggle('menu-open')"}
+       [graphics/queue-list-icon]
        "Contacts"]]
      [:li
       [:a {:href (url-for :contact/qr)
            :hx-target "#modal"
            :on-click "document.body.classList.toggle('menu-open')"}
        [graphics/scan-icon] "Add Contact"]]
-
-     [:li [:a {:href "https://github.com/heartofclojure/heartofclojure-site-2024/wiki/Attendee-Guide-2024"
-               :target "_blank"
-               }
-           "Attendee Guide"]]
-     [:div.bottom
-      [:p "Proudly made by the " [:a {:href "https://gaiwan.co" :target "_blank"} "Gaiwan Team"] " and contributors."]
-      [:p [:a {:href "https://github.com/GaiwanTeam/compass" :target "_blank"} [graphics/github-icon] "GaiwanTeam/compass"]]]
-     ]]))
+     [:li
+      [:hr]]
+     [:li
+      [:a {:href "https://github.com/heartofclojure/heartofclojure-site-2024/wiki/Attendee-Guide-2024"
+           :target "_blank"}
+       [graphics/book-open-icon]
+       "Attendee Guide"]]]
+    [:div.bottom
+     [:p "Proudly made by the " [:a {:href "https://gaiwan.co" :target "_blank"} "Gaiwan Team"] " and contributors."]
+     [:p [:a {:href "https://github.com/GaiwanTeam/compass" :target "_blank"} [graphics/github-icon] "GaiwanTeam/compass"]]]
+    ]))
 
 (o/defrules toggle-menu-button)
 
