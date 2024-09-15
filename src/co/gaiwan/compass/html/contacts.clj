@@ -89,14 +89,17 @@
          [:button.remove-btn {:hx-delete (url-for :contact/link {:id (:db/id c)})}
           [graphics/person-remove] "Remove"]])]]
     [:div#edn {:style {:display "none"}}
-     (for [c (:user/contacts user)
-           c (into {} c)]
-       (pr-str c))]
+     (for [c (:user/contacts user)]
+       (let [c (into {} c)
+             c (dissoc c :db/id :user/contacts :user/uuid)]
+         ;; We might want to add the profile-link 
+         (pr-str c)))]
     [:script
      "function downloadEDN(event) {
           event.preventDefault();  // prevent the default button behavior
 
           var data = document.getElementById('edn').innerHTML;
+          data = '[' + data + ']';
           var blob = new Blob([data], { type: 'text/edn' });
           var url = window.URL.createObjectURL(blob);
 
@@ -111,3 +114,10 @@
           document.body.removeChild(a);
           window.URL.revokeObjectURL(url);
           };"]]))
+
+(comment
+  (require '[co.gaiwan.compass.db :as db])
+  (def eid 17592186045516)
+  (def user  (db/entity eid))
+  (def c (:user/contacts user))
+  (pr-str c))
