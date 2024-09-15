@@ -5,6 +5,20 @@
 
 #_(set! *print-namespace-maps* false)
 
+(defn contact-data
+  "return the exported version of the contact
+  
+  the input eid is the contact's eid"
+  [eid]
+  (db/pull '[:public-profile/name
+             :pubilc-profile/avatar-url
+             :public-profile/bio
+             :private-profile/name
+             :private-profile/bio
+             {:public-profile/links [:profile-link/type :profile-link/href]}
+             {:private-profile/links [:profile-link/type :profile-link/href]}]
+           eid))
+
 (defn ?resolve-ident
   "Maybe resolve ident
 

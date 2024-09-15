@@ -7,6 +7,7 @@
    [co.gaiwan.compass.html.graphics :as graphics]
    [co.gaiwan.compass.http.routing :refer [url-for]]
    [co.gaiwan.compass.model.user :as user]
+   [co.gaiwan.compass.db.queries :as queries]
    [lambdaisland.ornament :as o]
    [markdown-to-hiccup.core :as m]))
 
@@ -90,10 +91,9 @@
           [graphics/person-remove] "Remove"]])]]
     [:div#edn {:style {:display "none"}}
      (for [c (:user/contacts user)]
-       (let [c (into {} c)
-             c (dissoc c :db/id :user/contacts :user/uuid)]
-         ;; We might want to add the profile-link 
-         (pr-str c)))]
+       (let [eid (:db/id c)
+             contact-data (queries/contact-data eid)]
+         (pr-str contact-data)))]
     [:script
      "function downloadEDN(event) {
           event.preventDefault();  // prevent the default button behavior
@@ -117,7 +117,9 @@
 
 (comment
   (require '[co.gaiwan.compass.db :as db])
+  
   (def eid 17592186045516)
+  (queries/contact-data eid)
   (def user  (db/entity eid))
   (def c (:user/contacts user))
   (pr-str c))
