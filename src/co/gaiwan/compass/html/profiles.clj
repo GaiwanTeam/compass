@@ -24,22 +24,35 @@
    [:.link :w-full :flex :flex-1 :py-1 :font-size-3]
    [:.link-type :w-12 :px-2]
    [:.link-ref :flex-grow :px-2]]
-
+  [:.contact-card :my-2]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user} viewer]
    [:<>
     [:div [c/image-frame {:profile/image (user/avatar-css-value user)}]]
     [:div.details
      [:h3.title name]
-     [:div.bio
-      (m/component (m/md->hiccup (:public-profile/bio user)))]
+     (when (:public-profile/bio user)
+       [:div.bio
+        (m/component (m/md->hiccup (:public-profile/bio user)))])
      [:div.links
       (for [link (:public-profile/links user)]
         [:div.link
          [:div.link-type (:profile-link/type link)]
          [:div.link-ref (:profile-link/href link)]])]]
-
-;; hide edit button unless it's your own profile
+    ;; if the user is connected (contact), show "contact card"
+    (when (some #{(:db/id viewer)} (map :db/id (:user/contacts user)))
+      [:div.contact-card
+       [:div.details
+        [:h3.title (:private-profile/name user)]
+        (when (:private-profile/bio user)
+          [:div.bio
+           (m/component (m/md->hiccup (:private-profile/bio user)))])
+        [:div.links
+         (for [link (:private-profile/links user)]
+           [:div.link
+            [:div.link-type (:profile-link/type link)]
+            [:div.link-ref (:profile-link/href link)]])]]])
+    ;; hide edit button unless it's your own profile
     (when (= (:db/id viewer) (:db/id user))
       [:div.actions
        [edit-profile-btn user]])]))
