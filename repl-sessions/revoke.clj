@@ -33,11 +33,17 @@
     (concat
      (mapv
       (fn [x]
-        {:db/id (str "temp-" x)
-         :user/contacts eid
-         :discord/email (str "temp-email-" x "@gaiwan.co")
-         :public-profile/name (str "temp-user-" x)
-         :public-profile/avatar-url (assets/download-image (str avatar-url-part x ".png"))})
+        (cond-> {:db/id (str "temp-" x)
+                 :user/uuid (random-uuid)
+                 :user/contacts eid
+                 :discord/email (str "temp-email-" x "@gaiwan.co")
+                 :public-profile/name (str "temp-user-" x)
+                 :public-profile/bio "public bio ... "
+                 :public-profile/avatar-url (assets/download-image (str avatar-url-part x ".png"))}
+          (even? x)
+          (assoc :private-profile/name "private-name")
+          (even? x)
+          (assoc :private-profile/bio "private bio ...")))
       (range 1 11))
      (mapv
       (fn [x]
@@ -46,6 +52,6 @@
       (range 1 11)))))
 
 (def tx (temp-user-tx
-         (test-user-eid "Arne")))
+         (test-user-eid "Laurence")))
 
 (db/transact tx)
