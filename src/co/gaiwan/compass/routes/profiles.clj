@@ -20,7 +20,7 @@
   ;; (log/debug :debug {:req req})
   {:html/body
    [h/profile-detail
-    (if-let [profile-id (get-in req [:path-params :profile-id])]
+    (if-let [profile-id (get-in req [:path-params :user-uuid])]
       (db/entity [:user/uuid (parse-uuid profile-id)])
       (:identity req)) (:identity req)]})
 

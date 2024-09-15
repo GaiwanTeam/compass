@@ -20,11 +20,15 @@
 (o/defstyled profile-detail :div#detail
   [c/image-frame :w-100px {t/--arc-thickness "7%"}]
   [:.details
+   [:.bio :mt-2]
    [:.links :my-2]
    [:.link :w-full :flex :flex-1 :py-1 :font-size-3]
    [:.link-type :w-12 :px-2]
    [:.link-ref :flex-grow :px-2]]
-  [:.contact-card :my-2]
+  [:.contact-card :my-6 :shadow-3
+   {:background-color t/--surface-2
+    :padding t/--size-3
+    :border-radius t/--size-2}]
   ([{:public-profile/keys [name hidden?]
      :user/keys [uuid] :as user} viewer]
    [:<>

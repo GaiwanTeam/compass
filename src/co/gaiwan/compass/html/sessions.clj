@@ -198,7 +198,7 @@
    [:<>
     [c/image-frame {:profile/image (user/avatar-css-value p)}]
     [:div.details
-     [:a {:href (url-for :profile/show {:profile-id (:user/uuid p)})}
+     [:a {:href (url-for :profile/show {:user-uuid (:user/uuid p)})}
       [:div.profile-name (:public-profile/name p)]]]]))
 
 (o/defstyled session-detail :div
