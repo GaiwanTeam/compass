@@ -68,18 +68,22 @@
   [:input {:color t/--text-2
            :background-color t/--surface-3
            :border-radius t/--radius-2}]
+  [:span :font-bold]
   ([session user]
    ;; Progressive enhancement, without htmx the form submission will kick in
-   [:<>
-    {:method "POST"
-     :action (url-for :session/participate {:id (:db/id session)})}
-    [:input {:type "submit"
-             :hx-post (url-for :session/participate {:id (:db/id session)})
-             :hx-swap "none"
-             :value
-             (if (session/participating? session user)
-               "Leave"
-               "Join")}]]))
+   (if (<= (:session/capacity session) (:session/signup-count session))
+     [:<>
+      [:span "FULL"]]
+     [:<>
+      {:method "POST"
+       :action (url-for :session/participate {:id (:db/id session)})}
+      [:input {:type "submit"
+               :hx-post (url-for :session/participate {:id (:db/id session)})
+               :hx-swap "none"
+               :value
+               (if (session/participating? session user)
+                 "Leave"
+                 "Join")}]])))
 
 (o/defstyled session-card-actions :nav
   :flex :justify-end :w-full
@@ -283,7 +287,7 @@
        [:div.large (:location/name location)]]
       [:div.capacity
        [:div.small "Spots available"]
-       [:div.large (- (or capacity 0) (or signup-count 0))]]
+       [:div.large (min 0 (- (or capacity 0) (or signup-count 0)))]]
       #_[:div
          [:p.small "Ticket required"]
          (if (:session/ticket-required? session)
@@ -291,7 +295,7 @@
            [:p.large "NO ❎"])]]
      #_(when (session/organizing? session user))
      [:div.participants
-      [:h3 "Participants"]
+      [:h3 "Participants (" signup-count ")"]
       (for [p participants]
         (when-not (:public-profile/hidden? p)
           [attendee p]))
@@ -387,9 +391,9 @@
                         (str (time/local-date (:session/time session)))
                         (str (java.time.LocalDate/now)))}]
       [:input (cond->
-               {:id "start-time" :name "start-time" :type "time"
-                :min "06:00" :max "23:00" :required true
-                :step 60}
+                  {:id "start-time" :name "start-time" :type "time"
+                   :min "06:00" :max "23:00" :required true
+                   :step 60}
                 session
                 (assoc :value
                        (str (time/local-time (:session/time session)))))]]
