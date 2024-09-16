@@ -5,13 +5,13 @@
 
 (def all
   [{:label :add-locations
-    :tx-data (data/locations)}
+    :tx-data #(data/locations)}
 
    {:label :add-session-types
-    :tx-data (data/session-types)}
+    :tx-data #(data/session-types)}
 
    {:label :add-initial-schedule
-    :tx-data (data/load-schedule "compass/schedule.edn")}
+    :tx-data #(data/load-schedule "compass/schedule.edn")}
 
    {:label :add-live-set
     :tx-data [{:session.type/name  "Live Set"
@@ -19,7 +19,7 @@
                :db/ident           :session.type/live-set}]}
 
    {:label :add-updated-schedule
-    :tx-data (data/load-schedule "compass/schedule_20240909.edn")}
+    :tx-data #(data/load-schedule "compass/schedule_20240909.edn")}
 
    {:label :update-locations
     :tx-data
@@ -52,4 +52,10 @@
     :tx-data
     [{:location/name "Other location (see description)"}]}
 
-   ])
+   {:label :workshop-capacity-cap
+    :tx-data
+    [{:session/code "XXE9RM" :session/capacity 30}
+     {:session/code "7CHPV8" :session/capacity 30}
+     {:session/code "W8JQNR" :session/capacity 30}
+     {:session/code "R8UFRM" :session/capacity 30}
+     {:session/code "RYJ78V" :session/capacity 30}]}])

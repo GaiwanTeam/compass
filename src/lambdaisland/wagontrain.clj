@@ -1,6 +1,7 @@
 (ns lambdaisland.wagontrain
   (:require
-   [datomic.api :as d]))
+   [datomic.api :as d]
+   [io.pedestal.log :as log]))
 
 (def schema
   [{:db/ident       :wagontrain.tx/label,
@@ -52,7 +53,12 @@
 
 (defn migrate1
   [conn {:keys [label tx-data]}]
-  @(d/transact conn (up-tx label (if (fn? tx-data) (tx-data) tx-data))))
+  (if (applied? conn label)
+    (log/info :migration/skipped {:label label})
+    (let [{:keys [tx-data db-after]} @(d/transact conn (up-tx label (if (fn? tx-data) (tx-data) tx-data)))]
+      (log/info :migration/applied {:label label
+                                    :datom-count (count tx-data)
+                                    :basis-t (d/basis-t db-after)}))))
 
 (defn migrate! [conn migrations]
   (run! (partial migrate1 conn) migrations))

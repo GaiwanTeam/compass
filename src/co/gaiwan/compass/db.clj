@@ -15,12 +15,21 @@
 
 (declare munge-to-db)
 
+(defn migrations []
+  (map (fn [m]
+         (update
+          m :tx-data
+          (fn [tx]
+            (comp munge-to-db (if (fn? tx)
+                                tx
+                                (constantly tx))))))
+       @(requiring-resolve 'co.gaiwan.compass.db.migrations/all)))
+
 (defmethod ig/init-key :compass/db [_ {:keys [url]}]
   (d/create-database url)
   (let [conn (d/connect url)]
-    @(transact conn (concat (schema/schema-tx)
-                            wagontrain/schema))
-    (wagontrain/migrate! conn (munge-to-db @(requiring-resolve 'co.gaiwan.compass.db.migrations/all)))
+    @(transact conn (concat (schema/schema-tx) wagontrain/schema))
+    (wagontrain/migrate! conn (migrations))
     conn))
 
 (defmethod ig/halt-key! :compass/db [_ conn])
@@ -103,6 +112,6 @@
 
   (wagontrain/rollback! (conn) :add-live-set)
   (wagontrain/rollback! (conn) :add-updated-schedule)
-  (wagontrain/migrate! (conn) (munge-to-db migrations/all))
+  (wagontrain/migrate! (conn) (migrations))
 
   )
