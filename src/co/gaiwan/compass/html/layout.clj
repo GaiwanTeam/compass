@@ -39,6 +39,7 @@
 (defn base-layout [{:keys [head body flash user request] :as opts}]
   [:html
    [:head
+    [:title "Compass | Heart of Clojure 2024"]
     [:meta {:charset "UTF-8"}]
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
     [:link {:rel "stylesheet" :href "/fonts/open-sans/open-sans.css"}]
