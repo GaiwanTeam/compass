@@ -287,7 +287,7 @@
        [:div.large (:location/name location)]]
       [:div.capacity
        [:div.small "Spots available"]
-       [:div.large (min 0 (- (or capacity 0) (or signup-count 0)))]]
+       [:div.large (max 0 (- (or capacity 0) (or signup-count 0)))]]
       #_[:div
          [:p.small "Ticket required"]
          (if (:session/ticket-required? session)
