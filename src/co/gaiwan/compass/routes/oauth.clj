@@ -34,7 +34,8 @@
                {:keys [access_token refresh_token expires_in] :as body}
                {:keys [id email username global_name] :as user-info}]
   #_(def user-info user-info)
-  (let [avatar-id (:avatar user-info)
+  (let [existing-user (db/entity [:user/uuid user-uuid])
+        avatar-id (:avatar user-info)
         discord-avatar-url (when-not (str/blank? avatar-id)
                              (str "https://cdn.discordapp.com/avatars/" id "/" avatar-id ".png"))
         avatar-url (when discord-avatar-url
@@ -45,7 +46,7 @@
                                    :exception e)
                          discord-avatar-url)))]
     [(cond-> {:user/uuid                 user-uuid
-              :public-profile/name       (or global_name username)
+              :public-profile/name       (or (:public-profile/name existing-user) global_name username)
               :discord/id                id
               :discord/access-token      access_token
               :discord/refresh-token     refresh_token
