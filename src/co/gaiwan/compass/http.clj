@@ -31,7 +31,9 @@
                :keywordize true}
    :cookies   true
    :session   {:flash true
-               :cookie-attrs {:http-only true}
+               :cookie-attrs {:http-only true
+                              ;; 5 days
+                              :max-age (* 60 60 24 5)}
                :store (session-cookie/cookie-store {:key "zsrpNuvjTqFcz6fg"})}
    :security  {:anti-forgery   true
                :frame-options  :sameorigin
