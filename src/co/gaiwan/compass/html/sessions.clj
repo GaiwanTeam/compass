@@ -71,7 +71,7 @@
   [:span :font-bold]
   ([session user]
    ;; Progressive enhancement, without htmx the form submission will kick in
-   (if (<= (:session/capacity session) (:session/signup-count session))
+   (if (and (<= (:session/capacity session) (:session/signup-count session)) (not (session/participating? session user)))
      [:<>
       [:span "FULL"]]
      [:<>
