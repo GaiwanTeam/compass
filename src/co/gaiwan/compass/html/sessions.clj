@@ -269,16 +269,22 @@
        [:h4 (session/subtitle session)]]]
      [:div.event-at
       #_[:p "Event scheduled at"]
-      [:div.datetime
-       (when time
-         (str
-          (subs (str/capitalize (str (time/day-of-week time))) 0 3)
-          " "
-          (time/format "dd.MM" time)
-          ", "
-          (time/truncate-to (time/local-time time) :minutes)))
-       " → "
-       (fmt-dur duration)]]
+      [:div
+       [:div.datetime
+        (when time
+          (str
+           (subs (str/capitalize (str (time/day-of-week time))) 0 3)
+           " "
+           (time/format "dd.MM" time)
+           ", "
+           (time/truncate-to (time/local-time time) :minutes)))
+        " → "
+        (fmt-dur duration)]]
+      (when (and duration time)
+       [:a {:hx-boost "false"
+            :href (url-for :session/add-to-calendar {:id (:db/id session)})
+            :download (str (str/replace title #"\s+" "_") ".ics")}
+        "Add to calendar (downloads ICS file)"])]
 
      [:div.description.site-copy
       [:div (m/component (m/md->hiccup description))]]

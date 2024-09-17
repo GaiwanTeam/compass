@@ -42,7 +42,7 @@
                  session
                  (:identity req)]
      :html/head [session-html/session-metas
-                 session ]}))
+                 session]}))
 
 (defn GET-session-card [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]
@@ -209,6 +209,41 @@
        :user     user
        :sessions (session/apply-filters sessions user filters)}]}))
 
+(defn format-datetime [time]
+  (time/format "yyyyMMdd'T'HHmmss" time))
+
+(defn generate-icalendar [event]
+  (let [{:keys [title description location start-time end-time]} event]
+    (str/join "\r\n"
+              ["BEGIN:VCALENDAR"
+               "VERSION:2.0"
+               "BEGIN:VEVENT"
+               (str "SUMMARY:" title)
+               (str "DESCRIPTION:" description)
+               (str "LOCATION:" location)
+               (str "DTSTART:" start-time)
+               (str "DTEND:" end-time)
+               "END:VEVENT"
+               "END:VCALENDAR"])))
+
+(defn create-icalendar-response [event]
+  {:headers {"content-type" "text/calendar"
+             "content-disposition" (str "attachment; filename=\"" (:title event) ".ics\"")}
+   :body (generate-icalendar event)})
+
+(defn GET-add-to-calendar-handler [req]
+  (let [session-eid (parse-long (get-in req [:path-params :id]))
+        {:session/keys [title description
+                        location time duration]} (q/session session-eid)
+        event {:title title
+               :description (when description (subs description 0 (min (count description) 50)))
+               :location (:location/name location)
+               :start-time (format-datetime time)
+               :end-time (-> time
+                             (time/+ (time/duration duration))
+                             format-datetime)}]
+    (create-icalendar-response event)))
+
 (defn routes []
   [[""
     ["/" {:name :sessions/index
@@ -243,4 +278,7 @@
     ["/:id/thread"
      {:name :session/create-thread
       :post {:middleware [[response/wrap-requires-auth]]
-             :handler POST-create-session-thread}}]]])
+             :handler POST-create-session-thread}}]
+    ["/:id/add-to-calendar"
+     {:name :session/add-to-calendar
+      :get {:handler GET-add-to-calendar-handler}}]]])
