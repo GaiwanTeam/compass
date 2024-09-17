@@ -213,11 +213,12 @@
   (time/format "yyyyMMdd'T'HHmmss" time))
 
 (defn generate-icalendar [event]
-  (let [{:keys [title description location start-time end-time]} event]
+  (let [{:keys [uid title description location start-time end-time]} event]
     (str/join "\r\n"
               ["BEGIN:VCALENDAR"
                "VERSION:2.0"
                "BEGIN:VEVENT"
+               (str "UID:" uid)
                (str "SUMMARY:" title)
                (str "DESCRIPTION:" description)
                (str "LOCATION:" location)
@@ -234,8 +235,10 @@
 (defn GET-add-to-calendar-handler [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))
         {:session/keys [title description
-                        location time duration]} (q/session session-eid)
-        event {:title title
+                        location time duration]
+         :as session} (q/session session-eid)
+        event {:uid (str (:db/id session) "@heart_of_clojure_2024")
+               :title title
                :description (when description (subs description 0 (min (count description) 50)))
                :location (:location/name location)
                :start-time (format-datetime time)
