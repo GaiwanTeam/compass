@@ -36,10 +36,13 @@
                  (q/all-session-types)]}))
 
 (defn GET-session [req]
-  (let [session-eid (parse-long (get-in req [:path-params :id]))]
+  (let [session-eid (parse-long (get-in req [:path-params :id]))
+        session (q/session session-eid)]
     {:html/body [session-html/session-detail
-                 (q/session session-eid)
-                 (:identity req)]}))
+                 session
+                 (:identity req)]
+     :html/head [session-html/session-metas
+                 session ]}))
 
 (defn GET-session-card [req]
   (let [session-eid (parse-long (get-in req [:path-params :id]))]

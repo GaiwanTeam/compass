@@ -3,6 +3,7 @@
   {:ornament/prefix "sessions-"}
   (:require
    [clojure.string :as str]
+   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.css.tokens :as t :refer :all]
    [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.components :as c]
@@ -317,6 +318,16 @@
          [:button {:hx-delete (url-for :session/get {:id (:db/id session)})} "Delete"]])]
      #_[:p (pr-str user)]
      #_[:p (pr-str session)]]]))
+
+(defn session-metas [{:session/keys [title description image]
+                      :as session :or {description ""}}]
+  [:<>
+   [:meta {:property "og:url" :content (url-for :session/card {:id (:db/id session)})}]
+   [:meta {:property "og:title" :content title}]
+   [:meta {:property "og:description" :content (subs description 0
+                                                     ;; max 200 chars for twitter
+                                                     (min (count description) 200))}]
+   [:meta {:property "og:image" :content (str (config/value :compass/origin) "/uploads/" image)}]])
 
 (o/defstyled session-list :section#sessions
   [:.sessions
