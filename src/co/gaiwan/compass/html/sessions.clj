@@ -408,9 +408,7 @@
                         (str (time/local-date (:session/time session)))
                         (str (java.time.LocalDate/now)))}]
       [:input (cond->
-                  {:id "start-time" :name "start-time" :type "time"
-                   :min "06:00" :max "23:00" :required true
-                   :step 60}
+                  {:id "start-time" :name "start-time" :type "time" :required true :step 60}
                 session
                 (assoc :value
                        (str (time/local-time (:session/time session)))))]]
