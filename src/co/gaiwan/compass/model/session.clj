@@ -5,7 +5,8 @@
   (:require
    [co.gaiwan.compass.model.assets :as assets]
    [clojure.string :as str]
-   [java-time.api :as time]))
+   [java-time.api :as time]
+   [co.gaiwan.compass.db :as db]))
 
 (defn participating?
   "If user participates this session"
@@ -96,7 +97,11 @@
     (if v
       sessions
       (remove
-       #(time/before? (:session/time %) now)
+       #(time/before?
+         (time/+
+          (:session/time %)
+          (time/duration (:session/duration %)))
+         now)
        sessions))))
 
 (defmethod apply-filter :spots-available [sessions user k v]
