@@ -338,10 +338,7 @@
 (o/defstyled session-list :section#sessions
   [:.sessions
    :grid :gap-3
-   {:grid-template-columns "repeat(1, 1fr)"}
-   [:at-media {:min-width "40rem"} {:grid-template-columns "repeat(1, 1fr)"}]
-   [:at-media {:min-width "60rem"} {:grid-template-columns "repeat(2, 1fr)"}]
-   #_[:at-media {:min-width "80rem"} {:grid-template-columns "repeat(3, 1fr)"}]]
+   {:grid-template-columns "repeat(1, 1fr)"}]
   [:>h2 :mb-4 :mt-7
    {:font-size t/--font-size-3}
    ["&:first-child" :mt-0]
