@@ -40,8 +40,8 @@
 
  :aliases
  {:dev
-  {:extra-paths ["dev"]
-   :extra-deps  {}}
+  {:extra-paths ["dev" ".clj-kondo"]
+   :extra-deps  {clj-kondo/clj-kondo {:mvn/version "LATEST"}}}
 
   :prod
   {:extra-deps
