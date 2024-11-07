@@ -169,7 +169,8 @@
 (defn file-handler [req]
   (let [file (io/file (config/value :uploads/dir) (get-in req [:path-params :filename]))]
     (if (.exists file)
-      (ring-response/file-response (.getPath file))
+      (-> (ring-response/file-response (.getPath file))
+          (assoc-in [:headers "Cache-Control"] "public, max-age=31536000"))
       (ring-response/not-found "File not found"))))
 
 (defn routes []

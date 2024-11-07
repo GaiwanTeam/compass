@@ -38,7 +38,8 @@
    :security  {:anti-forgery   true
                :frame-options  :sameorigin
                :content-type-options :nosniff}
-   :static    {:resources "public"}
+   :static    {:resources {:root "public"
+                           :prefer-handler? true}}
    :responses {:not-modified-responses true
                :absolute-redirects     false
                :content-types          true
