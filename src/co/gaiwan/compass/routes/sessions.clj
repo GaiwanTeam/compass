@@ -7,6 +7,8 @@
   organized by participants.
   "
   (:require
+   [clojure.string :as str]
+   [co.gaiwan.compass.config :as config]
    [co.gaiwan.compass.db :as db]
    [co.gaiwan.compass.db.queries :as q]
    [co.gaiwan.compass.html.sessions :as session-html]
@@ -14,10 +16,9 @@
    [co.gaiwan.compass.model.assets :as assets]
    [co.gaiwan.compass.model.session :as session]
    [co.gaiwan.compass.model.user :as user]
-   [java-time.api :as time]
    [co.gaiwan.compass.services.discord :as discord]
-   [co.gaiwan.compass.util :as util]
-   [clojure.string :as str]))
+   [co.gaiwan.compass.util :as util :refer [now]]
+   [java-time.api :as time]))
 
 (defn GET-session-new [req]
   (if-not (:identity req)
@@ -210,20 +211,39 @@
        :sessions (session/apply-filters sessions user filters)}]}))
 
 (defn format-datetime [time]
-  (time/format "yyyyMMdd'T'HHmmss" time))
+  (->> (.withZoneSameInstant time java.time.ZoneOffset/UTC)
+       (time/format "yyyyMMdd'T'HHmmss'Z'")))
+
+(defn fold-content [content]
+  (->> (partition-all 73 content)  ; 73 chars + CRLF = 75
+       (map #(apply str %))
+       (str/join "\r\n ")))
+
+(defn escape-text [text]
+  (-> text
+      (str/replace #"\r?\n" "\\n")  ; Replace newlines with \n
+      (str/replace #"," "\\,")      ; Escape commas
+      (str/replace #";" "\\;")      ; Escape semicolons
+      (str/replace #"\\" "\\\\")))  ; Escape backslashes
+
+(defn format-property [key value]
+  (let [content-line (str key ":" value)]
+    (fold-content content-line)))
 
 (defn generate-icalendar [event]
-  (let [{:keys [uid title description location start-time end-time]} event]
+  (let [{:keys [prodid uid title description location start-time end-time]} event]
     (str/join "\r\n"
               ["BEGIN:VCALENDAR"
                "VERSION:2.0"
+               (format-property "PRODID" prodid)
                "BEGIN:VEVENT"
-               (str "UID:" uid)
-               (str "SUMMARY:" title)
-               (str "DESCRIPTION:" description)
-               (str "LOCATION:" location)
-               (str "DTSTART:" start-time)
-               (str "DTEND:" end-time)
+               (format-property "UID" uid)
+               (format-property "DTSTAMP" (format-datetime (now)))
+               (format-property "SUMMARY" (escape-text title))
+               (format-property "DESCRIPTION" (escape-text description))
+               (format-property "LOCATION" (escape-text location))
+               (format-property "DTSTART" start-time)
+               (format-property "DTEND" end-time)
                "END:VEVENT"
                "END:VCALENDAR"])))
 
@@ -237,9 +257,12 @@
         {:session/keys [title description
                         location time duration]
          :as session} (q/session session-eid)
-        event {:uid (str (:db/id session) "@heart_of_clojure_2024")
+        event {:prodid (str "-//Heart of Clojure_"
+                            (config/value :compass/origin)
+                            "//Compass//EN")
+               :uid (str (:db/id session) "@heart_of_clojure_2024")
                :title title
-               :description (when description (subs description 0 (min (count description) 50)))
+               :description (or description "")
                :location (:location/name location)
                :start-time (format-datetime time)
                :end-time (-> time

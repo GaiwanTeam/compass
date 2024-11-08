@@ -85,6 +85,8 @@
   [expires-in]
   (.plusSeconds (Instant/now) (- expires-in 60)))
 
+(defn now [] (ZonedDateTime/now))
+
 (defn partition-with-limit
   [limit parts]
   (loop [result []
