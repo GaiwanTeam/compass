@@ -24,9 +24,29 @@ function ensure_show_modal() {
   document.getElementById("modal").addEventListener('htmx:afterSwap', showModal)
 }
 
+function stopPropagate(e) {
+  e.stopPropagation();
+}
+
+function preventDefault(e) {
+  e.preventDefault();
+}
+
+function apply_stop_propagate_handler() {
+  document.querySelectorAll('.stop-propagate').forEach((el) => el.removeEventListener('click', stopPropagate));
+  document.querySelectorAll('.stop-propagate').forEach((el) => el.addEventListener('click', stopPropagate));
+}
+
+function apply_prevent_default_handler() {
+  document.querySelectorAll('.prevent-default').forEach((el) => el.removeEventListener('click', preventDefault));
+  document.querySelectorAll('.prevent-default').forEach((el) => el.addEventListener('click', preventDefault));
+}
+
 function apply_handlers() {
   ensure_cx_toggle()
   ensure_show_modal()
+  apply_stop_propagate_handler()
+  apply_prevent_default_handler()
 }
 
 function handle_response_errors(err) {
