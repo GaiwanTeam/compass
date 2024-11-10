@@ -233,19 +233,21 @@
 (defn join-clrf [strs]
   (str/join "\r\n" strs))
 
-(defn generate-icalendar-event
-  ([event] (generate-icalendar-event event (now)))
-  ([event now]
-   (let [{:keys [uid title description location start-time end-time]} event]
+(defn session->ical-object
+  ([session] (session->ical-object session (now)))
+  ([now session]
+   (let [{:session/keys [title description
+                         location time duration]
+          :as session} session]
      (join-clrf
       ["BEGIN:VEVENT"
-       (format-property "UID" uid)
+       (format-property "UID" (str (:db/id session) "@heart_of_clojure_2024"))
        (format-property "DTSTAMP" (format-datetime now))
        (format-property "SUMMARY" (escape-text title))
-       (format-property "DESCRIPTION" (escape-text description))
-       (format-property "LOCATION" (escape-text location))
-       (format-property "DTSTART" (format-datetime start-time))
-       (format-property "DTEND" (format-datetime end-time))
+       (format-property "DESCRIPTION" (escape-text (or description "")))
+       (format-property "LOCATION" (escape-text (:location/name location)))
+       (format-property "DTSTART" (format-datetime time))
+       (format-property "DTEND" (format-datetime (time/+ time (time/duration duration))))
        "END:VEVENT"]))))
 
 (defn create-icalendar-response [icalendar]
@@ -253,18 +255,10 @@
              "content-disposition" (str "attachment; filename=\"" (:title icalendar) ".ics\"")}
    :body icalendar})
 
-(defn session->icalendar-events [now session]
-  (let [{:session/keys [title description
-                        location time duration]
-         :as session} session
-        event {:uid (str (:db/id session) "@heart_of_clojure_2024")
-               :title title
-               :description (or description "")
-               :location (:location/name location)
-               :start-time time
-               :end-time (time/+ time (time/duration duration))}
-        icalendar-events (generate-icalendar-event event now)]
-    icalendar-events))
+(defn sessions->ical-objects [sessions now]
+  (->> sessions
+       (mapv (partial session->ical-object now))
+       join-clrf))
 
 (defn sessions->icalendar [sessions now]
      (let [prodid (str "-//Heart of Clojure_"
@@ -274,18 +268,20 @@
         ["BEGIN:VCALENDAR"
          "VERSION:2.0"
          (format-property "PRODID" prodid)
-         (->> sessions
-              (mapv (partial session->icalendar-events now))
-              join-clrf)
+         (sessions->ical-objects sessions now)
          "END:VCALENDAR"])))
 
-(defn GET-add-to-calendar-handler [req]
+(defn GET-add-to-calendar-handler
+  "Get iCalendar response for a single session."
+  [req]
   (let [session (q/session (parse-long (get-in req [:path-params :id])))]
     (-> [session]
         (sessions->icalendar (now))
         create-icalendar-response)))
 
-(defn GET-calendar-feed [_]
+(defn GET-calendar-feed
+  "Get iCalendar feed for all sessions."
+  [_]
   (let [sessions (q/all-sessions)]
     (-> sessions
         (sessions->icalendar (now))
