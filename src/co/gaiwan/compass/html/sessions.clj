@@ -84,7 +84,8 @@
                :value
                (if (session/participating? session user)
                  "Leave"
-                 "Join")}]])))
+                 "Join")
+               :class "prevent-default stop-propagate"}]])))
 
 (o/defstyled session-card-actions :nav
   :flex :justify-end :w-full
@@ -123,13 +124,16 @@
     [join-btn session user]]))
 
 (o/defstyled session-card :div
-  :flex :gap-1
-  :bg-surface-2
-  :shadow-2
-  :boder :border-solid :border-surface-3
+  [:a :flex :gap-1
+   :bg-surface-2
+   :shadow-2
+   :boder :border-solid :border-surface-3]
   #_:text-center
+  [:a
+   {:text-decoration "none"
+    :color "inherit"}]
   [:.title :font-size-4 :font-semibold :mt-3 :mb-2
-   [:a {:color t/--text-1}]]
+   {:color t/--text-1}]
   [:.subtitle :font-size-3 :font-medium :mb-3
    {:color t/--text-2}]
   [:.details :w-full #_:items-center :py-3 :mr-2 :relative]
@@ -162,21 +166,23 @@
      ;; :cx-toggle "expanded"
      ;; :cx-target (str "." session-card)
      :hx-disinherit "hx-target hx-select"}
-    [:div.type (:session.type/name type)]
+    [:a
+     {:href (url-for :session/get {:id (:db/id session)}) }
+     [:div.type (:session.type/name type)]
 
-    [img+join-widget session user]
+     [img+join-widget session user]
 
-    [:div.details
-     [:h2.title
-      [:a {:href (url-for :session/get {:id (:db/id session)})}
-       [:span.datetime
-        (str (time/truncate-to (time/local-time time) :minutes)) " · "]
-       title]]
-     [:h3.subtitle (session/subtitle session)]
-     #_[:div.expansion
-        [session-card-actions session user]]
-     [:div.loc (fmt-dur duration) " @ " (:location/name location)]
-     #_[:p.host "Organized by " organized]]]))
+     [:div.details
+      [:h2.title
+       [:span
+        [:span.datetime
+         (str (time/truncate-to (time/local-time time) :minutes)) " · "]
+        title]]
+      [:h3.subtitle (session/subtitle session)]
+      #_[:div.expansion
+         [session-card-actions session user]]
+      [:div.loc (fmt-dur duration) " @ " (:location/name location)]
+      #_[:p.host "Organized by " organized]]]]))
 
 (o/defrules session-card-pulse
   (garden.stylesheet/at-keyframes
